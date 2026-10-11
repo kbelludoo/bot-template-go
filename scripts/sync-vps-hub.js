@@ -73,16 +73,18 @@ function getSystemMetrics() {
 async function main() {
   const vps = getSystemMetrics();
 
-  const [huntera, tibidle, sigma] = await Promise.all([
+  const [huntera, tibidle, sigma, baiak] = await Promise.all([
     fetchJson('http://127.0.0.1:3000/api/status'),
     fetchJson('http://127.0.0.1:3001/api/status'),
-    fetchJson('http://127.0.0.1:3002/api/status')
+    fetchJson('http://127.0.0.1:3002/api/status'),
+    fetchJson('http://127.0.0.1:8090/api/fleet')
   ]);
 
   const bots = {
     huntera: {
       name: 'Huntera Idle Bot',
       game: 'Huntera',
+      engine: 'Go Native Engine',
       port: 3000,
       dashboardUrl: 'https://kbelludoo.github.io/huntera-bot/',
       status: huntera
@@ -90,6 +92,7 @@ async function main() {
     tibidle: {
       name: 'Tibidle Multi-Bot',
       game: 'Tibidle',
+      engine: 'Go Native Engine',
       port: 3001,
       dashboardUrl: 'https://kbelludoo.github.io/tibidle-bot/',
       status: tibidle
@@ -97,9 +100,18 @@ async function main() {
     sigma: {
       name: 'Pokemon Sigma Multi-Bot',
       game: 'Pokemon Sigma',
+      engine: 'Go Native Engine',
       port: 3002,
       dashboardUrl: 'https://kbelludoo.github.io/sigma-bot/',
       status: sigma
+    },
+    baiak: {
+      name: 'Baiak Idle Terminal Bot',
+      game: 'Baiak Idle',
+      engine: 'Bun / Colyseus Headless',
+      port: 8090,
+      dashboardUrl: 'https://kbelludoo.github.io/baiak-idle-bot/',
+      status: baiak
     }
   };
 
@@ -107,12 +119,13 @@ async function main() {
   if (huntera.online) activeBotsCount++;
   if (tibidle.online) activeBotsCount++;
   if (sigma.online) activeBotsCount++;
+  if (baiak.online && (baiak.fleet?.botsOnline > 0 || baiak.online)) activeBotsCount++;
 
   const payload = {
     timestamp: new Date().toISOString(),
     vps,
     summary: {
-      totalBots: 3,
+      totalBots: 4,
       activeBots: activeBotsCount
     },
     bots
@@ -137,7 +150,7 @@ async function main() {
       } else {
         execSync(`gh api -X PUT repos/kbelludoo/bot-template-go/contents/docs/status.json -f message="telemetry: live vps bots summary" -f content="${b64}" > /dev/null 2>&1`);
       }
-      console.log('✓ Resumo da VPS sincronizado com sucesso no GitHub Pages!');
+      console.log('✓ Resumo da VPS (Huntera + Tibidle + Sigma + Baiak) sincronizado com sucesso no GitHub Pages!');
     } catch (pushErr) {
       console.error('[-] Falha ao sincronizar via GitHub API:', pushErr.message);
     }

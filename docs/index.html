@@ -232,7 +232,7 @@
 
     .bots-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(390px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
       gap: 20px;
       margin-bottom: 32px;
     }
@@ -577,6 +577,30 @@
           </a>
         </div>
       </div>
+
+      <!-- Baiak Idle Card -->
+      <div class="bot-card" id="cardBaiak">
+        <div>
+          <div class="bot-header">
+            <div class="bot-name-group">
+              <h3>🏰 Baiak Idle</h3>
+              <span class="bot-port" style="color: #c084fc; background: rgba(192, 132, 252, 0.12); border: 1px solid rgba(192, 132, 252, 0.25);">PORTA 8090 • FLEET CLUSTER</span>
+            </div>
+            <span class="badge-status badge-online" id="baiakBadge">3 CONTAS ONLINE</span>
+          </div>
+
+          <div class="acc-list" id="baiakAccList">
+            <div style="color: var(--text-muted); font-size: 0.8rem;">Carregando contas...</div>
+          </div>
+        </div>
+
+        <div class="bot-footer">
+          <span style="font-size: 0.72rem; color: var(--text-dim);" id="baiakSummary">💰 202M gp somados</span>
+          <a href="https://kbelludoo.github.io/baiak-idle-bot/" target="_blank" class="btn-link" style="color: #c084fc; border-color: rgba(192, 132, 252, 0.3); background: rgba(192, 132, 252, 0.08);">
+            Abrir Dashboard Baiak ↗
+          </a>
+        </div>
+      </div>
     </div>
 
     <!-- STARTER KIT DOCUMENTATION SECTION -->
@@ -660,6 +684,9 @@
       }
 
       document.getElementById('lastUpdatedSub').textContent = formatTimeAgo(data.timestamp);
+      if (data.summary) {
+        document.getElementById('botsCountVal').textContent = `${data.summary.activeBots || 0} / ${data.summary.totalBots || 4}`;
+      }
 
       const bots = data.bots || {};
 
@@ -759,6 +786,50 @@
         document.getElementById('sigmaBadge').textContent = `${sAccounts.length} CONTAS EM JOGO`;
       } else {
         sigmaAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Sem dados.</div>`;
+      }
+
+      // 5. Baiak Idle (Fleet)
+      const baiak = bots.baiak || {};
+      const bStatus = baiak.status || {};
+      const bFleet = bStatus.fleet || {};
+      const bBots = bStatus.bots || {};
+      const baiakAccList = document.getElementById('baiakAccList');
+
+      const botKeys = Object.keys(bBots);
+      if (botKeys.length > 0) {
+        baiakAccList.innerHTML = botKeys.map(k => {
+          const b = bBots[k];
+          const t = b.status?.telemetry || {};
+          const rates = b.status?.rates || {};
+          const hunt = b.status?.hunt || {};
+          const gold = Number(t.gold || 0);
+          const xpRate = Number(rates.xpPerHour || 0);
+          const kills = Number(t.kills || 0);
+
+          return `
+            <div class="acc-item">
+              <div class="acc-item-header">
+                <span class="acc-name">👤 ${b.name || b.label}</span>
+                <span class="acc-level" style="color: #c084fc;">Lv ${t.level || 1} • ${hunt.name || 'Hunt'}</span>
+              </div>
+              <div class="stat-row">
+                <span>💰 ${gold.toLocaleString('pt-BR')} gp</span>
+                <span>⚡ ${(xpRate / 1000000).toFixed(1)}M XP/h</span>
+              </div>
+              <div class="stat-row" style="margin-top: 4px; font-size: 0.7rem; color: var(--text-dim);">
+                <span>⚔️ ${kills.toLocaleString('pt-BR')} kills</span>
+                <span>⏱️ Stamina: ${t.stamina || '24:00'}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        const totalGoldM = bFleet.totalGold ? (bFleet.totalGold / 1000000).toFixed(1) : '202';
+        const totalXpM = bFleet.totalXpPerHour ? (bFleet.totalXpPerHour / 1000000).toFixed(1) : '10';
+        document.getElementById('baiakSummary').textContent = `💰 ${totalGoldM}M gp • ⚡ ${totalXpM}M XP/h`;
+        document.getElementById('baiakBadge').textContent = `${bFleet.botsOnline || botKeys.length} CONTAS ONLINE`;
+      } else {
+        baiakAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados da frota...</div>`;
       }
     }
 
