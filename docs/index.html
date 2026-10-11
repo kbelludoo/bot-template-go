@@ -578,6 +578,30 @@
         </div>
       </div>
 
+      <!-- Leveling Idle 2D Card -->
+      <div class="bot-card" id="cardLeveling">
+        <div>
+          <div class="bot-header">
+            <div class="bot-name-group">
+              <h3>🏹 Leveling Idle 2D</h3>
+              <span class="bot-port" style="color: #34d399; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.25);">PORTA 3003 • PROTOBUF 3</span>
+            </div>
+            <span class="badge-status badge-online" id="levelingBadge">4 CONTAS ONLINE</span>
+          </div>
+
+          <div class="acc-list" id="levelingAccList">
+            <div style="color: var(--text-muted); font-size: 0.8rem;">Carregando contas...</div>
+          </div>
+        </div>
+
+        <div class="bot-footer">
+          <span style="font-size: 0.72rem; color: var(--text-dim);" id="levelingSummary">Party 4x • Floresta Sombria</span>
+          <a href="https://kbelludoo.github.io/leveling-bot/" target="_blank" class="btn-link" style="color: #34d399; border-color: rgba(52, 211, 153, 0.3); background: rgba(52, 211, 153, 0.08);">
+            Abrir Dashboard Leveling ↗
+          </a>
+        </div>
+      </div>
+
       <!-- Baiak Idle Card -->
       <div class="bot-card" id="cardBaiak">
         <div>
@@ -788,7 +812,41 @@
         sigmaAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Sem dados.</div>`;
       }
 
-      // 5. Baiak Idle (Fleet)
+      // 5. Leveling Idle 2D
+      const leveling = bots.leveling || {};
+      const lStatus = leveling.status || {};
+      const lAccounts = lStatus.accounts || [];
+      const levelingAccList = document.getElementById('levelingAccList');
+
+      if (lAccounts.length > 0) {
+        let lTotalGold = 0;
+        levelingAccList.innerHTML = lAccounts.map(acc => {
+          lTotalGold += (acc.gold || 0);
+          const vocIcon = acc.vocation === 'arqueiro' ? '🏹' : acc.vocation === 'healer' ? '✨' : acc.vocation === 'mago' ? '🔮' : '🛡️';
+          return `
+            <div class="acc-item">
+              <div class="acc-item-header">
+                <span class="acc-name">${vocIcon} ${acc.name || acc.id}</span>
+                <span class="acc-level" style="color: #34d399;">Lv ${acc.level || 1} • ${(acc.vocation || '').toUpperCase()}</span>
+              </div>
+              <div class="stat-row">
+                <span>💰 ${(acc.gold || 0).toLocaleString('pt-BR')} gold</span>
+                <span>⚔️ ${(acc.kills || 0).toLocaleString('pt-BR')} kills</span>
+              </div>
+              <div class="stat-row" style="margin-top: 4px; font-size: 0.7rem; color: var(--text-dim);">
+                <span>🗺️ ${acc.currentArea || 'floresta'}</span>
+                <span>⚡ ${acc.expPerHour ? acc.expPerHour.toLocaleString('pt-BR') + ' EXP/h' : 'Hunt Ativa'}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+        document.getElementById('levelingSummary').textContent = `💰 ${lTotalGold.toLocaleString('pt-BR')} gold • RAM: ~2 MB`;
+        document.getElementById('levelingBadge').textContent = `${lAccounts.length} CONTAS (PARTY)`;
+      } else {
+        levelingAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados...</div>`;
+      }
+
+      // 6. Baiak Idle (Fleet)
       const baiak = bots.baiak || {};
       const bStatus = baiak.status || {};
       const bFleet = bStatus.fleet || {};

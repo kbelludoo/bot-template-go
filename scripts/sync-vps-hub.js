@@ -73,10 +73,11 @@ function getSystemMetrics() {
 async function main() {
   const vps = getSystemMetrics();
 
-  const [huntera, tibidle, sigma, baiak] = await Promise.all([
+  const [huntera, tibidle, sigma, leveling, baiak] = await Promise.all([
     fetchJson('http://127.0.0.1:3000/api/status'),
     fetchJson('http://127.0.0.1:3001/api/status'),
     fetchJson('http://127.0.0.1:3002/api/status'),
+    fetchJson('http://127.0.0.1:3003/api/status'),
     fetchJson('http://127.0.0.1:8090/api/fleet')
   ]);
 
@@ -105,6 +106,14 @@ async function main() {
       dashboardUrl: 'https://kbelludoo.github.io/sigma-bot/',
       status: sigma
     },
+    leveling: {
+      name: 'Leveling Idle 2D Bot',
+      game: 'Leveling Idle 2D',
+      engine: 'Go Native Engine (Protobuf 3)',
+      port: 3003,
+      dashboardUrl: 'https://kbelludoo.github.io/leveling-bot/',
+      status: leveling
+    },
     baiak: {
       name: 'Baiak Idle Terminal Bot',
       game: 'Baiak Idle',
@@ -119,13 +128,14 @@ async function main() {
   if (huntera.online) activeBotsCount++;
   if (tibidle.online) activeBotsCount++;
   if (sigma.online) activeBotsCount++;
+  if (leveling.online) activeBotsCount++;
   if (baiak.online && (baiak.fleet?.botsOnline > 0 || baiak.online)) activeBotsCount++;
 
   const payload = {
     timestamp: new Date().toISOString(),
     vps,
     summary: {
-      totalBots: 4,
+      totalBots: 5,
       activeBots: activeBotsCount
     },
     bots
@@ -150,7 +160,7 @@ async function main() {
       } else {
         execSync(`gh api -X PUT repos/kbelludoo/bot-template-go/contents/docs/status.json -f message="telemetry: live vps bots summary" -f content="${b64}" > /dev/null 2>&1`);
       }
-      console.log('✓ Resumo da VPS (Huntera + Tibidle + Sigma + Baiak) sincronizado com sucesso no GitHub Pages!');
+      console.log('✓ Resumo da VPS (5 bots: Huntera, Tibidle, Sigma, Leveling, Baiak) sincronizado com sucesso no GitHub Pages!');
     } catch (pushErr) {
       console.error('[-] Falha ao sincronizar via GitHub API:', pushErr.message);
     }
