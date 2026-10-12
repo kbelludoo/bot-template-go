@@ -625,6 +625,50 @@
           </a>
         </div>
       </div>
+
+      <!-- PokeIdle.io Card -->
+      <div class="bot-card" id="cardPokeidle">
+        <div>
+          <div class="bot-header">
+            <div class="bot-name-group">
+              <h3>⚡ PokeIdle.io</h3>
+              <span class="bot-port" style="color: #38bdf8; background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.25);">PORTA 3006 • GO NATIVE</span>
+            </div>
+            <span class="badge-status badge-online" id="pokeidleBadge">1 CONTA ONLINE</span>
+          </div>
+
+          <div class="acc-list" id="pokeidleAccList">
+            <div style="color: var(--text-muted); font-size: 0.8rem;">Carregando contas...</div>
+          </div>
+        </div>
+
+        <div class="bot-footer">
+          <span style="font-size: 0.72rem; color: var(--text-dim);" id="pokeidleSummary">Twitch Lurker Ativo (+20% XP)</span>
+          <span class="badge-status badge-online" style="font-size: 0.72rem;">24/7 VPS</span>
+        </div>
+      </div>
+
+      <!-- Poke Idle World Card -->
+      <div class="bot-card" id="cardPokeidleworld">
+        <div>
+          <div class="bot-header">
+            <div class="bot-name-group">
+              <h3>🌍 Poke Idle World</h3>
+              <span class="bot-port" style="color: #fb923c; background: rgba(251, 146, 60, 0.12); border: 1px solid rgba(251, 146, 60, 0.25);">PORTA 3007 • GO NATIVE</span>
+            </div>
+            <span class="badge-status badge-online" id="pokeidleworldBadge">1 CONTA ONLINE</span>
+          </div>
+
+          <div class="acc-list" id="pokeidleworldAccList">
+            <div style="color: var(--text-muted); font-size: 0.8rem;">Carregando contas...</div>
+          </div>
+        </div>
+
+        <div class="bot-footer">
+          <span style="font-size: 0.72rem; color: var(--text-dim);" id="pokeidleworldSummary">Auto-Catch & 4.0x Dano</span>
+          <span class="badge-status badge-online" style="font-size: 0.72rem;">24/7 VPS</span>
+        </div>
+      </div>
     </div>
 
     <!-- STARTER KIT DOCUMENTATION SECTION -->
@@ -888,6 +932,73 @@
         document.getElementById('baiakBadge').textContent = `${bFleet.botsOnline || botKeys.length} CONTAS ONLINE`;
       } else {
         baiakAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados da frota...</div>`;
+      }
+
+      // 7. PokeIdle.io
+      const pokeidle = bots.pokeidle || {};
+      const piStatus = pokeidle.status || {};
+      const piAccounts = piStatus.accounts || [];
+      const pokeidleAccList = document.getElementById('pokeidleAccList');
+
+      if (piAccounts.length > 0) {
+        pokeidleAccList.innerHTML = piAccounts.map(acc => {
+          const extra = acc.extra || {};
+          const lives = (extra.kickLives || []).length;
+          return `
+            <div class="acc-item">
+              <div class="acc-item-header">
+                <span class="acc-name">⚡ ${acc.name || acc.id}</span>
+                <span class="acc-level" style="color: #38bdf8;">Lv ${acc.level || 1} • ${acc.vocation || 'Pokemon'}</span>
+              </div>
+              <div class="stat-row">
+                <span>💰 ${(acc.gold || 0).toLocaleString('pt-BR')} gold</span>
+                <span>⚔️ ${(acc.kills || 0).toLocaleString('pt-BR')} kills</span>
+              </div>
+              <div class="stat-row" style="margin-top: 4px; font-size: 0.7rem; color: var(--text-dim);">
+                <span>🎯 Rota: ${acc.currentArea || 'geodude'}</span>
+                <span>📺 Lurker: ${lives} lives (+20% XP)</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+        const goldSum = piAccounts.reduce((acc, a) => acc + (a.gold || 0), 0);
+        document.getElementById('pokeidleSummary').textContent = `💰 ${goldSum.toLocaleString('pt-BR')} gold • RAM: ~2.8 MB`;
+        document.getElementById('pokeidleBadge').textContent = `${piAccounts.length} CONTA ONLINE`;
+      } else {
+        pokeidleAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados...</div>`;
+      }
+
+      // 8. Poke Idle World
+      const pokeidleworld = bots.pokeidleworld || {};
+      const pwStatus = pokeidleworld.status || {};
+      const pwAccounts = pwStatus.accounts || [];
+      const pokeidleworldAccList = document.getElementById('pokeidleworldAccList');
+
+      if (pwAccounts.length > 0) {
+        pokeidleworldAccList.innerHTML = pwAccounts.map(acc => {
+          const extra = acc.extra || {};
+          return `
+            <div class="acc-item">
+              <div class="acc-item-header">
+                <span class="acc-name">🌍 ${acc.name || acc.id}</span>
+                <span class="acc-level" style="color: #fb923c;">Lv ${acc.level || 1} • ${extra.activePokemon || 'Pokemon'}</span>
+              </div>
+              <div class="stat-row">
+                <span>💰 ${(acc.gold || 0).toLocaleString('pt-BR')} gold</span>
+                <span>⚔️ ${(acc.kills || 0).toLocaleString('pt-BR')} kills</span>
+              </div>
+              <div class="stat-row" style="margin-top: 4px; font-size: 0.7rem; color: var(--text-dim);">
+                <span>💥 ${extra.matchup || '4.0x Dano'}</span>
+                <span>🎯 Capturas: ${extra.captures || 0}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+        const goldSum = pwAccounts.reduce((acc, a) => acc + (a.gold || 0), 0);
+        document.getElementById('pokeidleworldSummary').textContent = `💰 ${goldSum.toLocaleString('pt-BR')} gold • RAM: ~3.1 MB`;
+        document.getElementById('pokeidleworldBadge').textContent = `${pwAccounts.length} CONTA ONLINE`;
+      } else {
+        pokeidleworldAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados...</div>`;
       }
     }
 
