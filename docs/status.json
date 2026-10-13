@@ -1,63 +1,1939 @@
 {
-  "timestamp": "2026-10-13T12:50:05.794Z",
-  "vps": {
-    "uptime": "up 1 week, 11 hours, 36 minutes",
-    "load": "2.37, 1.23, 0.74",
-    "ramTotalMb": 951,
-    "ramUsedMb": 482,
-    "ramAvailableMb": 468,
-    "ramPercent": 51,
-    "swapTotalMb": 1023,
-    "swapUsedMb": 380
-  },
-  "summary": {
-    "totalBots": 9,
-    "activeBots": 9
-  },
   "bots": {
-    "huntera": {
-      "name": "Huntera Idle Bot",
-      "game": "Huntera",
-      "engine": "Go Native Engine",
-      "port": 3000,
-      "dashboardUrl": "https://kbelludoo.github.io/huntera-bot/",
+    "baiak": {
+      "dashboardUrl": "https://kbelludoo.github.io/baiak-idle-bot/",
+      "engine": "Bun / Colyseus Headless",
+      "game": "Baiak Idle",
+      "name": "Baiak Idle Terminal Bot",
+      "port": 8090,
       "status": {
-        "online": true,
-        "serverTime": 1791895805497,
+        "bots": {
+          "acc1": {
+            "error": null,
+            "label": "Conta #1",
+            "name": "Frota #1",
+            "online": true,
+            "port": 8080,
+            "reachable": true,
+            "status": {
+              "auth": {
+                "writing": "loopback-only"
+              },
+              "availableHunts": [
+                {
+                  "id": "troll-cave",
+                  "minLevel": 1,
+                  "name": "Troll Cave"
+                },
+                {
+                  "id": "elf-lair",
+                  "minLevel": 8,
+                  "name": "Elf"
+                },
+                {
+                  "id": "amazon-camp",
+                  "minLevel": 9,
+                  "name": "Amazon"
+                },
+                {
+                  "id": "minotaur",
+                  "minLevel": 10,
+                  "name": "Minotaur"
+                },
+                {
+                  "id": "kongra",
+                  "minLevel": 10,
+                  "name": "Kongra"
+                },
+                {
+                  "id": "cyclopolis",
+                  "minLevel": 15,
+                  "name": "Cyclopolis"
+                },
+                {
+                  "id": "corym-cave",
+                  "minLevel": 30,
+                  "name": "Corym Skirmisher"
+                },
+                {
+                  "id": "refiner-cave",
+                  "minLevel": 30,
+                  "name": "Stone Refiner"
+                },
+                {
+                  "id": "giant-spider",
+                  "minLevel": 50,
+                  "name": "Giant Spider"
+                },
+                {
+                  "id": "crawler-cave",
+                  "minLevel": 50,
+                  "name": "Crawler"
+                },
+                {
+                  "id": "glooth-cave",
+                  "minLevel": 60,
+                  "name": "Glooth Bandit"
+                },
+                {
+                  "id": "hero-cave",
+                  "minLevel": 60,
+                  "name": "Hero"
+                },
+                {
+                  "id": "cult-cave",
+                  "minLevel": 80,
+                  "name": "Cult"
+                },
+                {
+                  "id": "dragon-lair",
+                  "minLevel": 80,
+                  "name": "Dragon Lair"
+                },
+                {
+                  "id": "werebadge-cave",
+                  "minLevel": 90,
+                  "name": "Werebadge"
+                },
+                {
+                  "id": "hydra-cave",
+                  "minLevel": 100,
+                  "name": "Hydra"
+                },
+                {
+                  "id": "behemoth-cave",
+                  "minLevel": 100,
+                  "name": "Behemoth"
+                },
+                {
+                  "id": "orclops-cave",
+                  "minLevel": 100,
+                  "name": "Orclops"
+                },
+                {
+                  "id": "crumbling-cave",
+                  "minLevel": 130,
+                  "name": "Crumbling Caverns"
+                },
+                {
+                  "id": "grimreaper-cave",
+                  "minLevel": 130,
+                  "name": "Grim Reaper"
+                },
+                {
+                  "id": "wyrm-cave",
+                  "minLevel": 130,
+                  "name": "Wyrm"
+                },
+                {
+                  "id": "candia-cave",
+                  "minLevel": 140,
+                  "name": "Candia"
+                },
+                {
+                  "id": "werehyaena-cave",
+                  "minLevel": 140,
+                  "name": "Werehyaena"
+                },
+                {
+                  "id": "asura-lair",
+                  "minLevel": 150,
+                  "name": "Asuras"
+                },
+                {
+                  "id": "darktorturer-cave",
+                  "minLevel": 150,
+                  "name": "Dark Torturer"
+                },
+                {
+                  "id": "wereliones-cave",
+                  "minLevel": 170,
+                  "name": "Wereliones"
+                },
+                {
+                  "id": "draken-lair",
+                  "minLevel": 180,
+                  "name": "Draken"
+                },
+                {
+                  "id": "mitmah-cave",
+                  "minLevel": 180,
+                  "name": "Mitmah Seer"
+                },
+                {
+                  "id": "cobra-cave",
+                  "minLevel": 190,
+                  "name": "Cobras"
+                },
+                {
+                  "id": "undeadragon-lair",
+                  "minLevel": 200,
+                  "name": "Undead Dragon"
+                },
+                {
+                  "id": "cliffstrider-cave",
+                  "minLevel": 200,
+                  "name": "Cliff Strider"
+                },
+                {
+                  "id": "hideous-fungus",
+                  "minLevel": 200,
+                  "name": "Hideous Fungus"
+                },
+                {
+                  "id": "magmacrawler-cave",
+                  "minLevel": 200,
+                  "name": "Magma Crawler"
+                },
+                {
+                  "id": "dreadintruder-cave",
+                  "minLevel": 200,
+                  "name": "Dread Intruder"
+                },
+                {
+                  "id": "falcon",
+                  "minLevel": 210,
+                  "name": "Falcon"
+                },
+                {
+                  "id": "vexclaw-lair",
+                  "minLevel": 210,
+                  "name": "Vexclaw"
+                },
+                {
+                  "id": "grimeleech-cave",
+                  "minLevel": 220,
+                  "name": "Grimeleech"
+                },
+                {
+                  "id": "choking-cave",
+                  "minLevel": 240,
+                  "name": "Choking Fear"
+                },
+                {
+                  "id": "crazed-cave",
+                  "minLevel": 240,
+                  "name": "Crazed Elf's"
+                },
+                {
+                  "id": "guzzlemaw-cave",
+                  "minLevel": 250,
+                  "name": "Guzzlemaw"
+                },
+                {
+                  "id": "raubritter-lair",
+                  "minLevel": 250,
+                  "name": "Raubritter"
+                },
+                {
+                  "id": "catacomb-cave",
+                  "minLevel": 250,
+                  "name": "Catacomb"
+                },
+                {
+                  "id": "prison-cave",
+                  "minLevel": 250,
+                  "name": "Prison"
+                },
+                {
+                  "id": "lionknight-cave",
+                  "minLevel": 270,
+                  "name": "Lion Knight"
+                },
+                {
+                  "id": "megadragon-cave",
+                  "minLevel": 290,
+                  "name": "Mega Dragon"
+                },
+                {
+                  "id": "naga-lair",
+                  "minLevel": 300,
+                  "name": "Naga Lair"
+                },
+                {
+                  "id": "trueazura-cave",
+                  "minLevel": 300,
+                  "name": "True Azura"
+                },
+                {
+                  "id": "freakishlostsoul-cave",
+                  "minLevel": 300,
+                  "name": "Freakish Lost Soul"
+                },
+                {
+                  "id": "weretiger-cave",
+                  "minLevel": 330,
+                  "name": "Weretiger"
+                },
+                {
+                  "id": "werecrocodile-cave",
+                  "minLevel": 340,
+                  "name": "Feral Werecrocodile"
+                },
+                {
+                  "id": "bulltaur-cave",
+                  "minLevel": 350,
+                  "name": "Bulltaur"
+                },
+                {
+                  "id": "gazer-lair",
+                  "minLevel": 350,
+                  "name": "Gazer"
+                },
+                {
+                  "id": "skeletin-cave",
+                  "minLevel": 350,
+                  "name": "Skeleton Elite Warrior"
+                },
+                {
+                  "id": "bashmu-cave",
+                  "minLevel": 350,
+                  "name": "Bashmu"
+                },
+                {
+                  "id": "darkcarnisylvan-cave",
+                  "minLevel": 430,
+                  "name": "Dark Carnisylvan"
+                },
+                {
+                  "id": "inferniarch-lair",
+                  "minLevel": 450,
+                  "name": "Inferniarch"
+                },
+                {
+                  "id": "girtablilu-cave",
+                  "minLevel": 460,
+                  "name": "girtablilu warrior"
+                },
+                {
+                  "id": "livrariaice-cave",
+                  "minLevel": 500,
+                  "name": "Livraria ICE"
+                },
+                {
+                  "id": "livrariafire-cave",
+                  "minLevel": 500,
+                  "name": "Livraria FIRE"
+                },
+                {
+                  "id": "livrariaearth-cave",
+                  "minLevel": 500,
+                  "name": "Livraria EARTH"
+                },
+                {
+                  "id": "livraria-cave",
+                  "minLevel": 500,
+                  "name": "Livraria ENERGY"
+                },
+                {
+                  "id": "quararaider-lair",
+                  "minLevel": 600,
+                  "name": "Quara Raider"
+                },
+                {
+                  "id": "norcferatu-cave",
+                  "minLevel": 600,
+                  "name": "Norcferatu Nightweaver"
+                },
+                {
+                  "id": "lavafungos-cave",
+                  "minLevel": 610,
+                  "name": "Lavafungos"
+                },
+                {
+                  "id": "afflictedstrider-cave",
+                  "minLevel": 610,
+                  "name": "Afflicted Strider"
+                },
+                {
+                  "id": "varnisheddiremaw-cave",
+                  "minLevel": 610,
+                  "name": "Varnished Diremaw"
+                },
+                {
+                  "id": "crypt-cave",
+                  "minLevel": 700,
+                  "name": "Crypt Construct"
+                },
+                {
+                  "id": "gnomprona2-cave",
+                  "minLevel": 800,
+                  "name": "Crystal Enigma"
+                },
+                {
+                  "id": "rottengolem-cave",
+                  "minLevel": 800,
+                  "name": "Rotten Golem"
+                },
+                {
+                  "id": "cloakofterror-lair",
+                  "minLevel": 800,
+                  "name": "Cloak Of Terror"
+                },
+                {
+                  "id": "gnomprona1-cave",
+                  "minLevel": 800,
+                  "name": "Monster Graveyard"
+                },
+                {
+                  "id": "gnomprona3-cave",
+                  "minLevel": 800,
+                  "name": "Sparkling Pools"
+                },
+                {
+                  "id": "infernalmdemon-cave",
+                  "minLevel": 800,
+                  "name": "Infernal Demon"
+                },
+                {
+                  "id": "bonyseadevil-cave",
+                  "minLevel": 800,
+                  "name": "Bony Sea Devil"
+                },
+                {
+                  "id": "darkthais-cave",
+                  "minLevel": 800,
+                  "name": "Dark Thais"
+                },
+                {
+                  "id": "bloatedmanmaggot-cave",
+                  "minLevel": 1500,
+                  "name": "bloated man-maggot"
+                },
+                {
+                  "id": "maggot-cave",
+                  "minLevel": 1500,
+                  "name": "Rotten man-maggot"
+                },
+                {
+                  "id": "draklightsource-cave",
+                  "minLevel": 1500,
+                  "name": "Darklight Source"
+                },
+                {
+                  "id": "wanderingpillar-cave",
+                  "minLevel": 1500,
+                  "name": "Wandering Pillar"
+                }
+              ],
+              "characters": [
+                {
+                  "gold": 72151929,
+                  "healSpell": "exura ico",
+                  "hpPotion": "supreme health potion",
+                  "id": 114999,
+                  "level": 309,
+                  "manaPotion": "distilled ultimate mana potion",
+                  "name": "Conta 1 • Char 1",
+                  "rotation": [
+                    "exori gran",
+                    "exori",
+                    "exori min",
+                    "exori mas"
+                  ],
+                  "stamina": 1313.3057666427885,
+                  "vocation": "knight"
+                },
+                {
+                  "gold": 72151929,
+                  "healSpell": "exura gran tio",
+                  "hpPotion": "ultimate spirit potion",
+                  "id": 115396,
+                  "level": 312,
+                  "manaPotion": "distilled ultimate mana potion",
+                  "name": "Conta 1 • Char 2",
+                  "rotation": [
+                    "exori gran mas pug",
+                    "exori mas pug",
+                    "exori mas nia",
+                    "exori med pug"
+                  ],
+                  "stamina": 1313.3057666427885,
+                  "vocation": "monk"
+                },
+                {
+                  "gold": 72151929,
+                  "healSpell": "exura gran san",
+                  "hpPotion": "ultimate spirit potion",
+                  "id": 115596,
+                  "level": 341,
+                  "manaPotion": "distilled ultimate mana potion",
+                  "name": "Conta 1 • Char 3",
+                  "rotation": [
+                    "exevo mas san",
+                    "exori dir san",
+                    "exori dir moe",
+                    "exori gran con"
+                  ],
+                  "stamina": 1313.3057666427885,
+                  "vocation": "paladin"
+                },
+                {
+                  "gold": 42136585,
+                  "healSpell": "",
+                  "hpPotion": "",
+                  "id": 115889,
+                  "level": 8,
+                  "manaPotion": "",
+                  "name": "Conta 1 • Char 4",
+                  "rotation": [],
+                  "stamina": 1371.6664831979947,
+                  "vocation": "sorcerer"
+                }
+              ],
+              "hunt": {
+                "id": "grimreaper-cave",
+                "minLevel": 130,
+                "name": "Grim Reaper"
+              },
+              "online": true,
+              "rates": {
+                "goldPerHour": -908387,
+                "killsPerHour": 2277,
+                "sampledAt": "2026-10-13T12:49:59.591Z",
+                "xpPerHour": 6451424
+              },
+              "state": {
+                "autoBoss": true,
+                "inTreino": false
+              },
+              "telemetry": {
+                "gold": 72083420,
+                "hunt": "Grim Reaper",
+                "kills": 741,
+                "level": 341,
+                "onlineSince": "2026-10-13T12:13:58.804Z",
+                "stamina": "21:50",
+                "waves": 542
+              },
+              "updatedAt": "2026-10-13T12:50:10.385Z",
+              "uptimeSec": 2171
+            }
+          },
+          "acc2": {
+            "error": null,
+            "label": "Conta #2",
+            "name": "Frota #2",
+            "online": true,
+            "port": 8082,
+            "reachable": true,
+            "status": {
+              "auth": {
+                "writing": "loopback-only"
+              },
+              "availableHunts": [
+                {
+                  "id": "troll-cave",
+                  "minLevel": 1,
+                  "name": "Troll Cave"
+                },
+                {
+                  "id": "elf-lair",
+                  "minLevel": 8,
+                  "name": "Elf"
+                },
+                {
+                  "id": "amazon-camp",
+                  "minLevel": 9,
+                  "name": "Amazon"
+                },
+                {
+                  "id": "minotaur",
+                  "minLevel": 10,
+                  "name": "Minotaur"
+                },
+                {
+                  "id": "kongra",
+                  "minLevel": 10,
+                  "name": "Kongra"
+                },
+                {
+                  "id": "cyclopolis",
+                  "minLevel": 15,
+                  "name": "Cyclopolis"
+                },
+                {
+                  "id": "corym-cave",
+                  "minLevel": 30,
+                  "name": "Corym Skirmisher"
+                },
+                {
+                  "id": "refiner-cave",
+                  "minLevel": 30,
+                  "name": "Stone Refiner"
+                },
+                {
+                  "id": "giant-spider",
+                  "minLevel": 50,
+                  "name": "Giant Spider"
+                },
+                {
+                  "id": "crawler-cave",
+                  "minLevel": 50,
+                  "name": "Crawler"
+                },
+                {
+                  "id": "glooth-cave",
+                  "minLevel": 60,
+                  "name": "Glooth Bandit"
+                },
+                {
+                  "id": "hero-cave",
+                  "minLevel": 60,
+                  "name": "Hero"
+                },
+                {
+                  "id": "cult-cave",
+                  "minLevel": 80,
+                  "name": "Cult"
+                },
+                {
+                  "id": "dragon-lair",
+                  "minLevel": 80,
+                  "name": "Dragon Lair"
+                },
+                {
+                  "id": "werebadge-cave",
+                  "minLevel": 90,
+                  "name": "Werebadge"
+                },
+                {
+                  "id": "hydra-cave",
+                  "minLevel": 100,
+                  "name": "Hydra"
+                },
+                {
+                  "id": "behemoth-cave",
+                  "minLevel": 100,
+                  "name": "Behemoth"
+                },
+                {
+                  "id": "orclops-cave",
+                  "minLevel": 100,
+                  "name": "Orclops"
+                },
+                {
+                  "id": "crumbling-cave",
+                  "minLevel": 130,
+                  "name": "Crumbling Caverns"
+                },
+                {
+                  "id": "grimreaper-cave",
+                  "minLevel": 130,
+                  "name": "Grim Reaper"
+                },
+                {
+                  "id": "wyrm-cave",
+                  "minLevel": 130,
+                  "name": "Wyrm"
+                },
+                {
+                  "id": "candia-cave",
+                  "minLevel": 140,
+                  "name": "Candia"
+                },
+                {
+                  "id": "werehyaena-cave",
+                  "minLevel": 140,
+                  "name": "Werehyaena"
+                },
+                {
+                  "id": "asura-lair",
+                  "minLevel": 150,
+                  "name": "Asuras"
+                },
+                {
+                  "id": "darktorturer-cave",
+                  "minLevel": 150,
+                  "name": "Dark Torturer"
+                },
+                {
+                  "id": "wereliones-cave",
+                  "minLevel": 170,
+                  "name": "Wereliones"
+                },
+                {
+                  "id": "draken-lair",
+                  "minLevel": 180,
+                  "name": "Draken"
+                },
+                {
+                  "id": "mitmah-cave",
+                  "minLevel": 180,
+                  "name": "Mitmah Seer"
+                },
+                {
+                  "id": "cobra-cave",
+                  "minLevel": 190,
+                  "name": "Cobras"
+                },
+                {
+                  "id": "undeadragon-lair",
+                  "minLevel": 200,
+                  "name": "Undead Dragon"
+                },
+                {
+                  "id": "cliffstrider-cave",
+                  "minLevel": 200,
+                  "name": "Cliff Strider"
+                },
+                {
+                  "id": "hideous-fungus",
+                  "minLevel": 200,
+                  "name": "Hideous Fungus"
+                },
+                {
+                  "id": "magmacrawler-cave",
+                  "minLevel": 200,
+                  "name": "Magma Crawler"
+                },
+                {
+                  "id": "dreadintruder-cave",
+                  "minLevel": 200,
+                  "name": "Dread Intruder"
+                },
+                {
+                  "id": "falcon",
+                  "minLevel": 210,
+                  "name": "Falcon"
+                },
+                {
+                  "id": "vexclaw-lair",
+                  "minLevel": 210,
+                  "name": "Vexclaw"
+                },
+                {
+                  "id": "grimeleech-cave",
+                  "minLevel": 220,
+                  "name": "Grimeleech"
+                },
+                {
+                  "id": "choking-cave",
+                  "minLevel": 240,
+                  "name": "Choking Fear"
+                },
+                {
+                  "id": "crazed-cave",
+                  "minLevel": 240,
+                  "name": "Crazed Elf's"
+                },
+                {
+                  "id": "guzzlemaw-cave",
+                  "minLevel": 250,
+                  "name": "Guzzlemaw"
+                },
+                {
+                  "id": "raubritter-lair",
+                  "minLevel": 250,
+                  "name": "Raubritter"
+                },
+                {
+                  "id": "catacomb-cave",
+                  "minLevel": 250,
+                  "name": "Catacomb"
+                },
+                {
+                  "id": "prison-cave",
+                  "minLevel": 250,
+                  "name": "Prison"
+                },
+                {
+                  "id": "lionknight-cave",
+                  "minLevel": 270,
+                  "name": "Lion Knight"
+                },
+                {
+                  "id": "megadragon-cave",
+                  "minLevel": 290,
+                  "name": "Mega Dragon"
+                },
+                {
+                  "id": "naga-lair",
+                  "minLevel": 300,
+                  "name": "Naga Lair"
+                },
+                {
+                  "id": "trueazura-cave",
+                  "minLevel": 300,
+                  "name": "True Azura"
+                },
+                {
+                  "id": "freakishlostsoul-cave",
+                  "minLevel": 300,
+                  "name": "Freakish Lost Soul"
+                },
+                {
+                  "id": "weretiger-cave",
+                  "minLevel": 330,
+                  "name": "Weretiger"
+                },
+                {
+                  "id": "werecrocodile-cave",
+                  "minLevel": 340,
+                  "name": "Feral Werecrocodile"
+                },
+                {
+                  "id": "bulltaur-cave",
+                  "minLevel": 350,
+                  "name": "Bulltaur"
+                },
+                {
+                  "id": "gazer-lair",
+                  "minLevel": 350,
+                  "name": "Gazer"
+                },
+                {
+                  "id": "skeletin-cave",
+                  "minLevel": 350,
+                  "name": "Skeleton Elite Warrior"
+                },
+                {
+                  "id": "bashmu-cave",
+                  "minLevel": 350,
+                  "name": "Bashmu"
+                },
+                {
+                  "id": "darkcarnisylvan-cave",
+                  "minLevel": 430,
+                  "name": "Dark Carnisylvan"
+                },
+                {
+                  "id": "inferniarch-lair",
+                  "minLevel": 450,
+                  "name": "Inferniarch"
+                },
+                {
+                  "id": "girtablilu-cave",
+                  "minLevel": 460,
+                  "name": "girtablilu warrior"
+                },
+                {
+                  "id": "livrariaice-cave",
+                  "minLevel": 500,
+                  "name": "Livraria ICE"
+                },
+                {
+                  "id": "livrariafire-cave",
+                  "minLevel": 500,
+                  "name": "Livraria FIRE"
+                },
+                {
+                  "id": "livrariaearth-cave",
+                  "minLevel": 500,
+                  "name": "Livraria EARTH"
+                },
+                {
+                  "id": "livraria-cave",
+                  "minLevel": 500,
+                  "name": "Livraria ENERGY"
+                },
+                {
+                  "id": "quararaider-lair",
+                  "minLevel": 600,
+                  "name": "Quara Raider"
+                },
+                {
+                  "id": "norcferatu-cave",
+                  "minLevel": 600,
+                  "name": "Norcferatu Nightweaver"
+                },
+                {
+                  "id": "lavafungos-cave",
+                  "minLevel": 610,
+                  "name": "Lavafungos"
+                },
+                {
+                  "id": "afflictedstrider-cave",
+                  "minLevel": 610,
+                  "name": "Afflicted Strider"
+                },
+                {
+                  "id": "varnisheddiremaw-cave",
+                  "minLevel": 610,
+                  "name": "Varnished Diremaw"
+                },
+                {
+                  "id": "crypt-cave",
+                  "minLevel": 700,
+                  "name": "Crypt Construct"
+                },
+                {
+                  "id": "gnomprona2-cave",
+                  "minLevel": 800,
+                  "name": "Crystal Enigma"
+                },
+                {
+                  "id": "rottengolem-cave",
+                  "minLevel": 800,
+                  "name": "Rotten Golem"
+                },
+                {
+                  "id": "cloakofterror-lair",
+                  "minLevel": 800,
+                  "name": "Cloak Of Terror"
+                },
+                {
+                  "id": "gnomprona1-cave",
+                  "minLevel": 800,
+                  "name": "Monster Graveyard"
+                },
+                {
+                  "id": "gnomprona3-cave",
+                  "minLevel": 800,
+                  "name": "Sparkling Pools"
+                },
+                {
+                  "id": "infernalmdemon-cave",
+                  "minLevel": 800,
+                  "name": "Infernal Demon"
+                },
+                {
+                  "id": "bonyseadevil-cave",
+                  "minLevel": 800,
+                  "name": "Bony Sea Devil"
+                },
+                {
+                  "id": "darkthais-cave",
+                  "minLevel": 800,
+                  "name": "Dark Thais"
+                },
+                {
+                  "id": "bloatedmanmaggot-cave",
+                  "minLevel": 1500,
+                  "name": "bloated man-maggot"
+                },
+                {
+                  "id": "maggot-cave",
+                  "minLevel": 1500,
+                  "name": "Rotten man-maggot"
+                },
+                {
+                  "id": "draklightsource-cave",
+                  "minLevel": 1500,
+                  "name": "Darklight Source"
+                },
+                {
+                  "id": "wanderingpillar-cave",
+                  "minLevel": 1500,
+                  "name": "Wandering Pillar"
+                }
+              ],
+              "characters": [
+                {
+                  "gold": 96135629,
+                  "healSpell": "",
+                  "hpPotion": "",
+                  "id": 111307,
+                  "level": 158,
+                  "manaPotion": "",
+                  "name": "Conta 2 • Char 1",
+                  "rotation": [],
+                  "stamina": 1417.499783289238,
+                  "vocation": "monk"
+                },
+                {
+                  "gold": 49743300,
+                  "healSpell": "",
+                  "hpPotion": "",
+                  "id": 111391,
+                  "level": 163,
+                  "manaPotion": "",
+                  "name": "Conta 2 • Char 2",
+                  "rotation": [],
+                  "stamina": 1406.7932665983778,
+                  "vocation": "druid"
+                },
+                {
+                  "gold": 44017,
+                  "healSpell": "",
+                  "hpPotion": "",
+                  "id": 111392,
+                  "level": 10,
+                  "manaPotion": "",
+                  "name": "Conta 2 • Char 3",
+                  "rotation": [],
+                  "stamina": 2224.7797166681394,
+                  "vocation": "sorcerer"
+                },
+                {
+                  "gold": 2000,
+                  "healSpell": "",
+                  "hpPotion": "",
+                  "id": 111422,
+                  "level": 25,
+                  "manaPotion": "",
+                  "name": "Conta 2 • Char 4",
+                  "rotation": [],
+                  "stamina": 2518.2372833333825,
+                  "vocation": "paladin"
+                },
+                {
+                  "gold": 96135629,
+                  "healSpell": "",
+                  "hpPotion": "",
+                  "id": 111594,
+                  "level": 209,
+                  "manaPotion": "",
+                  "name": "Conta 2 • Char 5",
+                  "rotation": [],
+                  "stamina": 1417.499783289238,
+                  "vocation": "knight"
+                }
+              ],
+              "hunt": {
+                "id": "glooth-cave",
+                "minLevel": 60,
+                "name": "🧘 Treino Online"
+              },
+              "online": true,
+              "rates": {
+                "goldPerHour": 0,
+                "killsPerHour": 0,
+                "sampledAt": "2026-10-13T12:50:05.792Z",
+                "xpPerHour": 0
+              },
+              "state": {
+                "autoBoss": true,
+                "inTreino": true
+              },
+              "telemetry": {
+                "gold": 96135629,
+                "hunt": "Glooth Bandit",
+                "kills": 881,
+                "level": 158,
+                "onlineSince": "2026-10-13T10:39:33.932Z",
+                "stamina": "23:35",
+                "waves": 1116
+              },
+              "updatedAt": "2026-10-13T12:50:10.384Z",
+              "uptimeSec": 7836
+            }
+          },
+          "acc3": {
+            "error": null,
+            "label": "Conta #3",
+            "name": "Frota #3",
+            "online": true,
+            "port": 8083,
+            "reachable": true,
+            "status": {
+              "auth": {
+                "writing": "loopback-only"
+              },
+              "availableHunts": [
+                {
+                  "id": "troll-cave",
+                  "minLevel": 1,
+                  "name": "Troll Cave"
+                },
+                {
+                  "id": "elf-lair",
+                  "minLevel": 8,
+                  "name": "Elf"
+                },
+                {
+                  "id": "amazon-camp",
+                  "minLevel": 9,
+                  "name": "Amazon"
+                },
+                {
+                  "id": "minotaur",
+                  "minLevel": 10,
+                  "name": "Minotaur"
+                },
+                {
+                  "id": "kongra",
+                  "minLevel": 10,
+                  "name": "Kongra"
+                },
+                {
+                  "id": "cyclopolis",
+                  "minLevel": 15,
+                  "name": "Cyclopolis"
+                },
+                {
+                  "id": "corym-cave",
+                  "minLevel": 30,
+                  "name": "Corym Skirmisher"
+                },
+                {
+                  "id": "refiner-cave",
+                  "minLevel": 30,
+                  "name": "Stone Refiner"
+                },
+                {
+                  "id": "giant-spider",
+                  "minLevel": 50,
+                  "name": "Giant Spider"
+                },
+                {
+                  "id": "crawler-cave",
+                  "minLevel": 50,
+                  "name": "Crawler"
+                },
+                {
+                  "id": "glooth-cave",
+                  "minLevel": 60,
+                  "name": "Glooth Bandit"
+                },
+                {
+                  "id": "hero-cave",
+                  "minLevel": 60,
+                  "name": "Hero"
+                },
+                {
+                  "id": "cult-cave",
+                  "minLevel": 80,
+                  "name": "Cult"
+                },
+                {
+                  "id": "dragon-lair",
+                  "minLevel": 80,
+                  "name": "Dragon Lair"
+                },
+                {
+                  "id": "werebadge-cave",
+                  "minLevel": 90,
+                  "name": "Werebadge"
+                },
+                {
+                  "id": "hydra-cave",
+                  "minLevel": 100,
+                  "name": "Hydra"
+                },
+                {
+                  "id": "behemoth-cave",
+                  "minLevel": 100,
+                  "name": "Behemoth"
+                },
+                {
+                  "id": "orclops-cave",
+                  "minLevel": 100,
+                  "name": "Orclops"
+                },
+                {
+                  "id": "crumbling-cave",
+                  "minLevel": 130,
+                  "name": "Crumbling Caverns"
+                },
+                {
+                  "id": "grimreaper-cave",
+                  "minLevel": 130,
+                  "name": "Grim Reaper"
+                },
+                {
+                  "id": "wyrm-cave",
+                  "minLevel": 130,
+                  "name": "Wyrm"
+                },
+                {
+                  "id": "candia-cave",
+                  "minLevel": 140,
+                  "name": "Candia"
+                },
+                {
+                  "id": "werehyaena-cave",
+                  "minLevel": 140,
+                  "name": "Werehyaena"
+                },
+                {
+                  "id": "asura-lair",
+                  "minLevel": 150,
+                  "name": "Asuras"
+                },
+                {
+                  "id": "darktorturer-cave",
+                  "minLevel": 150,
+                  "name": "Dark Torturer"
+                },
+                {
+                  "id": "wereliones-cave",
+                  "minLevel": 170,
+                  "name": "Wereliones"
+                },
+                {
+                  "id": "draken-lair",
+                  "minLevel": 180,
+                  "name": "Draken"
+                },
+                {
+                  "id": "mitmah-cave",
+                  "minLevel": 180,
+                  "name": "Mitmah Seer"
+                },
+                {
+                  "id": "cobra-cave",
+                  "minLevel": 190,
+                  "name": "Cobras"
+                },
+                {
+                  "id": "undeadragon-lair",
+                  "minLevel": 200,
+                  "name": "Undead Dragon"
+                },
+                {
+                  "id": "cliffstrider-cave",
+                  "minLevel": 200,
+                  "name": "Cliff Strider"
+                },
+                {
+                  "id": "hideous-fungus",
+                  "minLevel": 200,
+                  "name": "Hideous Fungus"
+                },
+                {
+                  "id": "magmacrawler-cave",
+                  "minLevel": 200,
+                  "name": "Magma Crawler"
+                },
+                {
+                  "id": "dreadintruder-cave",
+                  "minLevel": 200,
+                  "name": "Dread Intruder"
+                },
+                {
+                  "id": "falcon",
+                  "minLevel": 210,
+                  "name": "Falcon"
+                },
+                {
+                  "id": "vexclaw-lair",
+                  "minLevel": 210,
+                  "name": "Vexclaw"
+                },
+                {
+                  "id": "grimeleech-cave",
+                  "minLevel": 220,
+                  "name": "Grimeleech"
+                },
+                {
+                  "id": "choking-cave",
+                  "minLevel": 240,
+                  "name": "Choking Fear"
+                },
+                {
+                  "id": "crazed-cave",
+                  "minLevel": 240,
+                  "name": "Crazed Elf's"
+                },
+                {
+                  "id": "guzzlemaw-cave",
+                  "minLevel": 250,
+                  "name": "Guzzlemaw"
+                },
+                {
+                  "id": "raubritter-lair",
+                  "minLevel": 250,
+                  "name": "Raubritter"
+                },
+                {
+                  "id": "catacomb-cave",
+                  "minLevel": 250,
+                  "name": "Catacomb"
+                },
+                {
+                  "id": "prison-cave",
+                  "minLevel": 250,
+                  "name": "Prison"
+                },
+                {
+                  "id": "lionknight-cave",
+                  "minLevel": 270,
+                  "name": "Lion Knight"
+                },
+                {
+                  "id": "megadragon-cave",
+                  "minLevel": 290,
+                  "name": "Mega Dragon"
+                },
+                {
+                  "id": "naga-lair",
+                  "minLevel": 300,
+                  "name": "Naga Lair"
+                },
+                {
+                  "id": "trueazura-cave",
+                  "minLevel": 300,
+                  "name": "True Azura"
+                },
+                {
+                  "id": "freakishlostsoul-cave",
+                  "minLevel": 300,
+                  "name": "Freakish Lost Soul"
+                },
+                {
+                  "id": "weretiger-cave",
+                  "minLevel": 330,
+                  "name": "Weretiger"
+                },
+                {
+                  "id": "werecrocodile-cave",
+                  "minLevel": 340,
+                  "name": "Feral Werecrocodile"
+                },
+                {
+                  "id": "bulltaur-cave",
+                  "minLevel": 350,
+                  "name": "Bulltaur"
+                },
+                {
+                  "id": "gazer-lair",
+                  "minLevel": 350,
+                  "name": "Gazer"
+                },
+                {
+                  "id": "skeletin-cave",
+                  "minLevel": 350,
+                  "name": "Skeleton Elite Warrior"
+                },
+                {
+                  "id": "bashmu-cave",
+                  "minLevel": 350,
+                  "name": "Bashmu"
+                },
+                {
+                  "id": "darkcarnisylvan-cave",
+                  "minLevel": 430,
+                  "name": "Dark Carnisylvan"
+                },
+                {
+                  "id": "inferniarch-lair",
+                  "minLevel": 450,
+                  "name": "Inferniarch"
+                },
+                {
+                  "id": "girtablilu-cave",
+                  "minLevel": 460,
+                  "name": "girtablilu warrior"
+                },
+                {
+                  "id": "livrariaice-cave",
+                  "minLevel": 500,
+                  "name": "Livraria ICE"
+                },
+                {
+                  "id": "livrariafire-cave",
+                  "minLevel": 500,
+                  "name": "Livraria FIRE"
+                },
+                {
+                  "id": "livrariaearth-cave",
+                  "minLevel": 500,
+                  "name": "Livraria EARTH"
+                },
+                {
+                  "id": "livraria-cave",
+                  "minLevel": 500,
+                  "name": "Livraria ENERGY"
+                },
+                {
+                  "id": "quararaider-lair",
+                  "minLevel": 600,
+                  "name": "Quara Raider"
+                },
+                {
+                  "id": "norcferatu-cave",
+                  "minLevel": 600,
+                  "name": "Norcferatu Nightweaver"
+                },
+                {
+                  "id": "lavafungos-cave",
+                  "minLevel": 610,
+                  "name": "Lavafungos"
+                },
+                {
+                  "id": "afflictedstrider-cave",
+                  "minLevel": 610,
+                  "name": "Afflicted Strider"
+                },
+                {
+                  "id": "varnisheddiremaw-cave",
+                  "minLevel": 610,
+                  "name": "Varnished Diremaw"
+                },
+                {
+                  "id": "crypt-cave",
+                  "minLevel": 700,
+                  "name": "Crypt Construct"
+                },
+                {
+                  "id": "gnomprona2-cave",
+                  "minLevel": 800,
+                  "name": "Crystal Enigma"
+                },
+                {
+                  "id": "rottengolem-cave",
+                  "minLevel": 800,
+                  "name": "Rotten Golem"
+                },
+                {
+                  "id": "cloakofterror-lair",
+                  "minLevel": 800,
+                  "name": "Cloak Of Terror"
+                },
+                {
+                  "id": "gnomprona1-cave",
+                  "minLevel": 800,
+                  "name": "Monster Graveyard"
+                },
+                {
+                  "id": "gnomprona3-cave",
+                  "minLevel": 800,
+                  "name": "Sparkling Pools"
+                },
+                {
+                  "id": "infernalmdemon-cave",
+                  "minLevel": 800,
+                  "name": "Infernal Demon"
+                },
+                {
+                  "id": "bonyseadevil-cave",
+                  "minLevel": 800,
+                  "name": "Bony Sea Devil"
+                },
+                {
+                  "id": "darkthais-cave",
+                  "minLevel": 800,
+                  "name": "Dark Thais"
+                },
+                {
+                  "id": "bloatedmanmaggot-cave",
+                  "minLevel": 1500,
+                  "name": "bloated man-maggot"
+                },
+                {
+                  "id": "maggot-cave",
+                  "minLevel": 1500,
+                  "name": "Rotten man-maggot"
+                },
+                {
+                  "id": "draklightsource-cave",
+                  "minLevel": 1500,
+                  "name": "Darklight Source"
+                },
+                {
+                  "id": "wanderingpillar-cave",
+                  "minLevel": 1500,
+                  "name": "Wandering Pillar"
+                }
+              ],
+              "characters": [
+                {
+                  "gold": 299978124,
+                  "healSpell": "",
+                  "hpPotion": "",
+                  "id": 111638,
+                  "level": 119,
+                  "manaPotion": "",
+                  "name": "Conta 3 • Char 1",
+                  "rotation": [],
+                  "stamina": 2310.4287166143763,
+                  "vocation": "paladin"
+                },
+                {
+                  "gold": 99646671,
+                  "healSpell": "",
+                  "hpPotion": "",
+                  "id": 111822,
+                  "level": 466,
+                  "manaPotion": "",
+                  "name": "Conta 3 • Char 2",
+                  "rotation": [],
+                  "stamina": 2183.535366637999,
+                  "vocation": "druid"
+                },
+                {
+                  "gold": 299978124,
+                  "healSpell": "",
+                  "hpPotion": "",
+                  "id": 112046,
+                  "level": 98,
+                  "manaPotion": "",
+                  "name": "Conta 3 • Char 3",
+                  "rotation": [],
+                  "stamina": 2310.4287166143763,
+                  "vocation": "monk"
+                },
+                {
+                  "gold": 99646671,
+                  "healSpell": "",
+                  "hpPotion": "",
+                  "id": 112816,
+                  "level": 474,
+                  "manaPotion": "",
+                  "name": "Conta 3 • Char 4",
+                  "rotation": [],
+                  "stamina": 2183.535366637999,
+                  "vocation": "knight"
+                },
+                {
+                  "gold": 99646671,
+                  "healSpell": "",
+                  "hpPotion": "",
+                  "id": 113989,
+                  "level": 452,
+                  "manaPotion": "",
+                  "name": "Conta 3 • Char 5",
+                  "rotation": [],
+                  "stamina": 2183.535366637999,
+                  "vocation": "sorcerer"
+                }
+              ],
+              "hunt": {
+                "id": "asura-lair",
+                "minLevel": 150,
+                "name": "Asuras"
+              },
+              "online": true,
+              "rates": {
+                "goldPerHour": 698204,
+                "killsPerHour": 1857,
+                "sampledAt": "2026-10-13T12:49:31.892Z",
+                "xpPerHour": 6654188
+              },
+              "state": {
+                "autoBoss": true,
+                "inTreino": false
+              },
+              "telemetry": {
+                "gold": 99385901,
+                "hunt": "Asuras",
+                "kills": 4008,
+                "level": 474,
+                "onlineSince": "2026-10-13T10:43:30.588Z",
+                "stamina": "36:20",
+                "waves": 2595
+              },
+              "updatedAt": "2026-10-13T12:50:10.385Z",
+              "uptimeSec": 7599
+            }
+          }
+        },
+        "fleet": {
+          "botsOnline": 3,
+          "botsTotal": 3,
+          "totalGold": 267604950,
+          "totalKillsPerHour": 4134,
+          "totalLootPerHour": 698204,
+          "totalXpPerHour": 13105612
+        },
+        "hunts": [
+          {
+            "id": "troll-cave",
+            "minLevel": 1,
+            "name": "Troll Cave"
+          },
+          {
+            "id": "elf-lair",
+            "minLevel": 8,
+            "name": "Elf"
+          },
+          {
+            "id": "amazon-camp",
+            "minLevel": 9,
+            "name": "Amazon"
+          },
+          {
+            "id": "minotaur",
+            "minLevel": 10,
+            "name": "Minotaur"
+          },
+          {
+            "id": "kongra",
+            "minLevel": 10,
+            "name": "Kongra"
+          },
+          {
+            "id": "cyclopolis",
+            "minLevel": 15,
+            "name": "Cyclopolis"
+          },
+          {
+            "id": "corym-cave",
+            "minLevel": 30,
+            "name": "Corym Skirmisher"
+          },
+          {
+            "id": "refiner-cave",
+            "minLevel": 30,
+            "name": "Stone Refiner"
+          },
+          {
+            "id": "giant-spider",
+            "minLevel": 50,
+            "name": "Giant Spider"
+          },
+          {
+            "id": "crawler-cave",
+            "minLevel": 50,
+            "name": "Crawler"
+          },
+          {
+            "id": "glooth-cave",
+            "minLevel": 60,
+            "name": "Glooth Bandit"
+          },
+          {
+            "id": "hero-cave",
+            "minLevel": 60,
+            "name": "Hero"
+          },
+          {
+            "id": "cult-cave",
+            "minLevel": 80,
+            "name": "Cult"
+          },
+          {
+            "id": "dragon-lair",
+            "minLevel": 80,
+            "name": "Dragon Lair"
+          },
+          {
+            "id": "werebadge-cave",
+            "minLevel": 90,
+            "name": "Werebadge"
+          },
+          {
+            "id": "hydra-cave",
+            "minLevel": 100,
+            "name": "Hydra"
+          },
+          {
+            "id": "behemoth-cave",
+            "minLevel": 100,
+            "name": "Behemoth"
+          },
+          {
+            "id": "orclops-cave",
+            "minLevel": 100,
+            "name": "Orclops"
+          },
+          {
+            "id": "crumbling-cave",
+            "minLevel": 130,
+            "name": "Crumbling Caverns"
+          },
+          {
+            "id": "grimreaper-cave",
+            "minLevel": 130,
+            "name": "Grim Reaper"
+          },
+          {
+            "id": "wyrm-cave",
+            "minLevel": 130,
+            "name": "Wyrm"
+          },
+          {
+            "id": "candia-cave",
+            "minLevel": 140,
+            "name": "Candia"
+          },
+          {
+            "id": "werehyaena-cave",
+            "minLevel": 140,
+            "name": "Werehyaena"
+          },
+          {
+            "id": "asura-lair",
+            "minLevel": 150,
+            "name": "Asuras"
+          },
+          {
+            "id": "darktorturer-cave",
+            "minLevel": 150,
+            "name": "Dark Torturer"
+          },
+          {
+            "id": "wereliones-cave",
+            "minLevel": 170,
+            "name": "Wereliones"
+          },
+          {
+            "id": "draken-lair",
+            "minLevel": 180,
+            "name": "Draken"
+          },
+          {
+            "id": "mitmah-cave",
+            "minLevel": 180,
+            "name": "Mitmah Seer"
+          },
+          {
+            "id": "cobra-cave",
+            "minLevel": 190,
+            "name": "Cobras"
+          },
+          {
+            "id": "undeadragon-lair",
+            "minLevel": 200,
+            "name": "Undead Dragon"
+          },
+          {
+            "id": "cliffstrider-cave",
+            "minLevel": 200,
+            "name": "Cliff Strider"
+          },
+          {
+            "id": "hideous-fungus",
+            "minLevel": 200,
+            "name": "Hideous Fungus"
+          },
+          {
+            "id": "magmacrawler-cave",
+            "minLevel": 200,
+            "name": "Magma Crawler"
+          },
+          {
+            "id": "dreadintruder-cave",
+            "minLevel": 200,
+            "name": "Dread Intruder"
+          },
+          {
+            "id": "falcon",
+            "minLevel": 210,
+            "name": "Falcon"
+          },
+          {
+            "id": "vexclaw-lair",
+            "minLevel": 210,
+            "name": "Vexclaw"
+          },
+          {
+            "id": "grimeleech-cave",
+            "minLevel": 220,
+            "name": "Grimeleech"
+          },
+          {
+            "id": "choking-cave",
+            "minLevel": 240,
+            "name": "Choking Fear"
+          },
+          {
+            "id": "crazed-cave",
+            "minLevel": 240,
+            "name": "Crazed Elf's"
+          },
+          {
+            "id": "guzzlemaw-cave",
+            "minLevel": 250,
+            "name": "Guzzlemaw"
+          },
+          {
+            "id": "raubritter-lair",
+            "minLevel": 250,
+            "name": "Raubritter"
+          },
+          {
+            "id": "catacomb-cave",
+            "minLevel": 250,
+            "name": "Catacomb"
+          },
+          {
+            "id": "prison-cave",
+            "minLevel": 250,
+            "name": "Prison"
+          },
+          {
+            "id": "lionknight-cave",
+            "minLevel": 270,
+            "name": "Lion Knight"
+          },
+          {
+            "id": "megadragon-cave",
+            "minLevel": 290,
+            "name": "Mega Dragon"
+          },
+          {
+            "id": "naga-lair",
+            "minLevel": 300,
+            "name": "Naga Lair"
+          },
+          {
+            "id": "trueazura-cave",
+            "minLevel": 300,
+            "name": "True Azura"
+          },
+          {
+            "id": "freakishlostsoul-cave",
+            "minLevel": 300,
+            "name": "Freakish Lost Soul"
+          },
+          {
+            "id": "weretiger-cave",
+            "minLevel": 330,
+            "name": "Weretiger"
+          },
+          {
+            "id": "werecrocodile-cave",
+            "minLevel": 340,
+            "name": "Feral Werecrocodile"
+          },
+          {
+            "id": "bulltaur-cave",
+            "minLevel": 350,
+            "name": "Bulltaur"
+          },
+          {
+            "id": "gazer-lair",
+            "minLevel": 350,
+            "name": "Gazer"
+          },
+          {
+            "id": "skeletin-cave",
+            "minLevel": 350,
+            "name": "Skeleton Elite Warrior"
+          },
+          {
+            "id": "bashmu-cave",
+            "minLevel": 350,
+            "name": "Bashmu"
+          },
+          {
+            "id": "darkcarnisylvan-cave",
+            "minLevel": 430,
+            "name": "Dark Carnisylvan"
+          },
+          {
+            "id": "inferniarch-lair",
+            "minLevel": 450,
+            "name": "Inferniarch"
+          },
+          {
+            "id": "girtablilu-cave",
+            "minLevel": 460,
+            "name": "girtablilu warrior"
+          },
+          {
+            "id": "livrariaice-cave",
+            "minLevel": 500,
+            "name": "Livraria ICE"
+          },
+          {
+            "id": "livrariafire-cave",
+            "minLevel": 500,
+            "name": "Livraria FIRE"
+          },
+          {
+            "id": "livrariaearth-cave",
+            "minLevel": 500,
+            "name": "Livraria EARTH"
+          },
+          {
+            "id": "livraria-cave",
+            "minLevel": 500,
+            "name": "Livraria ENERGY"
+          },
+          {
+            "id": "quararaider-lair",
+            "minLevel": 600,
+            "name": "Quara Raider"
+          },
+          {
+            "id": "norcferatu-cave",
+            "minLevel": 600,
+            "name": "Norcferatu Nightweaver"
+          },
+          {
+            "id": "lavafungos-cave",
+            "minLevel": 610,
+            "name": "Lavafungos"
+          },
+          {
+            "id": "afflictedstrider-cave",
+            "minLevel": 610,
+            "name": "Afflicted Strider"
+          },
+          {
+            "id": "varnisheddiremaw-cave",
+            "minLevel": 610,
+            "name": "Varnished Diremaw"
+          },
+          {
+            "id": "crypt-cave",
+            "minLevel": 700,
+            "name": "Crypt Construct"
+          },
+          {
+            "id": "gnomprona2-cave",
+            "minLevel": 800,
+            "name": "Crystal Enigma"
+          },
+          {
+            "id": "rottengolem-cave",
+            "minLevel": 800,
+            "name": "Rotten Golem"
+          },
+          {
+            "id": "cloakofterror-lair",
+            "minLevel": 800,
+            "name": "Cloak Of Terror"
+          },
+          {
+            "id": "gnomprona1-cave",
+            "minLevel": 800,
+            "name": "Monster Graveyard"
+          },
+          {
+            "id": "gnomprona3-cave",
+            "minLevel": 800,
+            "name": "Sparkling Pools"
+          },
+          {
+            "id": "infernalmdemon-cave",
+            "minLevel": 800,
+            "name": "Infernal Demon"
+          },
+          {
+            "id": "bonyseadevil-cave",
+            "minLevel": 800,
+            "name": "Bony Sea Devil"
+          },
+          {
+            "id": "darkthais-cave",
+            "minLevel": 800,
+            "name": "Dark Thais"
+          },
+          {
+            "id": "bloatedmanmaggot-cave",
+            "minLevel": 1500,
+            "name": "bloated man-maggot"
+          },
+          {
+            "id": "maggot-cave",
+            "minLevel": 1500,
+            "name": "Rotten man-maggot"
+          },
+          {
+            "id": "draklightsource-cave",
+            "minLevel": 1500,
+            "name": "Darklight Source"
+          },
+          {
+            "id": "wanderingpillar-cave",
+            "minLevel": 1500,
+            "name": "Wandering Pillar"
+          }
+        ],
+        "timestamp": "2026-10-13T12:50:10.386Z"
+      }
+    },
+    "huntera": {
+      "dashboardUrl": "https://kbelludoo.github.io/huntera-bot/",
+      "engine": "Go Native Engine",
+      "game": "Huntera",
+      "name": "Huntera Idle Bot",
+      "port": 3000,
+      "status": {
         "accounts": [
           {
-            "id": "acc1",
-            "charName": "Personagem #1",
-            "level": 53,
-            "experience": 11520,
-            "experienceNeeded": 132700,
-            "inGame": true,
-            "hp": 635,
-            "maxHp": 635,
-            "mana": 38,
-            "maxMana": 765,
-            "gold": 45,
-            "hunt": {
-              "huntId": "bog-raider-hunt",
-              "tier": 0,
-              "instanceId": "bog-raider-hunt-1031"
+            "analyzer": {
+              "experience": 141,
+              "kills": 1,
+              "lootValue": 0,
+              "waste": 0
             },
-            "staminaMs": 23044231,
-            "sessionRemainingMs": 0,
-            "staminaRefillCost": 67416,
-            "staminaRefillsLeft": 6,
             "bestiary": {
-              "currentMonster": "Bog Raider",
-              "monsterId": "bogRaider",
-              "kills": 22,
-              "required": 2500,
               "bonusPercent": 5,
-              "completedMonsters": 5,
-              "totalMonsters": 186,
-              "totalKills": 20345,
-              "stages": {
-                "amazon": 0
-              },
               "byMonster": {
                 "acolyteOfTheCult": 2627,
                 "adeptOfTheCult": 48,
@@ -85,58 +1961,51 @@
                 "tarantula": 2556,
                 "troll": 46,
                 "valkyrie": 5205
-              }
+              },
+              "completedMonsters": 5,
+              "currentMonster": "Bog Raider",
+              "kills": 22,
+              "monsterId": "bogRaider",
+              "required": 2500,
+              "stages": {
+                "amazon": 0
+              },
+              "totalKills": 20345,
+              "totalMonsters": 186
             },
-            "analyzer": {
-              "kills": 1,
-              "experience": 141,
-              "lootValue": 0,
-              "waste": 0
-            },
-            "lootsTaken": 0,
+            "charName": "Personagem #1",
             "deaths": 0,
+            "experience": 11520,
+            "experienceNeeded": 132700,
+            "gold": 45,
+            "hp": 635,
+            "hunt": {
+              "huntId": "bog-raider-hunt",
+              "instanceId": "bog-raider-hunt-1031",
+              "tier": 0
+            },
+            "id": "acc1",
+            "inGame": true,
+            "level": 53,
+            "lootsTaken": 0,
+            "mana": 38,
+            "maxHp": 635,
+            "maxMana": 765,
+            "sessionRemainingMs": 0,
+            "staminaMs": 23044231,
+            "staminaRefillCost": 67416,
+            "staminaRefillsLeft": 6,
             "updatedAt": 1791866629211
           },
           {
-            "id": "acc2",
-            "charName": "Personagem #2",
-            "level": 63,
-            "experience": 10342,
-            "experienceNeeded": 189200,
-            "inGame": true,
-            "hp": 460,
-            "maxHp": 460,
-            "mana": 1740,
-            "maxMana": 1740,
-            "gold": 21704,
-            "hunt": {
-              "huntId": "skeleton-hunt",
-              "tier": 0,
-              "instanceId": "skeleton-hunt-518"
+            "analyzer": {
+              "experience": 289156,
+              "kills": 5203,
+              "lootValue": 0,
+              "waste": 0
             },
-            "staminaMs": 7499233,
-            "sessionRemainingMs": 7497351,
-            "staminaRefillCost": 95256,
-            "staminaRefillsLeft": 6,
             "bestiary": {
-              "currentMonster": "Skeleton",
-              "monsterId": "skeleton",
-              "kills": 704,
-              "required": 2500,
               "bonusPercent": 17,
-              "completedMonsters": 14,
-              "totalMonsters": 186,
-              "totalKills": 89728,
-              "stages": {
-                "amazon": 1,
-                "frostTroll": 0,
-                "orc": 0,
-                "rat": 1,
-                "skeleton": 0,
-                "troll": 0,
-                "valkyrie": 1,
-                "winterWolf": 0
-              },
               "byMonster": {
                 "acolyteOfTheCult": 8103,
                 "adeptOfTheCult": 50,
@@ -165,54 +2034,58 @@
                 "troll": 2505,
                 "valkyrie": 11838,
                 "winterWolf": 2501
-              }
-            },
-            "analyzer": {
-              "kills": 5203,
-              "experience": 289156,
-              "lootValue": 0,
-              "waste": 0
-            },
-            "lootsTaken": 0,
-            "deaths": 0,
-            "updatedAt": 1791866629211
-          },
-          {
-            "id": "acc3",
-            "charName": "Personagem #3",
-            "level": 113,
-            "experience": 302849,
-            "experienceNeeded": 621700,
-            "inGame": true,
-            "hp": 1760,
-            "maxHp": 1760,
-            "mana": 555,
-            "maxMana": 615,
-            "gold": 114130,
-            "staminaMs": 16162,
-            "sessionRemainingMs": 0,
-            "staminaRefillCost": 306456,
-            "staminaRefillsLeft": 6,
-            "bestiary": {
-              "currentMonster": "Mutated Human",
-              "monsterId": "mutatedHuman",
-              "kills": 1777,
+              },
+              "completedMonsters": 14,
+              "currentMonster": "Skeleton",
+              "kills": 704,
+              "monsterId": "skeleton",
               "required": 2500,
-              "bonusPercent": 14,
-              "completedMonsters": 11,
-              "totalMonsters": 186,
-              "totalKills": 73274,
               "stages": {
                 "amazon": 1,
                 "frostTroll": 0,
-                "mutatedBat": 1,
-                "mutatedHuman": 0,
                 "orc": 0,
                 "rat": 1,
-                "spider": 0,
+                "skeleton": 0,
                 "troll": 0,
+                "valkyrie": 1,
                 "winterWolf": 0
               },
+              "totalKills": 89728,
+              "totalMonsters": 186
+            },
+            "charName": "Personagem #2",
+            "deaths": 0,
+            "experience": 10342,
+            "experienceNeeded": 189200,
+            "gold": 21704,
+            "hp": 460,
+            "hunt": {
+              "huntId": "skeleton-hunt",
+              "instanceId": "skeleton-hunt-518",
+              "tier": 0
+            },
+            "id": "acc2",
+            "inGame": true,
+            "level": 63,
+            "lootsTaken": 0,
+            "mana": 1740,
+            "maxHp": 460,
+            "maxMana": 1740,
+            "sessionRemainingMs": 7497351,
+            "staminaMs": 7499233,
+            "staminaRefillCost": 95256,
+            "staminaRefillsLeft": 6,
+            "updatedAt": 1791866629211
+          },
+          {
+            "analyzer": {
+              "experience": 469762,
+              "kills": 2684,
+              "lootValue": 0,
+              "waste": 0
+            },
+            "bestiary": {
+              "bonusPercent": 14,
               "byMonster": {
                 "acolyteOfTheCult": 97,
                 "adeptOfTheCult": 49,
@@ -250,54 +2123,54 @@
                 "troll": 2507,
                 "valkyrie": 7342,
                 "winterWolf": 2505
-              }
+              },
+              "completedMonsters": 11,
+              "currentMonster": "Mutated Human",
+              "kills": 1777,
+              "monsterId": "mutatedHuman",
+              "required": 2500,
+              "stages": {
+                "amazon": 1,
+                "frostTroll": 0,
+                "mutatedBat": 1,
+                "mutatedHuman": 0,
+                "orc": 0,
+                "rat": 1,
+                "spider": 0,
+                "troll": 0,
+                "winterWolf": 0
+              },
+              "totalKills": 73274,
+              "totalMonsters": 186
             },
-            "analyzer": {
-              "kills": 2684,
-              "experience": 469762,
-              "lootValue": 0,
-              "waste": 0
-            },
-            "lootsTaken": 0,
+            "charName": "Personagem #3",
             "deaths": 0,
+            "experience": 302849,
+            "experienceNeeded": 621700,
+            "gold": 114130,
+            "hp": 1760,
+            "id": "acc3",
+            "inGame": true,
+            "level": 113,
+            "lootsTaken": 0,
+            "mana": 555,
+            "maxHp": 1760,
+            "maxMana": 615,
+            "sessionRemainingMs": 0,
+            "staminaMs": 16162,
+            "staminaRefillCost": 306456,
+            "staminaRefillsLeft": 6,
             "updatedAt": 1791866629211
           },
           {
-            "id": "acc4",
-            "charName": "Personagem #4",
-            "level": 108,
-            "experience": 53703,
-            "experienceNeeded": 567200,
-            "inGame": true,
-            "hp": 685,
-            "maxHp": 685,
-            "mana": 3090,
-            "maxMana": 3090,
-            "gold": 66801,
-            "staminaMs": 12079541,
-            "sessionRemainingMs": 0,
-            "staminaRefillCost": 279936,
-            "staminaRefillsLeft": 6,
+            "analyzer": {
+              "experience": 127851,
+              "kills": 2976,
+              "lootValue": 0,
+              "waste": 0
+            },
             "bestiary": {
-              "currentMonster": "Frost Troll",
-              "monsterId": "frostTroll",
-              "kills": 258,
-              "required": 2500,
               "bonusPercent": 15,
-              "completedMonsters": 9,
-              "totalMonsters": 186,
-              "totalKills": 79531,
-              "stages": {
-                "amazon": 2,
-                "frostTroll": 0,
-                "mutatedBat": 1,
-                "mutatedTiger": 1,
-                "orc": 0,
-                "rat": 1,
-                "troll": 0,
-                "valkyrie": 1,
-                "winterWolf": 0
-              },
               "byMonster": {
                 "acolyteOfTheCult": 97,
                 "adeptOfTheCult": 50,
@@ -326,875 +2199,442 @@
                 "troll": 2508,
                 "valkyrie": 13006,
                 "winterWolf": 258
-              }
+              },
+              "completedMonsters": 9,
+              "currentMonster": "Frost Troll",
+              "kills": 258,
+              "monsterId": "frostTroll",
+              "required": 2500,
+              "stages": {
+                "amazon": 2,
+                "frostTroll": 0,
+                "mutatedBat": 1,
+                "mutatedTiger": 1,
+                "orc": 0,
+                "rat": 1,
+                "troll": 0,
+                "valkyrie": 1,
+                "winterWolf": 0
+              },
+              "totalKills": 79531,
+              "totalMonsters": 186
             },
-            "analyzer": {
-              "kills": 2976,
-              "experience": 127851,
-              "lootValue": 0,
-              "waste": 0
-            },
-            "lootsTaken": 0,
+            "charName": "Personagem #4",
             "deaths": 0,
+            "experience": 53703,
+            "experienceNeeded": 567200,
+            "gold": 66801,
+            "hp": 685,
+            "id": "acc4",
+            "inGame": true,
+            "level": 108,
+            "lootsTaken": 0,
+            "mana": 3090,
+            "maxHp": 685,
+            "maxMana": 3090,
+            "sessionRemainingMs": 0,
+            "staminaMs": 12079541,
+            "staminaRefillCost": 279936,
+            "staminaRefillsLeft": 6,
             "updatedAt": 1791866629211
           }
-        ]
-      }
-    },
-    "tibidle": {
-      "name": "Tibidle Multi-Bot",
-      "game": "Tibidle",
-      "engine": "Go Native Engine",
-      "port": 3001,
-      "dashboardUrl": "https://kbelludoo.github.io/tibidle-bot/",
-      "status": {
-        "online": true,
-        "accounts": [
-          {
-            "id": "acc1",
-            "name": "Conta #1",
-            "vocation": "KNIGHT",
-            "level": 38,
-            "hp": 0,
-            "maxHp": 0,
-            "mana": 0,
-            "maxMana": 0,
-            "gold": 0,
-            "xp": "",
-            "status": "hunting",
-            "currentHunt": "Daramian Minotaur Pyramid",
-            "kills": 0,
-            "expPerHour": 0,
-            "goldPerHour": 0,
-            "durationSec": 39061,
-            "targetHunt": "Elfs Shadowthorn",
-            "updatedAt": 1791895799841,
-            "recentLogs": [
-              "Conectado como Conta #1",
-              "Conectado como Conta #1",
-              "Conectado como Conta #1",
-              "Conectado como Conta #1",
-              "Conectado como Conta #1",
-              "Conectado como Conta #1",
-              "Conectado como Conta #1",
-              "Conectado como Conta #1",
-              "Conectado como Conta #1",
-              "Conectado como Conta #1",
-              "Conectado como Conta #1",
-              "Conectado como Conta #1",
-              "Conectado como Conta #1",
-              "Ticket recebido externamente (WS: wss://play11.tibidle.com)! Conectando...",
-              "Conexão WebSocket estabelecida com sucesso!"
-            ]
-          }
         ],
-        "goroutines": 9,
-        "ramAllocMB": 1.3864059448242188,
-        "ramSysMB": 17.34986114501953,
-        "uptime": "7h32m48s"
-      }
-    },
-    "sigma": {
-      "name": "Pokemon Sigma Multi-Bot",
-      "game": "Pokemon Sigma",
-      "engine": "Go Native Engine",
-      "port": 3002,
-      "dashboardUrl": "https://kbelludoo.github.io/sigma-bot/",
-      "status": {
-        "online": true,
-        "accounts": [
-          {
-            "id": "acc1",
-            "alias": "Treinador #1",
-            "trainerName": "Treinador #1",
-            "level": 82,
-            "xp": 8754580,
-            "xpToNextLevel": 324100,
-            "xpPercent": 2701.1971613699475,
-            "hp": 840,
-            "maxHp": 840,
-            "hpPercent": 100,
-            "gold": 1295505,
-            "diamonds": 0,
-            "inGame": true,
-            "inHunt": true,
-            "mapSlug": "blastoise",
-            "mapName": "Blastoise",
-            "leaderSpeciesId": 1,
-            "leaderName": "Bulbasaur",
-            "leaderLevel": 81,
-            "leaderHp": 40,
-            "leaderMaxHp": 1680,
-            "leaderShiny": false,
-            "wildTarget": "Blastoise",
-            "wildHp": 1128,
-            "wildMaxHp": 4800,
-            "wildLevel": 80,
-            "wildShiny": false,
-            "autoHuntActive": true,
-            "kills": 0,
-            "captures": 0,
-            "shinies": 0,
-            "goldFound": 258492,
-            "trainerXpGained": 833301,
-            "killsPerMin": 0,
-            "xpPerHour": 0,
-            "lastAction": "Coletando recompensas diárias...",
-            "connectedAt": 1791860099065,
-            "updatedAt": 1791895805085
-          },
-          {
-            "id": "acc2",
-            "alias": "Treinador #2",
-            "trainerName": "Treinador #2",
-            "level": 109,
-            "xp": 20619243,
-            "xpToNextLevel": 577900,
-            "xpPercent": 3567.9603737670873,
-            "hp": 1110,
-            "maxHp": 1110,
-            "hpPercent": 100,
-            "gold": 2435420,
-            "diamonds": 0,
-            "inGame": true,
-            "inHunt": true,
-            "mapSlug": "pinsir",
-            "mapName": "Pinsir",
-            "leaderSpeciesId": 4,
-            "leaderName": "Charmander",
-            "leaderLevel": 106,
-            "leaderHp": 1233,
-            "leaderMaxHp": 1944,
-            "leaderShiny": false,
-            "wildTarget": "Pinsir",
-            "wildHp": 3914,
-            "wildMaxHp": 5132,
-            "wildLevel": 100,
-            "wildShiny": false,
-            "autoHuntActive": true,
-            "kills": 3,
-            "captures": 0,
-            "shinies": 0,
-            "goldFound": 422256,
-            "trainerXpGained": 1514,
-            "killsPerMin": 12.857142857142858,
-            "xpPerHour": 389314.2857142857,
-            "lastAction": "Derrotou Pinsir (+0 XP, +0 Ouro)",
-            "connectedAt": 1791860099073,
-            "updatedAt": 1791895805481
-          },
-          {
-            "id": "acc3",
-            "alias": "Treinador #3",
-            "trainerName": "Treinador #3",
-            "level": 127,
-            "xp": 33013974,
-            "xpToNextLevel": 787600,
-            "xpPercent": 4191.718384966988,
-            "hp": 1290,
-            "maxHp": 1290,
-            "hpPercent": 100,
-            "gold": 3473437,
-            "diamonds": 0,
-            "inGame": true,
-            "inHunt": true,
-            "mapSlug": "arcanine",
-            "mapName": "Arcanine",
-            "leaderSpeciesId": 7,
-            "leaderName": "Squirtle",
-            "leaderLevel": 126,
-            "leaderHp": 1874,
-            "leaderMaxHp": 2568,
-            "leaderShiny": false,
-            "wildTarget": "Arcanine",
-            "wildHp": 636,
-            "wildMaxHp": 5498,
-            "wildLevel": 100,
-            "wildShiny": false,
-            "autoHuntActive": true,
-            "kills": 24,
-            "captures": 0,
-            "shinies": 0,
-            "goldFound": 872129,
-            "trainerXpGained": 11148,
-            "killsPerMin": 14.472361809045225,
-            "xpPerHour": 403344.72361809044,
-            "lastAction": "Derrotou Arcanine (+0 XP, +0 Ouro)",
-            "connectedAt": 1791860099162,
-            "updatedAt": 1791895805481
-          }
-        ],
-        "ramMB": 2.6713104248046875,
-        "serverTime": 1791895805586
-      }
-    },
-    "leveling": {
-      "name": "Leveling Idle 2D Bot",
-      "game": "Leveling Idle 2D",
-      "engine": "Go Native Engine (Protobuf 3)",
-      "port": 3003,
-      "dashboardUrl": "https://kbelludoo.github.io/leveling-bot/",
-      "status": {
-        "online": true,
-        "accounts": [
-          {
-            "id": "acc-1",
-            "name": "Party #1",
-            "level": 22,
-            "vocation": "arqueiro",
-            "hp": 750,
-            "maxHp": 750,
-            "mana": 430,
-            "maxMana": 430,
-            "gold": 1387708,
-            "kills": 13799,
-            "expPerHour": 34385,
-            "status": "hunting",
-            "currentArea": "Castelo dos Demônios (Orc Jovem Nv 25)",
-            "durationSec": 35724,
-            "logs": [
-              "Membro já está na Party.",
-              "Membro já está na Party.",
-              "Membro já está na Party.",
-              "Membro já está na Party.",
-              "Membro já está na Party.",
-              "Membro já está na Party.",
-              "Membro já está na Party.",
-              "Membro já está na Party.",
-              "Membro já está na Party.",
-              "Membro já está na Party.",
-              "Membro já está na Party.",
-              "Membro já está na Party.",
-              "Membro já está na Party.",
-              "Membro já está na Party.",
-              "Membro já está na Party."
-            ],
-            "updatedAt": 1791895804980
-          },
-          {
-            "id": "acc-2",
-            "name": "Party #2",
-            "level": 23,
-            "vocation": "healer",
-            "hp": 775,
-            "maxHp": 775,
-            "mana": 445,
-            "maxMana": 445,
-            "gold": 1365141,
-            "kills": 24529,
-            "expPerHour": 39071,
-            "status": "hunting",
-            "currentArea": "Castelo dos Demônios (Orc Jovem Nv 25)",
-            "durationSec": 36057,
-            "logs": [
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada."
-            ],
-            "updatedAt": 1791895804980
-          },
-          {
-            "id": "acc-3",
-            "name": "Party #3",
-            "level": 25,
-            "vocation": "guerreiro",
-            "hp": 825,
-            "maxHp": 825,
-            "mana": 475,
-            "maxMana": 475,
-            "gold": 1152482,
-            "kills": 26097,
-            "expPerHour": 0,
-            "status": "hunting",
-            "currentArea": "Castelo dos Demônios (Orc Jovem Nv 25)",
-            "durationSec": 37380,
-            "logs": [
-              "Conexão perdida com o servidor.",
-              "Conexão WebSocket estabelecida. Enviando login...",
-              "Login bem-sucedido! Bem-vindo, Party #3.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Conexão perdida com o servidor.",
-              "Conexão WebSocket estabelecida. Enviando login...",
-              "Login bem-sucedido! Bem-vindo, Party #3.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada."
-            ],
-            "updatedAt": 1791895804980
-          },
-          {
-            "id": "acc-4",
-            "name": "Party #4",
-            "level": 23,
-            "vocation": "mago",
-            "hp": 775,
-            "maxHp": 775,
-            "mana": 445,
-            "maxMana": 445,
-            "gold": 1266115,
-            "kills": 25406,
-            "expPerHour": 12061,
-            "status": "hunting",
-            "currentArea": "Castelo dos Demônios (Orc Jovem Nv 25)",
-            "durationSec": 36159,
-            "logs": [
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada."
-            ],
-            "updatedAt": 1791895804980
-          }
-        ],
-        "goroutines": 14,
-        "ramAllocMB": 1.9949417114257812,
-        "ramSysMB": 13.099861145019531,
-        "uptime": "9h39m34s"
-      }
-    },
-    "pokeidle": {
-      "name": "PokeIdle.io Bot",
-      "game": "PokeIdle.io",
-      "engine": "Go Native Engine (Twitch Lurker)",
-      "port": 3006,
-      "dashboardUrl": "https://kbelludoo.github.io/pokeidle-go/",
-      "status": {
-        "online": true,
-        "accounts": [
-          {
-            "id": "acc-1",
-            "name": "Treinador #1",
-            "level": 31,
-            "vocation": "Bulbasaur (Nv. 31)",
-            "hp": 573,
-            "maxHp": 636,
-            "mana": 88,
-            "maxMana": 88,
-            "gold": 2119493,
-            "kills": 1281,
-            "expPerHour": 9655.935266143853,
-            "status": "hunting",
-            "currentArea": "geodude",
-            "durationSec": 4308,
-            "logs": [
-              "Derrotou Geodude! Loot: Small Stone, 2x Earth Ball, Stone Orb",
-              "Derrotou Geodude! Loot: Small Stone, Earth Ball",
-              "Derrotou Geodude! Loot: 2x Small Stone, 2x Earth Ball",
-              "Derrotou Geodude! Loot: 2x Small Stone, Earth Ball",
-              "Derrotou Geodude! Loot: 2x Small Stone, 2x Earth Ball",
-              "Derrotou Geodude! Loot: Small Stone, Earth Ball",
-              "Derrotou Geodude! Loot: 2x Small Stone, Earth Ball",
-              "Derrotou Geodude! Loot: 2x Small Stone, 2x Earth Ball, Stone Orb",
-              "Derrotou Geodude! Loot: 2x Small Stone, Earth Ball",
-              "Derrotou Geodude! Loot: Small Stone, 2x Earth Ball"
-            ],
-            "updatedAt": 1791895802892,
-            "extra": {
-              "catches": 0,
-              "diamonds": 0,
-              "kickLives": [
-                "biscoitao"
-              ],
-              "noCentro": false,
-              "orbs": 0
-            }
-          }
-        ],
-        "goroutines": 11,
-        "ramAllocMB": 1.1735076904296875,
-        "ramSysMB": 13.099861145019531,
-        "uptime": "1h11m51s"
-      }
-    },
-    "pokeidleworld": {
-      "name": "Poke Idle World Bot",
-      "game": "Poke Idle World",
-      "engine": "Go Native Engine (Auto-Catch)",
-      "port": 3007,
-      "dashboardUrl": "https://kbelludoo.github.io/pokeidleworld-bot/",
-      "status": {
-        "online": true,
-        "accounts": [
-          {
-            "id": "acc-1",
-            "name": "Treinador #1",
-            "level": 9,
-            "hp": 325,
-            "maxHp": 384,
-            "mana": 0,
-            "maxMana": 0,
-            "gold": 62579,
-            "kills": 3871,
-            "expPerHour": 3425.479393025332,
-            "status": "hunting",
-            "currentArea": "Geodude",
-            "durationSec": 32489,
-            "logs": [
-              "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
-              "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
-              "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
-              "Pokébola ID 1 falhou na captura.",
-              "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
-              "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
-              "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
-              "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
-              "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
-              "Pokébola ID 1 falhou na captura.",
-              "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
-              "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)"
-            ],
-            "updatedAt": 1791895804499,
-            "extra": {
-              "activePokemon": "Bulbasaur",
-              "autoWeakness": true,
-              "balls": 55,
-              "captures": 67,
-              "enemyTypes": "ROCK / GROUND",
-              "lookType": 20011,
-              "lootGold": 58594,
-              "lootItems": 19677,
-              "matchup": "4.0x Dano",
-              "matchupDetail": "4.0x (Fraqueza Dupla!) | Risco Moderado",
-              "pokeCount": 1,
-              "pokemonLevel": 21,
-              "pokemonTypes": "GRASS / POISON",
-              "shinyCaptures": 0,
-              "slug": "geodude",
-              "trainerName": "Treinador #1"
-            }
-          }
-        ],
-        "goroutines": 9,
-        "ramAllocMB": 2.3583831787109375,
-        "ramSysMB": 13.599861145019531,
-        "uptime": "36h34m12s"
+        "serverTime": 1791895810389
       }
     },
     "kickminer": {
-      "name": "Kick Channel Points Miner",
-      "game": "Kick.com",
-      "engine": "Go Native (Zero-Video WS)",
-      "port": 3009,
       "dashboardUrl": "https://kbelludoo.github.io/kick-miner-go/",
+      "engine": "Go Native (Zero-Video WS)",
+      "game": "Kick.com",
+      "name": "Kick Channel Points Miner",
+      "port": 3009,
       "status": {
-        "online": true,
-        "uptime": "14h20m0s",
-        "ramMb": 1.7619476318359375,
-        "goroutines": 44,
-        "totalStreams": 12,
         "accounts": {
           "miner_1": {
-            "username": "Minerador #1",
             "activeStreams": 12,
-            "totalPoints": 6760,
             "streamers": {
               "adinross": {
-                "streamer": "adinross",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "adinross",
+                "watchTime": "",
+                "watching": false
               },
               "amouranth": {
-                "streamer": "amouranth",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 1190,
-                "watchTime": ""
+                "streamer": "amouranth",
+                "watchTime": "",
+                "watching": false
+              },
+              "anonimo": {
+                "autoFill": false,
+                "isLive": true,
+                "points": 0,
+                "streamer": "anonimo",
+                "watchTime": "14h14m2s",
+                "watching": true
               },
               "axtlol": {
-                "streamer": "axtlol",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "axtlol",
+                "watchTime": "",
+                "watching": false
               },
               "baianotv": {
-                "streamer": "baianotv",
-                "isLive": true,
-                "watching": true,
                 "autoFill": false,
+                "isLive": true,
                 "points": 0,
-                "watchTime": "7h21m54s"
+                "streamer": "baianotv",
+                "watchTime": "7h21m59s",
+                "watching": true
               },
               "bkinho": {
-                "streamer": "bkinho",
-                "isLive": true,
-                "watching": true,
                 "autoFill": true,
+                "isLive": true,
                 "points": 110,
-                "watchTime": "4h23m35s"
+                "streamer": "bkinho",
+                "watchTime": "4h23m40s",
+                "watching": true
               },
               "brtt": {
-                "streamer": "brtt",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "brtt",
+                "watchTime": "",
+                "watching": false
               },
               "budega": {
-                "streamer": "budega",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "budega",
+                "watchTime": "",
+                "watching": false
               },
               "cerol": {
-                "streamer": "cerol",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "cerol",
+                "watchTime": "",
+                "watching": false
               },
               "classybeef": {
-                "streamer": "classybeef",
-                "isLive": true,
-                "watching": true,
                 "autoFill": false,
+                "isLive": true,
                 "points": 890,
-                "watchTime": "6h41m45s"
+                "streamer": "classybeef",
+                "watchTime": "6h41m50s",
+                "watching": true
               },
               "coachturtle": {
-                "streamer": "coachturtle",
-                "isLive": true,
-                "watching": true,
                 "autoFill": true,
+                "isLive": true,
                 "points": 0,
-                "watchTime": "43m49s"
+                "streamer": "coachturtle",
+                "watchTime": "43m54s",
+                "watching": true
               },
               "cogu": {
-                "streamer": "cogu",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 170,
-                "watchTime": ""
+                "streamer": "cogu",
+                "watchTime": "",
+                "watching": false
               },
               "deuces": {
-                "streamer": "deuces",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "deuces",
+                "watchTime": "",
+                "watching": false
               },
               "dirrty": {
-                "streamer": "dirrty",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "dirrty",
+                "watchTime": "",
+                "watching": false
               },
               "faasii": {
-                "streamer": "faasii",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "faasii",
+                "watchTime": "",
+                "watching": false
               },
               "felps": {
-                "streamer": "felps",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "felps",
+                "watchTime": "",
+                "watching": false
               },
               "gaules": {
-                "streamer": "gaules",
-                "isLive": true,
-                "watching": true,
                 "autoFill": false,
+                "isLive": true,
                 "points": 1790,
-                "watchTime": "1h25m9s"
+                "streamer": "gaules",
+                "watchTime": "1h25m14s",
+                "watching": true
               },
               "guizn": {
-                "streamer": "guizn",
-                "isLive": true,
-                "watching": true,
                 "autoFill": true,
+                "isLive": true,
                 "points": 30,
-                "watchTime": "3h46m11s"
+                "streamer": "guizn",
+                "watchTime": "3h46m16s",
+                "watching": true
               },
               "hasanabi": {
-                "streamer": "hasanabi",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "hasanabi",
+                "watchTime": "",
+                "watching": false
               },
               "jynxzi": {
-                "streamer": "jynxzi",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "jynxzi",
+                "watchTime": "",
+                "watching": false
               },
               "k1ng": {
-                "streamer": "k1ng",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "k1ng",
+                "watchTime": "",
+                "watching": false
               },
               "kaicenat": {
-                "streamer": "kaicenat",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "kaicenat",
+                "watchTime": "",
+                "watching": false
               },
               "kazuhasama": {
-                "streamer": "kazuhasama",
-                "isLive": true,
-                "watching": true,
                 "autoFill": true,
-                "points": 0,
-                "watchTime": "3h3m18s"
-              },
-              "treinador": {
-                "streamer": "anonimo",
                 "isLive": true,
-                "watching": true,
-                "autoFill": false,
                 "points": 0,
-                "watchTime": "14h13m57s"
+                "streamer": "kazuhasama",
+                "watchTime": "3h3m23s",
+                "watching": true
               },
               "king": {
-                "streamer": "king",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "king",
+                "watchTime": "",
+                "watching": false
               },
               "lacy": {
-                "streamer": "lacy",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "lacy",
+                "watchTime": "",
+                "watching": false
               },
               "loud_coringa": {
-                "streamer": "loud_coringa",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "loud_coringa",
+                "watchTime": "",
+                "watching": false
               },
               "luanz7": {
-                "streamer": "luanz7",
-                "isLive": true,
-                "watching": true,
                 "autoFill": true,
+                "isLive": true,
                 "points": 70,
-                "watchTime": "7h50m32s"
+                "streamer": "luanz7",
+                "watchTime": "7h50m37s",
+                "watching": true
               },
               "matta": {
-                "streamer": "matta",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 1110,
-                "watchTime": ""
+                "streamer": "matta",
+                "watchTime": "",
+                "watching": false
               },
               "mizkif": {
-                "streamer": "mizkif",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 650,
-                "watchTime": ""
+                "streamer": "mizkif",
+                "watchTime": "",
+                "watching": false
               },
               "nickmercs": {
-                "streamer": "nickmercs",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "nickmercs",
+                "watchTime": "",
+                "watching": false
               },
               "ninkeratv": {
-                "streamer": "ninkeratv",
-                "isLive": true,
-                "watching": true,
                 "autoFill": true,
+                "isLive": true,
                 "points": 100,
-                "watchTime": "51m27s"
+                "streamer": "ninkeratv",
+                "watchTime": "51m31s",
+                "watching": true
               },
               "nmplol": {
-                "streamer": "nmplol",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "nmplol",
+                "watchTime": "",
+                "watching": false
               },
               "nobru": {
-                "streamer": "nobru",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "nobru",
+                "watchTime": "",
+                "watching": false
               },
               "pelegrino1993": {
-                "streamer": "pelegrino1993",
-                "isLive": true,
-                "watching": true,
                 "autoFill": true,
+                "isLive": true,
                 "points": 0,
-                "watchTime": "49m2s"
+                "streamer": "pelegrino1993",
+                "watchTime": "49m7s",
+                "watching": true
               },
               "razo97": {
-                "streamer": "razo97",
-                "isLive": true,
-                "watching": true,
                 "autoFill": true,
+                "isLive": true,
                 "points": 170,
-                "watchTime": "2h46m46s"
+                "streamer": "razo97",
+                "watchTime": "2h46m51s",
+                "watching": true
               },
               "reverso": {
-                "streamer": "reverso",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "reverso",
+                "watchTime": "",
+                "watching": false
               },
               "roshtein": {
-                "streamer": "roshtein",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "roshtein",
+                "watchTime": "",
+                "watching": false
               },
               "sheviii2k": {
-                "streamer": "sheviii2k",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 170,
-                "watchTime": ""
+                "streamer": "sheviii2k",
+                "watchTime": "",
+                "watching": false
               },
               "sketch": {
-                "streamer": "sketch",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "sketch",
+                "watchTime": "",
+                "watching": false
               },
               "sodapoppin": {
-                "streamer": "sodapoppin",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "sodapoppin",
+                "watchTime": "",
+                "watching": false
               },
               "sxb": {
-                "streamer": "sxb",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "sxb",
+                "watchTime": "",
+                "watching": false
               },
               "tarik": {
-                "streamer": "tarik",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "tarik",
+                "watchTime": "",
+                "watching": false
               },
               "tftoddy": {
-                "streamer": "tftoddy",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 180,
-                "watchTime": ""
+                "streamer": "tftoddy",
+                "watchTime": "",
+                "watching": false
               },
               "trainwreckstv": {
-                "streamer": "trainwreckstv",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "trainwreckstv",
+                "watchTime": "",
+                "watching": false
               },
               "westcol": {
-                "streamer": "westcol",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "westcol",
+                "watchTime": "",
+                "watching": false
               },
               "xdaren_": {
-                "streamer": "xdaren_",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 0,
-                "watchTime": ""
+                "streamer": "xdaren_",
+                "watchTime": "",
+                "watching": false
               },
               "xqc": {
-                "streamer": "xqc",
-                "isLive": false,
-                "watching": false,
                 "autoFill": false,
+                "isLive": false,
                 "points": 130,
-                "watchTime": ""
+                "streamer": "xqc",
+                "watchTime": "",
+                "watching": false
               }
-            }
+            },
+            "totalPoints": 6760,
+            "username": "Minerador #1"
           }
         },
+        "goroutines": 44,
         "logs": [
           "[12:10:34] [anonimo] 💰 Live de 'luanz7': saldo atualizado para 70 pontos (+10 creditados)!",
           "[12:10:43] [anonimo] 💰 Live de 'razo97': saldo atualizado para 140 pontos (+10 creditados)!",
@@ -1256,7 +2696,7 @@
           "[12:33:09] [anonimo] 💰 Live de 'kazuhasama': saldo atualizado para 0 pontos (+10 creditados)!",
           "[12:33:20] [anonimo] 💰 Live de 'bkinho': saldo atualizado para 100 pontos (+10 creditados)!",
           "[12:33:39] [anonimo] 💰 Live de 'ninkeratv': saldo atualizado para 70 pontos (+10 creditados)!",
-          "[12:34:30] [anonimo] ⚠ WebSocket de 'bkinho' caiu: read tcp x.x.x.x:54296->x.x.x.x:443: read: connection reset by peer. Reconectando em 10s...",
+          "[12:34:30] [anonimo] ⚠ WebSocket de 'bkinho' caiu: read tcp 10.0.0.191:54296-\u003e172.64.235.133:443: read: connection reset by peer. Reconectando em 10s...",
           "[12:34:40] [anonimo] ⭐ Conectado à live de 'bkinho'! Saldo atual: 100 pontos (+10 a cada 5m).",
           "[12:34:46] [anonimo] 💰 Live de 'classybeef': saldo atualizado para 890 pontos (+10 creditados)!",
           "[12:34:57] [anonimo] 💰 Live de 'gaules': saldo atualizado para 1790 pontos (+10 creditados)!",
@@ -1296,2031 +2736,583 @@
           "[12:49:40] [anonimo] 💰 Live de 'bkinho': saldo atualizado para 110 pontos (+10 creditados)!",
           "[12:49:46] [anonimo] 💰 Live de 'classybeef': saldo atualizado para 890 pontos (+10 creditados)!",
           "[12:49:57] [anonimo] 💰 Live de 'gaules': saldo atualizado para 1790 pontos (+10 creditados)!"
-        ]
+        ],
+        "ramMb": 1.9563980102539062,
+        "totalStreams": 12,
+        "uptime": "14h20m5s"
+      }
+    },
+    "leveling": {
+      "dashboardUrl": "https://kbelludoo.github.io/leveling-bot/",
+      "engine": "Go Native Engine (Protobuf 3)",
+      "game": "Leveling Idle 2D",
+      "name": "Leveling Idle 2D Bot",
+      "port": 3003,
+      "status": {
+        "accounts": [
+          {
+            "currentArea": "Castelo dos Demônios (Orc Jovem Nv 25)",
+            "durationSec": 35727,
+            "expPerHour": 34385,
+            "gold": 1387708,
+            "hp": 750,
+            "id": "acc-1",
+            "kills": 13799,
+            "level": 22,
+            "logs": [
+              "Membro já está na Party.",
+              "Membro já está na Party.",
+              "Membro já está na Party.",
+              "Membro já está na Party.",
+              "Membro já está na Party.",
+              "Membro já está na Party.",
+              "Membro já está na Party.",
+              "Membro já está na Party.",
+              "Membro já está na Party.",
+              "Membro já está na Party.",
+              "Membro já está na Party.",
+              "Membro já está na Party.",
+              "Membro já está na Party.",
+              "Membro já está na Party.",
+              "Membro já está na Party."
+            ],
+            "mana": 430,
+            "maxHp": 750,
+            "maxMana": 430,
+            "name": "Party #1",
+            "status": "hunting",
+            "updatedAt": 1791895810179,
+            "vocation": "arqueiro"
+          },
+          {
+            "currentArea": "Castelo dos Demônios (Orc Jovem Nv 25)",
+            "durationSec": 36060,
+            "expPerHour": 39071,
+            "gold": 1365141,
+            "hp": 775,
+            "id": "acc-2",
+            "kills": 24529,
+            "level": 23,
+            "logs": [
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada."
+            ],
+            "mana": 445,
+            "maxHp": 775,
+            "maxMana": 445,
+            "name": "Party #2",
+            "status": "hunting",
+            "updatedAt": 1791895810179,
+            "vocation": "healer"
+          },
+          {
+            "currentArea": "Castelo dos Demônios (Orc Jovem Nv 25)",
+            "durationSec": 37386,
+            "expPerHour": 0,
+            "gold": 1152482,
+            "hp": 825,
+            "id": "acc-3",
+            "kills": 26097,
+            "level": 25,
+            "logs": [
+              "Conexão perdida com o servidor.",
+              "Conexão WebSocket estabelecida. Enviando login...",
+              "Login bem-sucedido! Bem-vindo, anonimo.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Conexão perdida com o servidor.",
+              "Conexão WebSocket estabelecida. Enviando login...",
+              "Login bem-sucedido! Bem-vindo, anonimo.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada."
+            ],
+            "mana": 475,
+            "maxHp": 825,
+            "maxMana": 475,
+            "name": "Party #3",
+            "status": "hunting",
+            "updatedAt": 1791895810179,
+            "vocation": "guerreiro"
+          },
+          {
+            "currentArea": "Castelo dos Demônios (Orc Jovem Nv 25)",
+            "durationSec": 36165,
+            "expPerHour": 12061,
+            "gold": 1266115,
+            "hp": 775,
+            "id": "acc-4",
+            "kills": 25406,
+            "level": 23,
+            "logs": [
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada.",
+              "Party sincronizada."
+            ],
+            "mana": 445,
+            "maxHp": 775,
+            "maxMana": 445,
+            "name": "Party #4",
+            "status": "hunting",
+            "updatedAt": 1791895810179,
+            "vocation": "mago"
+          }
+        ],
+        "goroutines": 14,
+        "ramAllocMB": 2.0924224853515625,
+        "ramSysMB": 13.099861145019531,
+        "uptime": "9h39m39s"
+      }
+    },
+    "pokeidle": {
+      "dashboardUrl": "https://kbelludoo.github.io/pokeidle-go/",
+      "engine": "Go Native Engine (Twitch Lurker)",
+      "game": "PokeIdle.io",
+      "name": "PokeIdle.io Bot",
+      "port": 3006,
+      "status": {
+        "accounts": [
+          {
+            "currentArea": "geodude",
+            "durationSec": 4314,
+            "expPerHour": 9657.534258247408,
+            "extra": {
+              "catches": 0,
+              "diamonds": 0,
+              "kickLives": [
+                "biscoitao"
+              ],
+              "noCentro": false,
+              "orbs": 0,
+              "trainerName": "Treinador #1"
+            },
+            "gold": 2119587,
+            "hp": 573,
+            "id": "acc-1",
+            "kills": 1283,
+            "level": 31,
+            "logs": [
+              "Derrotou Geodude! Loot: 2x Small Stone, 2x Earth Ball",
+              "Derrotou Geodude! Loot: 2x Small Stone, Earth Ball",
+              "Derrotou Geodude! Loot: 2x Small Stone, 2x Earth Ball",
+              "Derrotou Geodude! Loot: Small Stone, Earth Ball",
+              "Derrotou Geodude! Loot: 2x Small Stone, Earth Ball",
+              "Derrotou Geodude! Loot: 2x Small Stone, 2x Earth Ball, Stone Orb",
+              "Derrotou Geodude! Loot: 2x Small Stone, Earth Ball",
+              "Derrotou Geodude! Loot: Small Stone, 2x Earth Ball",
+              "Derrotou Geodude! Loot: Small Stone, 2x Earth Ball",
+              "Derrotou Geodude! Loot: Small Stone, Earth Ball, Stone Orb"
+            ],
+            "mana": 88,
+            "maxHp": 636,
+            "maxMana": 88,
+            "name": "Treinador #1",
+            "status": "hunting",
+            "updatedAt": 1791895808888,
+            "vocation": "Bulbasaur (Nv. 31)"
+          }
+        ],
+        "goroutines": 11,
+        "ramAllocMB": 1.1989059448242188,
+        "ramSysMB": 13.099861145019531,
+        "uptime": "1h11m56s"
+      }
+    },
+    "pokeidleworld": {
+      "dashboardUrl": "https://kbelludoo.github.io/pokeidleworld-bot/",
+      "engine": "Go Native Engine (Auto-Catch)",
+      "game": "Poke Idle World",
+      "name": "Poke Idle World Bot",
+      "port": 3007,
+      "status": {
+        "accounts": [
+          {
+            "currentArea": "Geodude",
+            "durationSec": 32493,
+            "expPerHour": 3425.944049487582,
+            "extra": {
+              "activePokemon": "Bulbasaur",
+              "autoWeakness": true,
+              "balls": 54,
+              "captures": 67,
+              "enemyTypes": "ROCK / GROUND",
+              "lookType": 20011,
+              "lootGold": 58597,
+              "lootItems": 19680,
+              "matchup": "4.0x Dano",
+              "matchupDetail": "4.0x (Fraqueza Dupla!) | Risco Moderado",
+              "pokeCount": 1,
+              "pokemonLevel": 21,
+              "pokemonTypes": "GRASS / POISON",
+              "shinyCaptures": 0,
+              "slug": "geodude",
+              "trainerName": "Treinador #1"
+            },
+            "gold": 62577,
+            "hp": 325,
+            "id": "acc-1",
+            "kills": 3872,
+            "level": 9,
+            "logs": [
+              "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
+              "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
+              "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
+              "Pokébola ID 1 falhou na captura.",
+              "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
+              "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
+              "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
+              "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
+              "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
+              "Pokébola ID 1 falhou na captura.",
+              "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
+              "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)"
+            ],
+            "mana": 0,
+            "maxHp": 384,
+            "maxMana": 0,
+            "name": "Treinador #1",
+            "status": "hunting",
+            "updatedAt": 1791895809214
+          }
+        ],
+        "goroutines": 9,
+        "ramAllocMB": 2.442108154296875,
+        "ramSysMB": 13.599861145019531,
+        "uptime": "36h34m17s"
+      }
+    },
+    "sigma": {
+      "dashboardUrl": "https://kbelludoo.github.io/sigma-bot/",
+      "engine": "Go Native Engine",
+      "game": "Pokemon Sigma",
+      "name": "Pokemon Sigma Multi-Bot",
+      "port": 3002,
+      "status": {
+        "accounts": [
+          {
+            "alias": "Treinador #1",
+            "autoHuntActive": true,
+            "captures": 0,
+            "connectedAt": 1791860099065,
+            "diamonds": 0,
+            "gold": 1295505,
+            "goldFound": 258492,
+            "hp": 840,
+            "hpPercent": 100,
+            "id": "acc1",
+            "inGame": true,
+            "inHunt": false,
+            "kills": 0,
+            "killsPerMin": 0,
+            "lastAction": "Viajando para Blastoise (Blastoise (Alvo: Blastoise) │ Vantagem: 2.0x (Risco: 0.5x) │ XP: 223)...",
+            "leaderHp": 0,
+            "leaderLevel": 43,
+            "leaderMaxHp": 696,
+            "leaderName": "Bellsprout",
+            "leaderShiny": false,
+            "leaderSpeciesId": 69,
+            "level": 82,
+            "mapName": "Na Cidade / PokéCenter",
+            "mapSlug": "",
+            "maxHp": 840,
+            "shinies": 0,
+            "trainerName": "Treinador #1",
+            "trainerXpGained": 833301,
+            "updatedAt": 1791895809393,
+            "wildHp": 0,
+            "wildLevel": 0,
+            "wildMaxHp": 0,
+            "wildShiny": false,
+            "wildTarget": "",
+            "xp": 8754580,
+            "xpPerHour": 0,
+            "xpPercent": 2701.1971613699475,
+            "xpToNextLevel": 324100
+          },
+          {
+            "alias": "Treinador #2",
+            "autoHuntActive": true,
+            "captures": 0,
+            "connectedAt": 1791860099073,
+            "diamonds": 0,
+            "gold": 2435420,
+            "goldFound": 422256,
+            "hp": 1110,
+            "hpPercent": 100,
+            "id": "acc2",
+            "inGame": true,
+            "inHunt": true,
+            "kills": 3,
+            "killsPerMin": 10,
+            "lastAction": "Derrotou Pinsir (+0 XP, +0 Ouro)",
+            "leaderHp": 732,
+            "leaderLevel": 106,
+            "leaderMaxHp": 1944,
+            "leaderName": "Charmander",
+            "leaderShiny": false,
+            "leaderSpeciesId": 4,
+            "level": 109,
+            "mapName": "Pinsir",
+            "mapSlug": "pinsir",
+            "maxHp": 1110,
+            "shinies": 0,
+            "trainerName": "Treinador #2",
+            "trainerXpGained": 1514,
+            "updatedAt": 1791895809431,
+            "wildHp": 1020,
+            "wildLevel": 100,
+            "wildMaxHp": 5132,
+            "wildShiny": false,
+            "wildTarget": "Pinsir",
+            "xp": 20619243,
+            "xpPerHour": 302800,
+            "xpPercent": 3567.9603737670873,
+            "xpToNextLevel": 577900
+          },
+          {
+            "alias": "Treinador #3",
+            "autoHuntActive": true,
+            "captures": 0,
+            "connectedAt": 1791860099162,
+            "diamonds": 0,
+            "gold": 3473437,
+            "goldFound": 872129,
+            "hp": 1290,
+            "hpPercent": 100,
+            "id": "acc3",
+            "inGame": true,
+            "inHunt": true,
+            "kills": 26,
+            "killsPerMin": 15.072463768115941,
+            "lastAction": "Derrotou Arcanine (+0 XP, +0 Ouro)",
+            "leaderHp": 1806,
+            "leaderLevel": 126,
+            "leaderMaxHp": 2568,
+            "leaderName": "Squirtle",
+            "leaderShiny": false,
+            "leaderSpeciesId": 7,
+            "level": 127,
+            "mapName": "Arcanine",
+            "mapSlug": "arcanine",
+            "maxHp": 1290,
+            "shinies": 0,
+            "trainerName": "Treinador #3",
+            "trainerXpGained": 12048,
+            "updatedAt": 1791895809452,
+            "wildHp": 2593,
+            "wildLevel": 100,
+            "wildMaxHp": 5498,
+            "wildShiny": false,
+            "wildTarget": "Arcanine",
+            "xp": 33014874,
+            "xpPerHour": 419060.86956521735,
+            "xpPercent": 4191.832656170645,
+            "xpToNextLevel": 787600
+          }
+        ],
+        "ramMB": 2.3461837768554688,
+        "serverTime": 1791895810383
+      }
+    },
+    "tibidle": {
+      "dashboardUrl": "https://kbelludoo.github.io/tibidle-bot/",
+      "engine": "Go Native Engine",
+      "game": "Tibidle",
+      "name": "Tibidle Multi-Bot",
+      "port": 3001,
+      "status": {
+        "accounts": [
+          {
+            "currentHunt": "Daramian Minotaur Pyramid",
+            "durationSec": 39061,
+            "expPerHour": 0,
+            "gold": 0,
+            "goldPerHour": 0,
+            "hp": 0,
+            "id": "acc1",
+            "kills": 0,
+            "level": 38,
+            "mana": 0,
+            "maxHp": 0,
+            "maxMana": 0,
+            "name": "Conta #1",
+            "recentLogs": [
+              "Conectado como anonimo (Sessão Autenticada)",
+              "Conectado como anonimo (Sessão Autenticada)",
+              "Conectado como anonimo (Sessão Autenticada)",
+              "Conectado como anonimo (Sessão Autenticada)",
+              "Conectado como anonimo (Sessão Autenticada)",
+              "Conectado como anonimo (Sessão Autenticada)",
+              "Conectado como anonimo (Sessão Autenticada)",
+              "Conectado como anonimo (Sessão Autenticada)",
+              "Conectado como anonimo (Sessão Autenticada)",
+              "Conectado como anonimo (Sessão Autenticada)",
+              "Conectado como anonimo (Sessão Autenticada)",
+              "Conectado como anonimo (Sessão Autenticada)",
+              "Conectado como anonimo (Sessão Autenticada)",
+              "Ticket recebido externamente (WS: wss://play11.tibidle.com)! Conectando...",
+              "Conexão WebSocket estabelecida com sucesso!"
+            ],
+            "status": "hunting",
+            "targetHunt": "Elfs Shadowthorn",
+            "updatedAt": 1791895799841,
+            "vocation": "KNIGHT",
+            "xp": ""
+          }
+        ],
+        "goroutines": 10,
+        "ramAllocMB": 1.89715576171875,
+        "ramSysMB": 17.34986114501953,
+        "uptime": "7h32m53s"
       }
     },
     "twitchminer": {
-      "name": "Twitch Channel Points Miner",
-      "game": "Twitch.tv",
-      "engine": "Go Native (Zero-Video WS)",
-      "port": 3010,
       "dashboardUrl": "https://kbelludoo.github.io/twitch-miner-go/",
+      "engine": "Go Native (Zero-Video WS)",
+      "game": "Twitch.tv",
+      "name": "Twitch Channel Points Miner",
+      "port": 3010,
       "status": {
-        "online": true,
         "logs": [
           "[03:32:20] Iniciando Twitch Miner Go para 1 conta(s)...",
-          "[03:32:20] [Minerador #1] ✅ Autenticado com sucesso na Twitch! (Sessão Autenticada)",
+          "[03:32:20] [Minerador #1] ✅ Autenticado com sucesso na Twitch! (ID: 21107325, Login: Minerador #1)",
           "[03:32:21] [Minerador #1] ⭐ Assistindo live de 'Gaules'! Pontos: 0",
           "[03:32:21] [Minerador #1] ⭐ Assistindo live de 'Baiano'! Pontos: 1090",
           "[03:48:21] [Minerador #1] 📴 Live de 'Baiano' finalizou; slot liberado."
         ],
         "statuses": {
           "Minerador #1": {
-            "username": "Minerador #1",
-            "userId": "anonimo",
             "streamers": {
               "alanzoka": {
-                "login": "alanzoka",
                 "displayName": "alanzoka",
                 "isLive": false,
+                "lastClaimAt": "",
+                "login": "alanzoka",
+                "points": 0,
                 "title": "",
                 "viewers": 0,
-                "points": 0,
-                "watching": false,
-                "lastClaimAt": ""
+                "watching": false
               },
               "baiano": {
-                "login": "baiano",
                 "displayName": "Baiano",
                 "isLive": false,
+                "lastClaimAt": "",
+                "login": "baiano",
+                "points": 1090,
                 "title": "",
                 "viewers": 0,
-                "points": 1090,
-                "watching": false,
-                "lastClaimAt": ""
+                "watching": false
               },
               "brtt": {
-                "login": "brtt",
                 "displayName": "brtt",
                 "isLive": false,
+                "lastClaimAt": "",
+                "login": "brtt",
+                "points": 0,
                 "title": "",
                 "viewers": 0,
-                "points": 0,
-                "watching": false,
-                "lastClaimAt": ""
+                "watching": false
               },
               "casimito": {
-                "login": "casimito",
                 "displayName": "casimito",
                 "isLive": false,
+                "lastClaimAt": "",
+                "login": "casimito",
+                "points": 0,
                 "title": "",
                 "viewers": 0,
-                "points": 0,
-                "watching": false,
-                "lastClaimAt": ""
+                "watching": false
               },
               "cellbit": {
-                "login": "cellbit",
                 "displayName": "Cellbit",
                 "isLive": false,
+                "lastClaimAt": "",
+                "login": "cellbit",
+                "points": 0,
                 "title": "",
                 "viewers": 0,
-                "points": 0,
-                "watching": false,
-                "lastClaimAt": ""
+                "watching": false
               },
               "gaules": {
-                "login": "gaules",
                 "displayName": "Gaules",
                 "isLive": true,
+                "lastClaimAt": "",
+                "login": "gaules",
+                "points": 0,
                 "title": "RERUN: Jogos Variados! - !socio - Siga @Gaules nas redes sociais!",
                 "viewers": 309,
-                "points": 0,
-                "watching": true,
-                "lastClaimAt": ""
+                "watching": true
               },
               "loud_coringa": {
-                "login": "loud_coringa",
                 "displayName": "",
                 "isLive": false,
+                "lastClaimAt": "",
+                "login": "loud_coringa",
+                "points": 0,
                 "title": "",
                 "viewers": 0,
-                "points": 0,
-                "watching": false,
-                "lastClaimAt": ""
+                "watching": false
               },
               "nobru": {
-                "login": "nobru",
                 "displayName": "NOBRU",
                 "isLive": false,
+                "lastClaimAt": "",
+                "login": "nobru",
+                "points": 0,
                 "title": "",
                 "viewers": 0,
-                "points": 0,
-                "watching": false,
-                "lastClaimAt": ""
+                "watching": false
               }
-            }
+            },
+            "userId": "anonimo",
+            "username": "Minerador #1"
           }
         }
       }
-    },
-    "baiak": {
-      "name": "Baiak Idle Terminal Bot",
-      "game": "Baiak Idle",
-      "engine": "Bun / Colyseus Headless",
-      "port": 8090,
-      "dashboardUrl": "https://kbelludoo.github.io/baiak-idle-bot/",
-      "status": {
-        "online": true,
-        "fleet": {
-          "botsOnline": 3,
-          "botsTotal": 3,
-          "totalXpPerHour": 13105612,
-          "totalLootPerHour": 698204,
-          "totalKillsPerHour": 4134,
-          "totalGold": 267604950
-        },
-        "bots": {
-          "acc1": {
-            "label": "Conta #1",
-            "name": "Frota #1",
-            "online": true,
-            "reachable": true,
-            "port": 8080,
-            "status": {
-              "online": true,
-              "uptimeSec": 2166,
-              "hunt": {
-                "id": "grimreaper-cave",
-                "name": "Grim Reaper",
-                "minLevel": 130
-              },
-              "rates": {
-                "killsPerHour": 2277,
-                "goldPerHour": -908387,
-                "xpPerHour": 6451424,
-                "sampledAt": "2026-10-13T12:49:59.591Z"
-              },
-              "telemetry": {
-                "level": 341,
-                "gold": 72083420,
-                "stamina": "21:50",
-                "kills": 739,
-                "waves": 537,
-                "hunt": "Grim Reaper",
-                "onlineSince": "2026-10-13T12:13:58.804Z"
-              },
-              "characters": [
-                {
-                  "id": 114999,
-                  "name": "Personagem #1",
-                  "vocation": "knight",
-                  "level": 309,
-                  "gold": 72151929,
-                  "stamina": 1313.3057666427885,
-                  "rotation": [
-                    "exori gran",
-                    "exori",
-                    "exori min",
-                    "exori mas"
-                  ],
-                  "healSpell": "exura ico",
-                  "hpPotion": "supreme health potion",
-                  "manaPotion": "distilled ultimate mana potion"
-                },
-                {
-                  "id": 115396,
-                  "name": "Personagem #2",
-                  "vocation": "monk",
-                  "level": 312,
-                  "gold": 72151929,
-                  "stamina": 1313.3057666427885,
-                  "rotation": [
-                    "exori gran mas pug",
-                    "exori mas pug",
-                    "exori mas nia",
-                    "exori med pug"
-                  ],
-                  "healSpell": "exura gran tio",
-                  "hpPotion": "ultimate spirit potion",
-                  "manaPotion": "distilled ultimate mana potion"
-                },
-                {
-                  "id": 115596,
-                  "name": "Personagem #3",
-                  "vocation": "paladin",
-                  "level": 341,
-                  "gold": 72151929,
-                  "stamina": 1313.3057666427885,
-                  "rotation": [
-                    "exevo mas san",
-                    "exori dir san",
-                    "exori dir moe",
-                    "exori gran con"
-                  ],
-                  "healSpell": "exura gran san",
-                  "hpPotion": "ultimate spirit potion",
-                  "manaPotion": "distilled ultimate mana potion"
-                },
-                {
-                  "id": 115889,
-                  "name": "Personagem #4",
-                  "vocation": "sorcerer",
-                  "level": 8,
-                  "gold": 42136585,
-                  "stamina": 1371.6664831979947,
-                  "rotation": [],
-                  "healSpell": "",
-                  "hpPotion": "",
-                  "manaPotion": ""
-                }
-              ],
-              "state": {
-                "inTreino": false,
-                "autoBoss": true
-              },
-              "auth": {
-                "writing": "loopback-only"
-              },
-              "availableHunts": [
-                {
-                  "id": "troll-cave",
-                  "name": "Troll Cave",
-                  "minLevel": 1
-                },
-                {
-                  "id": "elf-lair",
-                  "name": "Elf",
-                  "minLevel": 8
-                },
-                {
-                  "id": "amazon-camp",
-                  "name": "Amazon",
-                  "minLevel": 9
-                },
-                {
-                  "id": "minotaur",
-                  "name": "Minotaur",
-                  "minLevel": 10
-                },
-                {
-                  "id": "kongra",
-                  "name": "Kongra",
-                  "minLevel": 10
-                },
-                {
-                  "id": "cyclopolis",
-                  "name": "Cyclopolis",
-                  "minLevel": 15
-                },
-                {
-                  "id": "corym-cave",
-                  "name": "Corym Skirmisher",
-                  "minLevel": 30
-                },
-                {
-                  "id": "refiner-cave",
-                  "name": "Stone Refiner",
-                  "minLevel": 30
-                },
-                {
-                  "id": "giant-spider",
-                  "name": "Giant Spider",
-                  "minLevel": 50
-                },
-                {
-                  "id": "crawler-cave",
-                  "name": "Crawler",
-                  "minLevel": 50
-                },
-                {
-                  "id": "glooth-cave",
-                  "name": "Glooth Bandit",
-                  "minLevel": 60
-                },
-                {
-                  "id": "hero-cave",
-                  "name": "Hero",
-                  "minLevel": 60
-                },
-                {
-                  "id": "cult-cave",
-                  "name": "Cult",
-                  "minLevel": 80
-                },
-                {
-                  "id": "dragon-lair",
-                  "name": "Dragon Lair",
-                  "minLevel": 80
-                },
-                {
-                  "id": "werebadge-cave",
-                  "name": "Werebadge",
-                  "minLevel": 90
-                },
-                {
-                  "id": "hydra-cave",
-                  "name": "Hydra",
-                  "minLevel": 100
-                },
-                {
-                  "id": "behemoth-cave",
-                  "name": "Behemoth",
-                  "minLevel": 100
-                },
-                {
-                  "id": "orclops-cave",
-                  "name": "Orclops",
-                  "minLevel": 100
-                },
-                {
-                  "id": "crumbling-cave",
-                  "name": "Crumbling Caverns",
-                  "minLevel": 130
-                },
-                {
-                  "id": "grimreaper-cave",
-                  "name": "Grim Reaper",
-                  "minLevel": 130
-                },
-                {
-                  "id": "wyrm-cave",
-                  "name": "Wyrm",
-                  "minLevel": 130
-                },
-                {
-                  "id": "candia-cave",
-                  "name": "Candia",
-                  "minLevel": 140
-                },
-                {
-                  "id": "werehyaena-cave",
-                  "name": "Werehyaena",
-                  "minLevel": 140
-                },
-                {
-                  "id": "asura-lair",
-                  "name": "Asuras",
-                  "minLevel": 150
-                },
-                {
-                  "id": "darktorturer-cave",
-                  "name": "Dark Torturer",
-                  "minLevel": 150
-                },
-                {
-                  "id": "wereliones-cave",
-                  "name": "Wereliones",
-                  "minLevel": 170
-                },
-                {
-                  "id": "draken-lair",
-                  "name": "Draken",
-                  "minLevel": 180
-                },
-                {
-                  "id": "mitmah-cave",
-                  "name": "Mitmah Seer",
-                  "minLevel": 180
-                },
-                {
-                  "id": "cobra-cave",
-                  "name": "Cobras",
-                  "minLevel": 190
-                },
-                {
-                  "id": "undeadragon-lair",
-                  "name": "Undead Dragon",
-                  "minLevel": 200
-                },
-                {
-                  "id": "cliffstrider-cave",
-                  "name": "Cliff Strider",
-                  "minLevel": 200
-                },
-                {
-                  "id": "hideous-fungus",
-                  "name": "Hideous Fungus",
-                  "minLevel": 200
-                },
-                {
-                  "id": "magmacrawler-cave",
-                  "name": "Magma Crawler",
-                  "minLevel": 200
-                },
-                {
-                  "id": "dreadintruder-cave",
-                  "name": "Dread Intruder",
-                  "minLevel": 200
-                },
-                {
-                  "id": "falcon",
-                  "name": "Falcon",
-                  "minLevel": 210
-                },
-                {
-                  "id": "vexclaw-lair",
-                  "name": "Vexclaw",
-                  "minLevel": 210
-                },
-                {
-                  "id": "grimeleech-cave",
-                  "name": "Grimeleech",
-                  "minLevel": 220
-                },
-                {
-                  "id": "choking-cave",
-                  "name": "Choking Fear",
-                  "minLevel": 240
-                },
-                {
-                  "id": "crazed-cave",
-                  "name": "Crazed Elf's",
-                  "minLevel": 240
-                },
-                {
-                  "id": "guzzlemaw-cave",
-                  "name": "Guzzlemaw",
-                  "minLevel": 250
-                },
-                {
-                  "id": "raubritter-lair",
-                  "name": "Raubritter",
-                  "minLevel": 250
-                },
-                {
-                  "id": "catacomb-cave",
-                  "name": "Catacomb",
-                  "minLevel": 250
-                },
-                {
-                  "id": "prison-cave",
-                  "name": "Prison",
-                  "minLevel": 250
-                },
-                {
-                  "id": "lionknight-cave",
-                  "name": "Lion Knight",
-                  "minLevel": 270
-                },
-                {
-                  "id": "megadragon-cave",
-                  "name": "Mega Dragon",
-                  "minLevel": 290
-                },
-                {
-                  "id": "naga-lair",
-                  "name": "Naga Lair",
-                  "minLevel": 300
-                },
-                {
-                  "id": "trueazura-cave",
-                  "name": "True Azura",
-                  "minLevel": 300
-                },
-                {
-                  "id": "freakishlostsoul-cave",
-                  "name": "Freakish Lost Soul",
-                  "minLevel": 300
-                },
-                {
-                  "id": "weretiger-cave",
-                  "name": "Weretiger",
-                  "minLevel": 330
-                },
-                {
-                  "id": "werecrocodile-cave",
-                  "name": "Feral Werecrocodile",
-                  "minLevel": 340
-                },
-                {
-                  "id": "bulltaur-cave",
-                  "name": "Bulltaur",
-                  "minLevel": 350
-                },
-                {
-                  "id": "gazer-lair",
-                  "name": "Gazer",
-                  "minLevel": 350
-                },
-                {
-                  "id": "skeletin-cave",
-                  "name": "Skeleton Elite Warrior",
-                  "minLevel": 350
-                },
-                {
-                  "id": "bashmu-cave",
-                  "name": "Bashmu",
-                  "minLevel": 350
-                },
-                {
-                  "id": "darkcarnisylvan-cave",
-                  "name": "Dark Carnisylvan",
-                  "minLevel": 430
-                },
-                {
-                  "id": "inferniarch-lair",
-                  "name": "Inferniarch",
-                  "minLevel": 450
-                },
-                {
-                  "id": "girtablilu-cave",
-                  "name": "girtablilu warrior",
-                  "minLevel": 460
-                },
-                {
-                  "id": "livrariaice-cave",
-                  "name": "Livraria ICE",
-                  "minLevel": 500
-                },
-                {
-                  "id": "livrariafire-cave",
-                  "name": "Livraria FIRE",
-                  "minLevel": 500
-                },
-                {
-                  "id": "livrariaearth-cave",
-                  "name": "Livraria EARTH",
-                  "minLevel": 500
-                },
-                {
-                  "id": "livraria-cave",
-                  "name": "Livraria ENERGY",
-                  "minLevel": 500
-                },
-                {
-                  "id": "quararaider-lair",
-                  "name": "Quara Raider",
-                  "minLevel": 600
-                },
-                {
-                  "id": "norcferatu-cave",
-                  "name": "Norcferatu Nightweaver",
-                  "minLevel": 600
-                },
-                {
-                  "id": "lavafungos-cave",
-                  "name": "Lavafungos",
-                  "minLevel": 610
-                },
-                {
-                  "id": "afflictedstrider-cave",
-                  "name": "Afflicted Strider",
-                  "minLevel": 610
-                },
-                {
-                  "id": "varnisheddiremaw-cave",
-                  "name": "Varnished Diremaw",
-                  "minLevel": 610
-                },
-                {
-                  "id": "crypt-cave",
-                  "name": "Crypt Construct",
-                  "minLevel": 700
-                },
-                {
-                  "id": "gnomprona2-cave",
-                  "name": "Crystal Enigma",
-                  "minLevel": 800
-                },
-                {
-                  "id": "rottengolem-cave",
-                  "name": "Rotten Golem",
-                  "minLevel": 800
-                },
-                {
-                  "id": "cloakofterror-lair",
-                  "name": "Cloak Of Terror",
-                  "minLevel": 800
-                },
-                {
-                  "id": "gnomprona1-cave",
-                  "name": "Monster Graveyard",
-                  "minLevel": 800
-                },
-                {
-                  "id": "gnomprona3-cave",
-                  "name": "Sparkling Pools",
-                  "minLevel": 800
-                },
-                {
-                  "id": "infernalmdemon-cave",
-                  "name": "Infernal Demon",
-                  "minLevel": 800
-                },
-                {
-                  "id": "bonyseadevil-cave",
-                  "name": "Bony Sea Devil",
-                  "minLevel": 800
-                },
-                {
-                  "id": "darkthais-cave",
-                  "name": "Dark Thais",
-                  "minLevel": 800
-                },
-                {
-                  "id": "bloatedmanmaggot-cave",
-                  "name": "bloated man-maggot",
-                  "minLevel": 1500
-                },
-                {
-                  "id": "maggot-cave",
-                  "name": "Rotten man-maggot",
-                  "minLevel": 1500
-                },
-                {
-                  "id": "draklightsource-cave",
-                  "name": "Darklight Source",
-                  "minLevel": 1500
-                },
-                {
-                  "id": "wanderingpillar-cave",
-                  "name": "Wandering Pillar",
-                  "minLevel": 1500
-                }
-              ],
-              "updatedAt": "2026-10-13T12:50:05.598Z"
-            },
-            "error": null
-          },
-          "acc2": {
-            "label": "Conta #2",
-            "name": "Frota #2",
-            "online": true,
-            "reachable": true,
-            "port": 8082,
-            "status": {
-              "online": true,
-              "uptimeSec": 7831,
-              "hunt": {
-                "id": "glooth-cave",
-                "name": "🧘 Treino Online",
-                "minLevel": 60
-              },
-              "rates": {
-                "killsPerHour": 0,
-                "goldPerHour": 0,
-                "xpPerHour": 0,
-                "sampledAt": "2026-10-13T12:50:00.791Z"
-              },
-              "telemetry": {
-                "level": 158,
-                "gold": 96135629,
-                "stamina": "23:35",
-                "kills": 881,
-                "waves": 1116,
-                "hunt": "Glooth Bandit",
-                "onlineSince": "2026-10-13T10:39:33.932Z"
-              },
-              "characters": [
-                {
-                  "id": 111307,
-                  "name": "Personagem #1",
-                  "vocation": "monk",
-                  "level": 158,
-                  "gold": 96135629,
-                  "stamina": 1417.499783289238,
-                  "rotation": [],
-                  "healSpell": "",
-                  "hpPotion": "",
-                  "manaPotion": ""
-                },
-                {
-                  "id": 111391,
-                  "name": "Personagem #2",
-                  "vocation": "druid",
-                  "level": 163,
-                  "gold": 49743300,
-                  "stamina": 1406.7932665983778,
-                  "rotation": [],
-                  "healSpell": "",
-                  "hpPotion": "",
-                  "manaPotion": ""
-                },
-                {
-                  "id": 111392,
-                  "name": "Personagem #3",
-                  "vocation": "sorcerer",
-                  "level": 10,
-                  "gold": 44017,
-                  "stamina": 2224.7797166681394,
-                  "rotation": [],
-                  "healSpell": "",
-                  "hpPotion": "",
-                  "manaPotion": ""
-                },
-                {
-                  "id": 111422,
-                  "name": "Personagem #4",
-                  "vocation": "paladin",
-                  "level": 25,
-                  "gold": 2000,
-                  "stamina": 2518.2372833333825,
-                  "rotation": [],
-                  "healSpell": "",
-                  "hpPotion": "",
-                  "manaPotion": ""
-                },
-                {
-                  "id": 111594,
-                  "name": "Personagem #5",
-                  "vocation": "knight",
-                  "level": 209,
-                  "gold": 96135629,
-                  "stamina": 1417.499783289238,
-                  "rotation": [],
-                  "healSpell": "",
-                  "hpPotion": "",
-                  "manaPotion": ""
-                }
-              ],
-              "state": {
-                "inTreino": true,
-                "autoBoss": true
-              },
-              "auth": {
-                "writing": "loopback-only"
-              },
-              "availableHunts": [
-                {
-                  "id": "troll-cave",
-                  "name": "Troll Cave",
-                  "minLevel": 1
-                },
-                {
-                  "id": "elf-lair",
-                  "name": "Elf",
-                  "minLevel": 8
-                },
-                {
-                  "id": "amazon-camp",
-                  "name": "Amazon",
-                  "minLevel": 9
-                },
-                {
-                  "id": "minotaur",
-                  "name": "Minotaur",
-                  "minLevel": 10
-                },
-                {
-                  "id": "kongra",
-                  "name": "Kongra",
-                  "minLevel": 10
-                },
-                {
-                  "id": "cyclopolis",
-                  "name": "Cyclopolis",
-                  "minLevel": 15
-                },
-                {
-                  "id": "corym-cave",
-                  "name": "Corym Skirmisher",
-                  "minLevel": 30
-                },
-                {
-                  "id": "refiner-cave",
-                  "name": "Stone Refiner",
-                  "minLevel": 30
-                },
-                {
-                  "id": "giant-spider",
-                  "name": "Giant Spider",
-                  "minLevel": 50
-                },
-                {
-                  "id": "crawler-cave",
-                  "name": "Crawler",
-                  "minLevel": 50
-                },
-                {
-                  "id": "glooth-cave",
-                  "name": "Glooth Bandit",
-                  "minLevel": 60
-                },
-                {
-                  "id": "hero-cave",
-                  "name": "Hero",
-                  "minLevel": 60
-                },
-                {
-                  "id": "cult-cave",
-                  "name": "Cult",
-                  "minLevel": 80
-                },
-                {
-                  "id": "dragon-lair",
-                  "name": "Dragon Lair",
-                  "minLevel": 80
-                },
-                {
-                  "id": "werebadge-cave",
-                  "name": "Werebadge",
-                  "minLevel": 90
-                },
-                {
-                  "id": "hydra-cave",
-                  "name": "Hydra",
-                  "minLevel": 100
-                },
-                {
-                  "id": "behemoth-cave",
-                  "name": "Behemoth",
-                  "minLevel": 100
-                },
-                {
-                  "id": "orclops-cave",
-                  "name": "Orclops",
-                  "minLevel": 100
-                },
-                {
-                  "id": "crumbling-cave",
-                  "name": "Crumbling Caverns",
-                  "minLevel": 130
-                },
-                {
-                  "id": "grimreaper-cave",
-                  "name": "Grim Reaper",
-                  "minLevel": 130
-                },
-                {
-                  "id": "wyrm-cave",
-                  "name": "Wyrm",
-                  "minLevel": 130
-                },
-                {
-                  "id": "candia-cave",
-                  "name": "Candia",
-                  "minLevel": 140
-                },
-                {
-                  "id": "werehyaena-cave",
-                  "name": "Werehyaena",
-                  "minLevel": 140
-                },
-                {
-                  "id": "asura-lair",
-                  "name": "Asuras",
-                  "minLevel": 150
-                },
-                {
-                  "id": "darktorturer-cave",
-                  "name": "Dark Torturer",
-                  "minLevel": 150
-                },
-                {
-                  "id": "wereliones-cave",
-                  "name": "Wereliones",
-                  "minLevel": 170
-                },
-                {
-                  "id": "draken-lair",
-                  "name": "Draken",
-                  "minLevel": 180
-                },
-                {
-                  "id": "mitmah-cave",
-                  "name": "Mitmah Seer",
-                  "minLevel": 180
-                },
-                {
-                  "id": "cobra-cave",
-                  "name": "Cobras",
-                  "minLevel": 190
-                },
-                {
-                  "id": "undeadragon-lair",
-                  "name": "Undead Dragon",
-                  "minLevel": 200
-                },
-                {
-                  "id": "cliffstrider-cave",
-                  "name": "Cliff Strider",
-                  "minLevel": 200
-                },
-                {
-                  "id": "hideous-fungus",
-                  "name": "Hideous Fungus",
-                  "minLevel": 200
-                },
-                {
-                  "id": "magmacrawler-cave",
-                  "name": "Magma Crawler",
-                  "minLevel": 200
-                },
-                {
-                  "id": "dreadintruder-cave",
-                  "name": "Dread Intruder",
-                  "minLevel": 200
-                },
-                {
-                  "id": "falcon",
-                  "name": "Falcon",
-                  "minLevel": 210
-                },
-                {
-                  "id": "vexclaw-lair",
-                  "name": "Vexclaw",
-                  "minLevel": 210
-                },
-                {
-                  "id": "grimeleech-cave",
-                  "name": "Grimeleech",
-                  "minLevel": 220
-                },
-                {
-                  "id": "choking-cave",
-                  "name": "Choking Fear",
-                  "minLevel": 240
-                },
-                {
-                  "id": "crazed-cave",
-                  "name": "Crazed Elf's",
-                  "minLevel": 240
-                },
-                {
-                  "id": "guzzlemaw-cave",
-                  "name": "Guzzlemaw",
-                  "minLevel": 250
-                },
-                {
-                  "id": "raubritter-lair",
-                  "name": "Raubritter",
-                  "minLevel": 250
-                },
-                {
-                  "id": "catacomb-cave",
-                  "name": "Catacomb",
-                  "minLevel": 250
-                },
-                {
-                  "id": "prison-cave",
-                  "name": "Prison",
-                  "minLevel": 250
-                },
-                {
-                  "id": "lionknight-cave",
-                  "name": "Lion Knight",
-                  "minLevel": 270
-                },
-                {
-                  "id": "megadragon-cave",
-                  "name": "Mega Dragon",
-                  "minLevel": 290
-                },
-                {
-                  "id": "naga-lair",
-                  "name": "Naga Lair",
-                  "minLevel": 300
-                },
-                {
-                  "id": "trueazura-cave",
-                  "name": "True Azura",
-                  "minLevel": 300
-                },
-                {
-                  "id": "freakishlostsoul-cave",
-                  "name": "Freakish Lost Soul",
-                  "minLevel": 300
-                },
-                {
-                  "id": "weretiger-cave",
-                  "name": "Weretiger",
-                  "minLevel": 330
-                },
-                {
-                  "id": "werecrocodile-cave",
-                  "name": "Feral Werecrocodile",
-                  "minLevel": 340
-                },
-                {
-                  "id": "bulltaur-cave",
-                  "name": "Bulltaur",
-                  "minLevel": 350
-                },
-                {
-                  "id": "gazer-lair",
-                  "name": "Gazer",
-                  "minLevel": 350
-                },
-                {
-                  "id": "skeletin-cave",
-                  "name": "Skeleton Elite Warrior",
-                  "minLevel": 350
-                },
-                {
-                  "id": "bashmu-cave",
-                  "name": "Bashmu",
-                  "minLevel": 350
-                },
-                {
-                  "id": "darkcarnisylvan-cave",
-                  "name": "Dark Carnisylvan",
-                  "minLevel": 430
-                },
-                {
-                  "id": "inferniarch-lair",
-                  "name": "Inferniarch",
-                  "minLevel": 450
-                },
-                {
-                  "id": "girtablilu-cave",
-                  "name": "girtablilu warrior",
-                  "minLevel": 460
-                },
-                {
-                  "id": "livrariaice-cave",
-                  "name": "Livraria ICE",
-                  "minLevel": 500
-                },
-                {
-                  "id": "livrariafire-cave",
-                  "name": "Livraria FIRE",
-                  "minLevel": 500
-                },
-                {
-                  "id": "livrariaearth-cave",
-                  "name": "Livraria EARTH",
-                  "minLevel": 500
-                },
-                {
-                  "id": "livraria-cave",
-                  "name": "Livraria ENERGY",
-                  "minLevel": 500
-                },
-                {
-                  "id": "quararaider-lair",
-                  "name": "Quara Raider",
-                  "minLevel": 600
-                },
-                {
-                  "id": "norcferatu-cave",
-                  "name": "Norcferatu Nightweaver",
-                  "minLevel": 600
-                },
-                {
-                  "id": "lavafungos-cave",
-                  "name": "Lavafungos",
-                  "minLevel": 610
-                },
-                {
-                  "id": "afflictedstrider-cave",
-                  "name": "Afflicted Strider",
-                  "minLevel": 610
-                },
-                {
-                  "id": "varnisheddiremaw-cave",
-                  "name": "Varnished Diremaw",
-                  "minLevel": 610
-                },
-                {
-                  "id": "crypt-cave",
-                  "name": "Crypt Construct",
-                  "minLevel": 700
-                },
-                {
-                  "id": "gnomprona2-cave",
-                  "name": "Crystal Enigma",
-                  "minLevel": 800
-                },
-                {
-                  "id": "rottengolem-cave",
-                  "name": "Rotten Golem",
-                  "minLevel": 800
-                },
-                {
-                  "id": "cloakofterror-lair",
-                  "name": "Cloak Of Terror",
-                  "minLevel": 800
-                },
-                {
-                  "id": "gnomprona1-cave",
-                  "name": "Monster Graveyard",
-                  "minLevel": 800
-                },
-                {
-                  "id": "gnomprona3-cave",
-                  "name": "Sparkling Pools",
-                  "minLevel": 800
-                },
-                {
-                  "id": "infernalmdemon-cave",
-                  "name": "Infernal Demon",
-                  "minLevel": 800
-                },
-                {
-                  "id": "bonyseadevil-cave",
-                  "name": "Bony Sea Devil",
-                  "minLevel": 800
-                },
-                {
-                  "id": "darkthais-cave",
-                  "name": "Dark Thais",
-                  "minLevel": 800
-                },
-                {
-                  "id": "bloatedmanmaggot-cave",
-                  "name": "bloated man-maggot",
-                  "minLevel": 1500
-                },
-                {
-                  "id": "maggot-cave",
-                  "name": "Rotten man-maggot",
-                  "minLevel": 1500
-                },
-                {
-                  "id": "draklightsource-cave",
-                  "name": "Darklight Source",
-                  "minLevel": 1500
-                },
-                {
-                  "id": "wanderingpillar-cave",
-                  "name": "Wandering Pillar",
-                  "minLevel": 1500
-                }
-              ],
-              "updatedAt": "2026-10-13T12:50:05.680Z"
-            },
-            "error": null
-          },
-          "acc3": {
-            "label": "Conta #3",
-            "name": "Frota #3",
-            "online": true,
-            "reachable": true,
-            "port": 8083,
-            "status": {
-              "online": true,
-              "uptimeSec": 7595,
-              "hunt": {
-                "id": "asura-lair",
-                "name": "Asuras",
-                "minLevel": 150
-              },
-              "rates": {
-                "killsPerHour": 1857,
-                "goldPerHour": 698204,
-                "xpPerHour": 6654188,
-                "sampledAt": "2026-10-13T12:49:31.892Z"
-              },
-              "telemetry": {
-                "level": 474,
-                "gold": 99385901,
-                "stamina": "36:20",
-                "kills": 4005,
-                "waves": 2590,
-                "hunt": "Asuras",
-                "onlineSince": "2026-10-13T10:43:30.588Z"
-              },
-              "characters": [
-                {
-                  "id": 111638,
-                  "name": "Personagem #1",
-                  "vocation": "paladin",
-                  "level": 119,
-                  "gold": 299978124,
-                  "stamina": 2310.4287166143763,
-                  "rotation": [],
-                  "healSpell": "",
-                  "hpPotion": "",
-                  "manaPotion": ""
-                },
-                {
-                  "id": 111822,
-                  "name": "Personagem #2",
-                  "vocation": "druid",
-                  "level": 466,
-                  "gold": 99646671,
-                  "stamina": 2183.535366637999,
-                  "rotation": [],
-                  "healSpell": "",
-                  "hpPotion": "",
-                  "manaPotion": ""
-                },
-                {
-                  "id": 112046,
-                  "name": "Personagem #3",
-                  "vocation": "monk",
-                  "level": 98,
-                  "gold": 299978124,
-                  "stamina": 2310.4287166143763,
-                  "rotation": [],
-                  "healSpell": "",
-                  "hpPotion": "",
-                  "manaPotion": ""
-                },
-                {
-                  "id": 112816,
-                  "name": "Personagem #4",
-                  "vocation": "knight",
-                  "level": 474,
-                  "gold": 99646671,
-                  "stamina": 2183.535366637999,
-                  "rotation": [],
-                  "healSpell": "",
-                  "hpPotion": "",
-                  "manaPotion": ""
-                },
-                {
-                  "id": 113989,
-                  "name": "Personagem #5",
-                  "vocation": "sorcerer",
-                  "level": 452,
-                  "gold": 99646671,
-                  "stamina": 2183.535366637999,
-                  "rotation": [],
-                  "healSpell": "",
-                  "hpPotion": "",
-                  "manaPotion": ""
-                }
-              ],
-              "state": {
-                "inTreino": false,
-                "autoBoss": true
-              },
-              "auth": {
-                "writing": "loopback-only"
-              },
-              "availableHunts": [
-                {
-                  "id": "troll-cave",
-                  "name": "Troll Cave",
-                  "minLevel": 1
-                },
-                {
-                  "id": "elf-lair",
-                  "name": "Elf",
-                  "minLevel": 8
-                },
-                {
-                  "id": "amazon-camp",
-                  "name": "Amazon",
-                  "minLevel": 9
-                },
-                {
-                  "id": "minotaur",
-                  "name": "Minotaur",
-                  "minLevel": 10
-                },
-                {
-                  "id": "kongra",
-                  "name": "Kongra",
-                  "minLevel": 10
-                },
-                {
-                  "id": "cyclopolis",
-                  "name": "Cyclopolis",
-                  "minLevel": 15
-                },
-                {
-                  "id": "corym-cave",
-                  "name": "Corym Skirmisher",
-                  "minLevel": 30
-                },
-                {
-                  "id": "refiner-cave",
-                  "name": "Stone Refiner",
-                  "minLevel": 30
-                },
-                {
-                  "id": "giant-spider",
-                  "name": "Giant Spider",
-                  "minLevel": 50
-                },
-                {
-                  "id": "crawler-cave",
-                  "name": "Crawler",
-                  "minLevel": 50
-                },
-                {
-                  "id": "glooth-cave",
-                  "name": "Glooth Bandit",
-                  "minLevel": 60
-                },
-                {
-                  "id": "hero-cave",
-                  "name": "Hero",
-                  "minLevel": 60
-                },
-                {
-                  "id": "cult-cave",
-                  "name": "Cult",
-                  "minLevel": 80
-                },
-                {
-                  "id": "dragon-lair",
-                  "name": "Dragon Lair",
-                  "minLevel": 80
-                },
-                {
-                  "id": "werebadge-cave",
-                  "name": "Werebadge",
-                  "minLevel": 90
-                },
-                {
-                  "id": "hydra-cave",
-                  "name": "Hydra",
-                  "minLevel": 100
-                },
-                {
-                  "id": "behemoth-cave",
-                  "name": "Behemoth",
-                  "minLevel": 100
-                },
-                {
-                  "id": "orclops-cave",
-                  "name": "Orclops",
-                  "minLevel": 100
-                },
-                {
-                  "id": "crumbling-cave",
-                  "name": "Crumbling Caverns",
-                  "minLevel": 130
-                },
-                {
-                  "id": "grimreaper-cave",
-                  "name": "Grim Reaper",
-                  "minLevel": 130
-                },
-                {
-                  "id": "wyrm-cave",
-                  "name": "Wyrm",
-                  "minLevel": 130
-                },
-                {
-                  "id": "candia-cave",
-                  "name": "Candia",
-                  "minLevel": 140
-                },
-                {
-                  "id": "werehyaena-cave",
-                  "name": "Werehyaena",
-                  "minLevel": 140
-                },
-                {
-                  "id": "asura-lair",
-                  "name": "Asuras",
-                  "minLevel": 150
-                },
-                {
-                  "id": "darktorturer-cave",
-                  "name": "Dark Torturer",
-                  "minLevel": 150
-                },
-                {
-                  "id": "wereliones-cave",
-                  "name": "Wereliones",
-                  "minLevel": 170
-                },
-                {
-                  "id": "draken-lair",
-                  "name": "Draken",
-                  "minLevel": 180
-                },
-                {
-                  "id": "mitmah-cave",
-                  "name": "Mitmah Seer",
-                  "minLevel": 180
-                },
-                {
-                  "id": "cobra-cave",
-                  "name": "Cobras",
-                  "minLevel": 190
-                },
-                {
-                  "id": "undeadragon-lair",
-                  "name": "Undead Dragon",
-                  "minLevel": 200
-                },
-                {
-                  "id": "cliffstrider-cave",
-                  "name": "Cliff Strider",
-                  "minLevel": 200
-                },
-                {
-                  "id": "hideous-fungus",
-                  "name": "Hideous Fungus",
-                  "minLevel": 200
-                },
-                {
-                  "id": "magmacrawler-cave",
-                  "name": "Magma Crawler",
-                  "minLevel": 200
-                },
-                {
-                  "id": "dreadintruder-cave",
-                  "name": "Dread Intruder",
-                  "minLevel": 200
-                },
-                {
-                  "id": "falcon",
-                  "name": "Falcon",
-                  "minLevel": 210
-                },
-                {
-                  "id": "vexclaw-lair",
-                  "name": "Vexclaw",
-                  "minLevel": 210
-                },
-                {
-                  "id": "grimeleech-cave",
-                  "name": "Grimeleech",
-                  "minLevel": 220
-                },
-                {
-                  "id": "choking-cave",
-                  "name": "Choking Fear",
-                  "minLevel": 240
-                },
-                {
-                  "id": "crazed-cave",
-                  "name": "Crazed Elf's",
-                  "minLevel": 240
-                },
-                {
-                  "id": "guzzlemaw-cave",
-                  "name": "Guzzlemaw",
-                  "minLevel": 250
-                },
-                {
-                  "id": "raubritter-lair",
-                  "name": "Raubritter",
-                  "minLevel": 250
-                },
-                {
-                  "id": "catacomb-cave",
-                  "name": "Catacomb",
-                  "minLevel": 250
-                },
-                {
-                  "id": "prison-cave",
-                  "name": "Prison",
-                  "minLevel": 250
-                },
-                {
-                  "id": "lionknight-cave",
-                  "name": "Lion Knight",
-                  "minLevel": 270
-                },
-                {
-                  "id": "megadragon-cave",
-                  "name": "Mega Dragon",
-                  "minLevel": 290
-                },
-                {
-                  "id": "naga-lair",
-                  "name": "Naga Lair",
-                  "minLevel": 300
-                },
-                {
-                  "id": "trueazura-cave",
-                  "name": "True Azura",
-                  "minLevel": 300
-                },
-                {
-                  "id": "freakishlostsoul-cave",
-                  "name": "Freakish Lost Soul",
-                  "minLevel": 300
-                },
-                {
-                  "id": "weretiger-cave",
-                  "name": "Weretiger",
-                  "minLevel": 330
-                },
-                {
-                  "id": "werecrocodile-cave",
-                  "name": "Feral Werecrocodile",
-                  "minLevel": 340
-                },
-                {
-                  "id": "bulltaur-cave",
-                  "name": "Bulltaur",
-                  "minLevel": 350
-                },
-                {
-                  "id": "gazer-lair",
-                  "name": "Gazer",
-                  "minLevel": 350
-                },
-                {
-                  "id": "skeletin-cave",
-                  "name": "Skeleton Elite Warrior",
-                  "minLevel": 350
-                },
-                {
-                  "id": "bashmu-cave",
-                  "name": "Bashmu",
-                  "minLevel": 350
-                },
-                {
-                  "id": "darkcarnisylvan-cave",
-                  "name": "Dark Carnisylvan",
-                  "minLevel": 430
-                },
-                {
-                  "id": "inferniarch-lair",
-                  "name": "Inferniarch",
-                  "minLevel": 450
-                },
-                {
-                  "id": "girtablilu-cave",
-                  "name": "girtablilu warrior",
-                  "minLevel": 460
-                },
-                {
-                  "id": "livrariaice-cave",
-                  "name": "Livraria ICE",
-                  "minLevel": 500
-                },
-                {
-                  "id": "livrariafire-cave",
-                  "name": "Livraria FIRE",
-                  "minLevel": 500
-                },
-                {
-                  "id": "livrariaearth-cave",
-                  "name": "Livraria EARTH",
-                  "minLevel": 500
-                },
-                {
-                  "id": "livraria-cave",
-                  "name": "Livraria ENERGY",
-                  "minLevel": 500
-                },
-                {
-                  "id": "quararaider-lair",
-                  "name": "Quara Raider",
-                  "minLevel": 600
-                },
-                {
-                  "id": "norcferatu-cave",
-                  "name": "Norcferatu Nightweaver",
-                  "minLevel": 600
-                },
-                {
-                  "id": "lavafungos-cave",
-                  "name": "Lavafungos",
-                  "minLevel": 610
-                },
-                {
-                  "id": "afflictedstrider-cave",
-                  "name": "Afflicted Strider",
-                  "minLevel": 610
-                },
-                {
-                  "id": "varnisheddiremaw-cave",
-                  "name": "Varnished Diremaw",
-                  "minLevel": 610
-                },
-                {
-                  "id": "crypt-cave",
-                  "name": "Crypt Construct",
-                  "minLevel": 700
-                },
-                {
-                  "id": "gnomprona2-cave",
-                  "name": "Crystal Enigma",
-                  "minLevel": 800
-                },
-                {
-                  "id": "rottengolem-cave",
-                  "name": "Rotten Golem",
-                  "minLevel": 800
-                },
-                {
-                  "id": "cloakofterror-lair",
-                  "name": "Cloak Of Terror",
-                  "minLevel": 800
-                },
-                {
-                  "id": "gnomprona1-cave",
-                  "name": "Monster Graveyard",
-                  "minLevel": 800
-                },
-                {
-                  "id": "gnomprona3-cave",
-                  "name": "Sparkling Pools",
-                  "minLevel": 800
-                },
-                {
-                  "id": "infernalmdemon-cave",
-                  "name": "Infernal Demon",
-                  "minLevel": 800
-                },
-                {
-                  "id": "bonyseadevil-cave",
-                  "name": "Bony Sea Devil",
-                  "minLevel": 800
-                },
-                {
-                  "id": "darkthais-cave",
-                  "name": "Dark Thais",
-                  "minLevel": 800
-                },
-                {
-                  "id": "bloatedmanmaggot-cave",
-                  "name": "bloated man-maggot",
-                  "minLevel": 1500
-                },
-                {
-                  "id": "maggot-cave",
-                  "name": "Rotten man-maggot",
-                  "minLevel": 1500
-                },
-                {
-                  "id": "draklightsource-cave",
-                  "name": "Darklight Source",
-                  "minLevel": 1500
-                },
-                {
-                  "id": "wanderingpillar-cave",
-                  "name": "Wandering Pillar",
-                  "minLevel": 1500
-                }
-              ],
-              "updatedAt": "2026-10-13T12:50:05.598Z"
-            },
-            "error": null
-          }
-        },
-        "hunts": [
-          {
-            "id": "troll-cave",
-            "name": "Troll Cave",
-            "minLevel": 1
-          },
-          {
-            "id": "elf-lair",
-            "name": "Elf",
-            "minLevel": 8
-          },
-          {
-            "id": "amazon-camp",
-            "name": "Amazon",
-            "minLevel": 9
-          },
-          {
-            "id": "minotaur",
-            "name": "Minotaur",
-            "minLevel": 10
-          },
-          {
-            "id": "kongra",
-            "name": "Kongra",
-            "minLevel": 10
-          },
-          {
-            "id": "cyclopolis",
-            "name": "Cyclopolis",
-            "minLevel": 15
-          },
-          {
-            "id": "corym-cave",
-            "name": "Corym Skirmisher",
-            "minLevel": 30
-          },
-          {
-            "id": "refiner-cave",
-            "name": "Stone Refiner",
-            "minLevel": 30
-          },
-          {
-            "id": "giant-spider",
-            "name": "Giant Spider",
-            "minLevel": 50
-          },
-          {
-            "id": "crawler-cave",
-            "name": "Crawler",
-            "minLevel": 50
-          },
-          {
-            "id": "glooth-cave",
-            "name": "Glooth Bandit",
-            "minLevel": 60
-          },
-          {
-            "id": "hero-cave",
-            "name": "Hero",
-            "minLevel": 60
-          },
-          {
-            "id": "cult-cave",
-            "name": "Cult",
-            "minLevel": 80
-          },
-          {
-            "id": "dragon-lair",
-            "name": "Dragon Lair",
-            "minLevel": 80
-          },
-          {
-            "id": "werebadge-cave",
-            "name": "Werebadge",
-            "minLevel": 90
-          },
-          {
-            "id": "hydra-cave",
-            "name": "Hydra",
-            "minLevel": 100
-          },
-          {
-            "id": "behemoth-cave",
-            "name": "Behemoth",
-            "minLevel": 100
-          },
-          {
-            "id": "orclops-cave",
-            "name": "Orclops",
-            "minLevel": 100
-          },
-          {
-            "id": "crumbling-cave",
-            "name": "Crumbling Caverns",
-            "minLevel": 130
-          },
-          {
-            "id": "grimreaper-cave",
-            "name": "Grim Reaper",
-            "minLevel": 130
-          },
-          {
-            "id": "wyrm-cave",
-            "name": "Wyrm",
-            "minLevel": 130
-          },
-          {
-            "id": "candia-cave",
-            "name": "Candia",
-            "minLevel": 140
-          },
-          {
-            "id": "werehyaena-cave",
-            "name": "Werehyaena",
-            "minLevel": 140
-          },
-          {
-            "id": "asura-lair",
-            "name": "Asuras",
-            "minLevel": 150
-          },
-          {
-            "id": "darktorturer-cave",
-            "name": "Dark Torturer",
-            "minLevel": 150
-          },
-          {
-            "id": "wereliones-cave",
-            "name": "Wereliones",
-            "minLevel": 170
-          },
-          {
-            "id": "draken-lair",
-            "name": "Draken",
-            "minLevel": 180
-          },
-          {
-            "id": "mitmah-cave",
-            "name": "Mitmah Seer",
-            "minLevel": 180
-          },
-          {
-            "id": "cobra-cave",
-            "name": "Cobras",
-            "minLevel": 190
-          },
-          {
-            "id": "undeadragon-lair",
-            "name": "Undead Dragon",
-            "minLevel": 200
-          },
-          {
-            "id": "cliffstrider-cave",
-            "name": "Cliff Strider",
-            "minLevel": 200
-          },
-          {
-            "id": "hideous-fungus",
-            "name": "Hideous Fungus",
-            "minLevel": 200
-          },
-          {
-            "id": "magmacrawler-cave",
-            "name": "Magma Crawler",
-            "minLevel": 200
-          },
-          {
-            "id": "dreadintruder-cave",
-            "name": "Dread Intruder",
-            "minLevel": 200
-          },
-          {
-            "id": "falcon",
-            "name": "Falcon",
-            "minLevel": 210
-          },
-          {
-            "id": "vexclaw-lair",
-            "name": "Vexclaw",
-            "minLevel": 210
-          },
-          {
-            "id": "grimeleech-cave",
-            "name": "Grimeleech",
-            "minLevel": 220
-          },
-          {
-            "id": "choking-cave",
-            "name": "Choking Fear",
-            "minLevel": 240
-          },
-          {
-            "id": "crazed-cave",
-            "name": "Crazed Elf's",
-            "minLevel": 240
-          },
-          {
-            "id": "guzzlemaw-cave",
-            "name": "Guzzlemaw",
-            "minLevel": 250
-          },
-          {
-            "id": "raubritter-lair",
-            "name": "Raubritter",
-            "minLevel": 250
-          },
-          {
-            "id": "catacomb-cave",
-            "name": "Catacomb",
-            "minLevel": 250
-          },
-          {
-            "id": "prison-cave",
-            "name": "Prison",
-            "minLevel": 250
-          },
-          {
-            "id": "lionknight-cave",
-            "name": "Lion Knight",
-            "minLevel": 270
-          },
-          {
-            "id": "megadragon-cave",
-            "name": "Mega Dragon",
-            "minLevel": 290
-          },
-          {
-            "id": "naga-lair",
-            "name": "Naga Lair",
-            "minLevel": 300
-          },
-          {
-            "id": "trueazura-cave",
-            "name": "True Azura",
-            "minLevel": 300
-          },
-          {
-            "id": "freakishlostsoul-cave",
-            "name": "Freakish Lost Soul",
-            "minLevel": 300
-          },
-          {
-            "id": "weretiger-cave",
-            "name": "Weretiger",
-            "minLevel": 330
-          },
-          {
-            "id": "werecrocodile-cave",
-            "name": "Feral Werecrocodile",
-            "minLevel": 340
-          },
-          {
-            "id": "bulltaur-cave",
-            "name": "Bulltaur",
-            "minLevel": 350
-          },
-          {
-            "id": "gazer-lair",
-            "name": "Gazer",
-            "minLevel": 350
-          },
-          {
-            "id": "skeletin-cave",
-            "name": "Skeleton Elite Warrior",
-            "minLevel": 350
-          },
-          {
-            "id": "bashmu-cave",
-            "name": "Bashmu",
-            "minLevel": 350
-          },
-          {
-            "id": "darkcarnisylvan-cave",
-            "name": "Dark Carnisylvan",
-            "minLevel": 430
-          },
-          {
-            "id": "inferniarch-lair",
-            "name": "Inferniarch",
-            "minLevel": 450
-          },
-          {
-            "id": "girtablilu-cave",
-            "name": "girtablilu warrior",
-            "minLevel": 460
-          },
-          {
-            "id": "livrariaice-cave",
-            "name": "Livraria ICE",
-            "minLevel": 500
-          },
-          {
-            "id": "livrariafire-cave",
-            "name": "Livraria FIRE",
-            "minLevel": 500
-          },
-          {
-            "id": "livrariaearth-cave",
-            "name": "Livraria EARTH",
-            "minLevel": 500
-          },
-          {
-            "id": "livraria-cave",
-            "name": "Livraria ENERGY",
-            "minLevel": 500
-          },
-          {
-            "id": "quararaider-lair",
-            "name": "Quara Raider",
-            "minLevel": 600
-          },
-          {
-            "id": "norcferatu-cave",
-            "name": "Norcferatu Nightweaver",
-            "minLevel": 600
-          },
-          {
-            "id": "lavafungos-cave",
-            "name": "Lavafungos",
-            "minLevel": 610
-          },
-          {
-            "id": "afflictedstrider-cave",
-            "name": "Afflicted Strider",
-            "minLevel": 610
-          },
-          {
-            "id": "varnisheddiremaw-cave",
-            "name": "Varnished Diremaw",
-            "minLevel": 610
-          },
-          {
-            "id": "crypt-cave",
-            "name": "Crypt Construct",
-            "minLevel": 700
-          },
-          {
-            "id": "gnomprona2-cave",
-            "name": "Crystal Enigma",
-            "minLevel": 800
-          },
-          {
-            "id": "rottengolem-cave",
-            "name": "Rotten Golem",
-            "minLevel": 800
-          },
-          {
-            "id": "cloakofterror-lair",
-            "name": "Cloak Of Terror",
-            "minLevel": 800
-          },
-          {
-            "id": "gnomprona1-cave",
-            "name": "Monster Graveyard",
-            "minLevel": 800
-          },
-          {
-            "id": "gnomprona3-cave",
-            "name": "Sparkling Pools",
-            "minLevel": 800
-          },
-          {
-            "id": "infernalmdemon-cave",
-            "name": "Infernal Demon",
-            "minLevel": 800
-          },
-          {
-            "id": "bonyseadevil-cave",
-            "name": "Bony Sea Devil",
-            "minLevel": 800
-          },
-          {
-            "id": "darkthais-cave",
-            "name": "Dark Thais",
-            "minLevel": 800
-          },
-          {
-            "id": "bloatedmanmaggot-cave",
-            "name": "bloated man-maggot",
-            "minLevel": 1500
-          },
-          {
-            "id": "maggot-cave",
-            "name": "Rotten man-maggot",
-            "minLevel": 1500
-          },
-          {
-            "id": "draklightsource-cave",
-            "name": "Darklight Source",
-            "minLevel": 1500
-          },
-          {
-            "id": "wanderingpillar-cave",
-            "name": "Wandering Pillar",
-            "minLevel": 1500
-          }
-        ],
-        "timestamp": "2026-10-13T12:50:05.681Z"
-      }
     }
+  },
+  "summary": {
+    "activeBots": 9,
+    "totalBots": 9
+  },
+  "timestamp": "2026-10-13T12:50:10Z",
+  "vps": {
+    "load": "2.66 1.31 0.77",
+    "ramAvailableMb": 480,
+    "ramPercent": 49,
+    "ramTotalMb": 951,
+    "ramUsedMb": 471,
+    "swapTotalMb": 1023,
+    "swapUsedMb": 379,
+    "uptime": "up 1 week, 11 hours, 36 minutes"
   }
 }
