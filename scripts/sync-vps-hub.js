@@ -73,13 +73,14 @@ function getSystemMetrics() {
 async function main() {
   const vps = getSystemMetrics();
 
-  const [huntera, tibidle, sigma, leveling, pokeidle, pokeidleworld, baiak] = await Promise.all([
+  const [huntera, tibidle, sigma, leveling, pokeidle, pokeidleworld, kickminer, baiak] = await Promise.all([
     fetchJson('http://127.0.0.1:3000/api/status'),
     fetchJson('http://127.0.0.1:3001/api/status'),
     fetchJson('http://127.0.0.1:3002/api/status'),
     fetchJson('http://127.0.0.1:3003/api/status'),
     fetchJson('http://127.0.0.1:3006/api/status'),
     fetchJson('http://127.0.0.1:3007/api/status'),
+    fetchJson('http://127.0.0.1:3009/api/status'),
     fetchJson('http://127.0.0.1:8090/api/fleet')
   ]);
 
@@ -132,6 +133,14 @@ async function main() {
       dashboardUrl: '#',
       status: pokeidleworld
     },
+    kickminer: {
+      name: 'Kick Channel Points Miner',
+      game: 'Kick.com',
+      engine: 'Go Native (Zero-Video WS)',
+      port: 3009,
+      dashboardUrl: 'https://kbelludoo.github.io/kick-miner-go/',
+      status: kickminer
+    },
     baiak: {
       name: 'Baiak Idle Terminal Bot',
       game: 'Baiak Idle',
@@ -149,13 +158,14 @@ async function main() {
   if (leveling.online) activeBotsCount++;
   if (pokeidle.online) activeBotsCount++;
   if (pokeidleworld.online) activeBotsCount++;
+  if (kickminer.online) activeBotsCount++;
   if (baiak.online && (baiak.fleet?.botsOnline > 0 || baiak.online)) activeBotsCount++;
 
   const payload = {
     timestamp: new Date().toISOString(),
     vps,
     summary: {
-      totalBots: 7,
+      totalBots: 8,
       activeBots: activeBotsCount
     },
     bots
@@ -176,11 +186,11 @@ async function main() {
       }
 
       if (sha) {
-        execSync(`gh api -X PUT repos/kbelludoo/bot-template-go/contents/docs/status.json -f message="telemetry: live vps 7 bots summary" -f content="${b64}" -f sha="${sha}" > /dev/null 2>&1`);
+        execSync(`gh api -X PUT repos/kbelludoo/bot-template-go/contents/docs/status.json -f message="telemetry: live vps 8 bots summary" -f content="${b64}" -f sha="${sha}" > /dev/null 2>&1`);
       } else {
-        execSync(`gh api -X PUT repos/kbelludoo/bot-template-go/contents/docs/status.json -f message="telemetry: live vps 7 bots summary" -f content="${b64}" > /dev/null 2>&1`);
+        execSync(`gh api -X PUT repos/kbelludoo/bot-template-go/contents/docs/status.json -f message="telemetry: live vps 8 bots summary" -f content="${b64}" > /dev/null 2>&1`);
       }
-      console.log('✓ Resumo da VPS (7 bots ativos) sincronizado com sucesso no GitHub Pages!');
+      console.log('✓ Resumo da VPS (8 bots ativos com Kick Miner) sincronizado com sucesso no GitHub Pages!');
     } catch (pushErr) {
       console.error('[-] Falha ao sincronizar via GitHub API:', pushErr.message);
     }

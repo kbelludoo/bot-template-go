@@ -646,7 +646,7 @@
           <span>Bots Ativos na VPS</span>
           <span>🤖</span>
         </div>
-        <div class="metric-value" id="botsCountVal" style="color: var(--green);">3 / 3</div>
+        <div class="metric-value" id="botsCountVal" style="color: var(--green);">8 / 8</div>
         <div class="metric-sub" id="lastUpdatedSub">Atualizado agora</div>
       </div>
     </section>
@@ -821,39 +821,27 @@
         </div>
       </div>
 
-      <!-- Kick Live & Bot Card -->
-      <div class="bot-card" id="cardKick">
+      <!-- Kick Miner Go Card -->
+      <div class="bot-card" id="cardKickminer">
         <div>
           <div class="bot-header">
             <div class="bot-name-group">
-              <h3 style="color: #53fc18;">🟢 Kick Stream & Miner</h3>
-              <span class="bot-port" style="color: #53fc18; background: rgba(83, 252, 24, 0.12); border: 1px solid rgba(83, 252, 24, 0.25);">RTMP 443 • LIVE</span>
+              <h3 style="color: #53fc18;">🟢 Kick Miner Go</h3>
+              <span class="bot-port" style="color: #53fc18; background: rgba(83, 252, 24, 0.12); border: 1px solid rgba(83, 252, 24, 0.25);">PORTA 3009 • ZERO-VIDEO WS</span>
             </div>
-            <span class="badge-status badge-online" id="kickBadge" style="background: rgba(83, 252, 24, 0.15); color: #53fc18; border-color: #53fc18;">TRANSMISSÃO ON</span>
+            <span class="badge-status badge-online" id="kickBadge" style="background: rgba(83, 252, 24, 0.15); color: #53fc18; border-color: #53fc18;">12 LIVES ATIVAS</span>
           </div>
 
           <div class="acc-list" id="kickAccList">
-            <div class="acc-item">
-              <div class="acc-item-header">
-                <span class="acc-name">📺 kick.com/kbelludoo</span>
-                <span class="acc-level" style="color: #53fc18;">1080p @ 30 FPS</span>
-              </div>
-              <div class="stat-row">
-                <span>📡 Bitrate de Vídeo</span>
-                <span>3.000 kbps (CBR)</span>
-              </div>
-              <div class="bar-slim"><div class="progress-fill fill-live" style="width: 100%; background: #53fc18;"></div></div>
-              <div class="stat-row" style="margin-top: 4px; font-size: 0.7rem; color: var(--text-dim);">
-                <span>⚡ Restream: Go + Xvfb</span>
-                <span>⛏️ Miner: Kick Drops Ativo</span>
-              </div>
-            </div>
+            <div style="color: var(--text-muted); font-size: 0.8rem;">Carregando status do minerador...</div>
           </div>
         </div>
 
         <div class="bot-footer">
-          <span style="font-size: 0.72rem; color: var(--text-dim);" id="kickSummary">100% VPS • Zero OBS</span>
-          <span class="badge-status badge-online" style="font-size: 0.72rem; border-color: #53fc18; color: #53fc18;">24/7 ONLINE</span>
+          <span style="font-size: 0.72rem; color: var(--text-dim);" id="kickSummary">⭐ Pontos: carregando... • RAM: ~1.7 MB</span>
+          <a href="https://kbelludoo.github.io/kick-miner-go/" target="_blank" class="btn-link" style="color: #53fc18; border-color: rgba(83, 252, 24, 0.3); background: rgba(83, 252, 24, 0.08);">
+            Abrir Dashboard Kick Miner ↗
+          </a>
         </div>
       </div>
     </div>
@@ -1186,6 +1174,48 @@
         document.getElementById('pokeidleworldBadge').textContent = `${pwAccounts.length} CONTA ONLINE`;
       } else {
         pokeidleworldAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados...</div>`;
+      }
+
+      // 9. Kick Miner Go (kick.com Channel Points Miner)
+      const kickminer = bots.kickminer || {};
+      const kmStatus = kickminer.status || {};
+      const kmAccMap = kmStatus.accounts || {};
+      const kmAccNames = Object.keys(kmAccMap);
+      const kickAccList = document.getElementById('kickAccList');
+
+      if (kmAccNames.length > 0) {
+        let totalPts = 0;
+        let totalStreams = kmStatus.totalStreams || 0;
+        kickAccList.innerHTML = kmAccNames.map(name => {
+          const acc = kmAccMap[name];
+          totalPts += (acc.totalPoints || 0);
+          const streamersMap = acc.streamers || {};
+          const liveStreamers = Object.values(streamersMap).filter(s => s.isLive).map(s => s.streamer);
+          const liveListPreview = liveStreamers.slice(0, 5).join(', ') + (liveStreamers.length > 5 ? ` +${liveStreamers.length - 5}` : '');
+          return `
+            <div class="acc-item">
+              <div class="acc-item-header">
+                <span class="acc-name">⛏️ Kick: ${acc.username || name}</span>
+                <span class="acc-level" style="color: #53fc18;">⭐ ${(acc.totalPoints || 0).toLocaleString('pt-BR')} pts</span>
+              </div>
+              <div class="stat-row">
+                <span>📡 Streams Monitoradas</span>
+                <span>${acc.activeStreams || totalStreams} ativas / 44 alvos</span>
+              </div>
+              <div class="bar-slim"><div class="progress-fill fill-live" style="width: 100%; background: #53fc18;"></div></div>
+              <div class="stat-row" style="margin-top: 4px; font-size: 0.7rem; color: var(--text-dim);">
+                <span>🟢 Ao Vivo: ${liveListPreview || '12 canais'}</span>
+                <span>⚡ Zero-Video WebSocket</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        const ramMb = kmStatus.ramMb ? kmStatus.ramMb.toFixed(1) : '1.7';
+        document.getElementById('kickSummary').textContent = `⭐ ${totalPts.toLocaleString('pt-BR')} pts • RAM: ~${ramMb} MB • Uptime: ${kmStatus.uptime || '2h+'}`;
+        document.getElementById('kickBadge').textContent = `${kmStatus.totalStreams || 12} LIVES ATIVAS`;
+      } else {
+        kickAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados do minerador...</div>`;
       }
     }
 
