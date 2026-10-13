@@ -176,6 +176,7 @@ async function main() {
   // Se executado com push (--push) ou standalone no crontab
   if (process.argv.includes('--push')) {
     try {
+      const fs = require('fs');
       const b64 = Buffer.from(jsonStr).toString('base64');
       let sha = '';
       try {
@@ -185,12 +186,15 @@ async function main() {
         // Arquivo ainda não existe
       }
 
-      if (sha) {
-        execSync(`gh api -X PUT repos/kbelludoo/bot-template-go/contents/docs/status.json -f message="telemetry: live vps 8 bots summary" -f content="${b64}" -f sha="${sha}" > /dev/null 2>&1`);
-      } else {
-        execSync(`gh api -X PUT repos/kbelludoo/bot-template-go/contents/docs/status.json -f message="telemetry: live vps 8 bots summary" -f content="${b64}" > /dev/null 2>&1`);
-      }
-      console.log('✓ Resumo da VPS (8 bots ativos com Kick Miner) sincronizado com sucesso no GitHub Pages!');
+      const tmpPayload = {
+        message: 'telemetry: live vps 8 bots summary',
+        content: b64,
+        ...(sha ? { sha } : {})
+      };
+      fs.writeFileSync('/tmp/status_hub_payload.json', JSON.stringify(tmpPayload));
+
+      execSync('gh api -X PUT repos/kbelludoo/bot-template-go/contents/docs/status.json --input /tmp/status_hub_payload.json > /dev/null 2>&1');
+      console.log('✓ Resumo da VPS (8 bots ativos) sincronizado com sucesso no GitHub Pages!');
     } catch (pushErr) {
       console.error('[-] Falha ao sincronizar via GitHub API:', pushErr.message);
     }
