@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-10-13T00:06:03.389Z",
+  "timestamp": "2026-10-13T00:08:03.798Z",
   "vps": {
-    "uptime": "up 6 days, 22 hours, 52 minutes",
-    "load": "0.14, 0.22, 0.20",
+    "uptime": "up 6 days, 22 hours, 54 minutes",
+    "load": "0.67, 0.29, 0.22",
     "ramTotalMb": 951,
-    "ramUsedMb": 486,
-    "ramAvailableMb": 464,
-    "ramPercent": 51,
+    "ramUsedMb": 505,
+    "ramAvailableMb": 445,
+    "ramPercent": 53,
     "swapTotalMb": 1023,
     "swapUsedMb": 299
   },
@@ -326,7 +326,7 @@
             "updatedAt": 1791751130111
           }
         ],
-        "serverTime": 1791849963297
+        "serverTime": 1791850083780
       }
     },
     "tibidle": {
@@ -355,7 +355,7 @@
             "expPerHour": 0,
             "goldPerHour": 0,
             "durationSec": 0,
-            "updatedAt": 1791849960292,
+            "updatedAt": 1791850081783,
             "recentLogs": [
               "Conectado como kbelludoo (kbelludoo@gmail.com)",
               "Conectado como kbelludoo (kbelludoo@gmail.com)",
@@ -376,9 +376,9 @@
           }
         ],
         "goroutines": 8,
-        "ramAllocMB": 1.0379791259765625,
+        "ramAllocMB": 1.0443115234375,
         "ramSysMB": 13.349861145019531,
-        "uptime": "23h41m26s"
+        "uptime": "23h43m26s"
       }
     },
     "sigma": {
@@ -430,7 +430,7 @@
             "xpPerHour": 706974.8743718592,
             "lastAction": "Viajando para Vaporeon (Vaporeon (Alvo: Vaporeon) │ Vantagem: 2.0x (Risco: 0.5x) │ XP: 274)...",
             "connectedAt": 1791764876395,
-            "updatedAt": 1791849960708
+            "updatedAt": 1791850080779
           },
           {
             "id": "acc2",
@@ -439,40 +439,40 @@
             "bindIp": "10.0.0.49",
             "outboundIp": "141.148.34.23",
             "level": 104,
-            "xp": 18068738,
+            "xp": 18076751,
             "xpToNextLevel": 525400,
-            "xpPercent": 3439.044156832889,
+            "xpPercent": 3440.5692805481535,
             "hp": 1060,
             "maxHp": 1060,
             "hpPercent": 100,
-            "gold": 1910663,
+            "gold": 1914080,
             "diamonds": 0,
             "inGame": true,
-            "inHunt": false,
-            "mapSlug": "",
-            "mapName": "Na Cidade / PokéCenter",
+            "inHunt": true,
+            "mapSlug": "pinsir",
+            "mapName": "Pinsir",
             "leaderSpeciesId": 4,
             "leaderName": "Charmander",
             "leaderLevel": 102,
-            "leaderHp": 1872,
+            "leaderHp": 0,
             "leaderMaxHp": 1872,
             "leaderShiny": false,
-            "wildTarget": "",
-            "wildHp": 0,
-            "wildMaxHp": 0,
-            "wildLevel": 0,
+            "wildTarget": "Pinsir",
+            "wildHp": 4232,
+            "wildMaxHp": 5132,
+            "wildLevel": 100,
             "wildShiny": false,
             "autoHuntActive": true,
             "kills": 0,
             "captures": 0,
             "shinies": 0,
-            "goldFound": 1910663,
-            "trainerXpGained": 14119148,
+            "goldFound": 1914080,
+            "trainerXpGained": 14127161,
             "killsPerMin": 0,
             "xpPerHour": 0,
-            "lastAction": "Curado no Centro Pokémon",
+            "lastAction": "Viajando para Pinsir (Pinsir (Alvo: Pinsir) │ Vantagem: 2.0x (Risco: 0.5x) │ XP: 349)...",
             "connectedAt": 1791764876391,
-            "updatedAt": 1791849960224
+            "updatedAt": 1791850083780
           },
           {
             "id": "acc3",
@@ -512,13 +512,14 @@
             "trainerXpGained": 72068,
             "killsPerMin": 15.399515738498788,
             "xpPerHour": 1256391.283292978,
-            "lastAction": "Autenticando...",
+            "lastAction": "Erro: falha no login: falha na requisição de login: Post \"https://api.poke.sigmaproject.online/auth/login\": context deadline exceeded (Client.Timeout exceeded while awaiting headers) (tentando em 30s)",
+            "lastError": "falha no login: falha na requisição de login: Post \"https://api.poke.sigmaproject.online/auth/login\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
             "connectedAt": 1791764876402,
             "updatedAt": 1791842645714
           }
         ],
-        "ramMB": 2.35882568359375,
-        "serverTime": 1791849963297
+        "ramMB": 2.8816299438476562,
+        "serverTime": 1791850083783
       }
     },
     "leveling": {
@@ -539,12 +540,12 @@
             "maxHp": 700,
             "mana": 400,
             "maxMana": 400,
-            "gold": 2066055,
-            "kills": 573240,
+            "gold": 2082030,
+            "kills": 573941,
             "expPerHour": 7808,
             "status": "Erro: party.invite.offline",
             "currentArea": "floresta-sombria",
-            "durationSec": 232353,
+            "durationSec": 232662,
             "logs": [
               "Party sincronizada.",
               "Party sincronizada.",
@@ -556,13 +557,13 @@
               "Party sincronizada.",
               "Party sincronizada.",
               "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
-              "Party sincronizada.",
+              "Membro já está na Party.",
+              "Servidor erro: party.invite.offline",
+              "Servidor erro: party.invite.offline",
               "Party sincronizada.",
               "Party sincronizada."
             ],
-            "updatedAt": 1791849963284
+            "updatedAt": 1791850083778
           },
           {
             "id": "acc-2",
@@ -573,12 +574,12 @@
             "maxHp": 700,
             "mana": 400,
             "maxMana": 400,
-            "gold": 1554375,
-            "kills": 573230,
+            "gold": 1570350,
+            "kills": 573931,
             "expPerHour": 12491,
             "status": "hunting",
             "currentArea": "floresta-sombria",
-            "durationSec": 232602,
+            "durationSec": 232908,
             "logs": [
               "Party sincronizada.",
               "Party sincronizada.",
@@ -596,7 +597,7 @@
               "Party sincronizada.",
               "Party sincronizada."
             ],
-            "updatedAt": 1791849963284
+            "updatedAt": 1791850083778
           },
           {
             "id": "acc-3",
@@ -610,7 +611,7 @@
             "gold": 2152647,
             "kills": 530895,
             "expPerHour": 18131,
-            "status": "Erro de conexão: websocket dial failed: dial tcp 10.0.0.217:0->104.21.25.252:443: i/o timeout",
+            "status": "Conectando ao servidor...",
             "currentArea": "floresta-sombria",
             "durationSec": 214506,
             "logs": [
@@ -630,7 +631,7 @@
               "Party sincronizada.",
               "Conexão perdida com o servidor."
             ],
-            "updatedAt": 1791849961310
+            "updatedAt": 1791850072318
           },
           {
             "id": "acc-4",
@@ -644,7 +645,7 @@
             "gold": 577995,
             "kills": 530631,
             "expPerHour": 27205,
-            "status": "Conectando ao servidor...",
+            "status": "Erro de conexão: websocket dial failed: dial tcp 10.0.0.79:0->104.21.25.252:443: i/o timeout",
             "currentArea": "floresta-sombria",
             "durationSec": 214332,
             "logs": [
@@ -664,13 +665,13 @@
               "Party sincronizada.",
               "Conexão perdida com o servidor."
             ],
-            "updatedAt": 1791849960698
+            "updatedAt": 1791850083705
           }
         ],
         "goroutines": 12,
-        "ramAllocMB": 2.1838150024414062,
+        "ramAllocMB": 1.002777099609375,
         "ramSysMB": 17.09986114501953,
-        "uptime": "23h23m0s"
+        "uptime": "23h25m1s"
       }
     },
     "pokeidle": {
@@ -687,29 +688,29 @@
             "name": "kbelludoo",
             "level": 27,
             "vocation": "Bulbasaur (Nv. 27)",
-            "hp": 435,
+            "hp": 431,
             "maxHp": 552,
             "mana": 77,
             "maxMana": 77,
-            "gold": 1485996,
-            "kills": 1000,
-            "expPerHour": 12909.855955468864,
+            "gold": 1487521,
+            "kills": 1033,
+            "expPerHour": 12873.865010209614,
             "status": "hunting",
             "currentArea": "geodude",
-            "durationSec": 3349,
+            "durationSec": 3469,
             "logs": [
-              "Derrotou Geodude! Loot: 2x Small Stone, Earth Ball, Stone Orb",
+              "Derrotou Geodude! Loot: Small Stone, 2x Earth Ball",
               "Derrotou Geodude! Loot: Small Stone, Earth Ball",
+              "Derrotou Geodude! Loot: Small Stone, Earth Ball",
+              "Derrotou Geodude! Loot: 2x Small Stone, 2x Earth Ball",
+              "Derrotou Geodude! Loot: Small Stone, 2x Earth Ball, Stone Orb",
+              "Derrotou Geodude! Loot: Small Stone, 2x Earth Ball",
               "Derrotou Geodude! Loot: Small Stone, Earth Ball",
               "Derrotou Geodude! Loot: Small Stone, 2x Earth Ball",
-              "Derrotou Geodude! Loot: Small Stone, 2x Earth Ball, Stone Orb",
-              "Derrotou Geodude! Loot: 2x Small Stone, 2x Earth Ball",
-              "Derrotou Geodude! Loot: Small Stone, Earth Ball",
-              "Derrotou Geodude! Loot: 2x Small Stone, Earth Ball",
-              "Derrotou Geodude! Loot: 2x Small Stone, 2x Earth Ball",
-              "Derrotou Geodude! Loot: Small Stone, 2x Earth Ball"
+              "Derrotou Geodude! Loot: Small Stone, 2x Earth Ball",
+              "Derrotou Geodude! Loot: Small Stone, 2x Earth Ball, Stone Orb"
             ],
-            "updatedAt": 1791849962379,
+            "updatedAt": 1791850082479,
             "extra": {
               "catches": 0,
               "diamonds": 0,
@@ -730,9 +731,9 @@
           }
         ],
         "goroutines": 10,
-        "ramAllocMB": 1.1748046875,
+        "ramAllocMB": 1.193389892578125,
         "ramSysMB": 13.099861145019531,
-        "uptime": "55m51s"
+        "uptime": "57m51s"
       }
     },
     "pokeidleworld": {
@@ -752,36 +753,36 @@
             "maxHp": 348,
             "mana": 0,
             "maxMana": 0,
-            "gold": 193997,
-            "kills": 11072,
-            "expPerHour": 3452.2535012943686,
+            "gold": 4150,
+            "kills": 11088,
+            "expPerHour": 3452.7194842282897,
             "status": "hunting",
             "currentArea": "Geodude",
-            "durationSec": 92323,
+            "durationSec": 92444,
             "logs": [
               "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
               "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
               "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
+              "Pokébola ID 1 falhou na captura.",
+              "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
+              "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
+              "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
               "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
               "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
               "Pokébola ID 1 falhou na captura.",
               "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
-              "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
-              "🛒 Compradas 50 Pokébolas (ID 1) com sucesso!",
-              "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)",
-              "Pokébola ID 1 falhou na captura.",
               "Pokébola (ID 1) lançada em monstro pendente #0 (Shiny: false)"
             ],
-            "updatedAt": 1791849962779,
+            "updatedAt": 1791850083597,
             "extra": {
               "activePokemon": "Bulbasaur",
               "autoWeakness": true,
-              "balls": 68,
+              "balls": 54,
               "captures": 65,
               "enemyTypes": "ROCK / GROUND",
               "lookType": 20011,
-              "lootGold": 187837,
-              "lootItems": 55674,
+              "lootGold": 188011,
+              "lootItems": 55752,
               "matchup": "4.0x Dano",
               "matchupDetail": "4.0x (Fraqueza Dupla!) | Risco Moderado",
               "pokeCount": 1,
@@ -794,9 +795,9 @@
           }
         ],
         "goroutines": 9,
-        "ramAllocMB": 1.7184295654296875,
+        "ramAllocMB": 1.6594085693359375,
         "ramSysMB": 13.349861145019531,
-        "uptime": "23h50m10s"
+        "uptime": "23h52m10s"
       }
     },
     "baiak": {
@@ -811,9 +812,9 @@
           "botsOnline": 1,
           "botsTotal": 3,
           "totalXpPerHour": 1638000,
-          "totalLootPerHour": 746183,
+          "totalLootPerHour": 1192001,
           "totalKillsPerHour": 840,
-          "totalGold": 86081306
+          "totalGold": 86101174
         },
         "bots": {
           "acc1": {
@@ -833,7 +834,7 @@
             "port": 8082,
             "status": {
               "online": true,
-              "uptimeSec": 3756,
+              "uptimeSec": 3876,
               "hunt": {
                 "id": "glooth-cave",
                 "name": "Glooth Bandit",
@@ -841,16 +842,16 @@
               },
               "rates": {
                 "killsPerHour": 840,
-                "goldPerHour": 746183,
+                "goldPerHour": 1192001,
                 "xpPerHour": 1638000,
-                "sampledAt": "2026-10-13T00:05:27.703Z"
+                "sampledAt": "2026-10-13T00:07:27.792Z"
               },
               "telemetry": {
                 "level": 149,
-                "gold": 86081306,
-                "stamina": "21:46",
-                "kills": 447,
-                "waves": 586,
+                "gold": 86101174,
+                "stamina": "21:44",
+                "kills": 473,
+                "waves": 607,
                 "hunt": "Glooth Bandit",
                 "onlineSince": "2026-10-12T23:03:27.030Z"
               },
@@ -1320,7 +1321,7 @@
                   "minLevel": 1500
                 }
               ],
-              "updatedAt": "2026-10-13T00:06:03.301Z"
+              "updatedAt": "2026-10-13T00:08:03.785Z"
             },
             "error": null
           },
@@ -1731,7 +1732,7 @@
             "minLevel": 1500
           }
         ],
-        "timestamp": "2026-10-13T00:06:03.301Z"
+        "timestamp": "2026-10-13T00:08:03.786Z"
       }
     }
   }
