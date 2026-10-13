@@ -73,7 +73,7 @@ cmd /c "set GOOS=linux&& set GOARCH=amd64&& go build -ldflags=\"-s -w\" -o bot-a
 
 Envie para a VPS:
 ```bash
-scp bot-app-linux ubuntu@129.153.157.17:/home/ubuntu/meu-bot/
+scp bot-app-linux ubuntu@seu-servidor-ip:/home/ubuntu/meu-bot/
 ```
 
 ---
