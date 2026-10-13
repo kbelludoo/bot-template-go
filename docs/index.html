@@ -891,6 +891,30 @@
           </a>
         </div>
       </div>
+
+      <!-- Twitch Miner Go Card -->
+      <div class="bot-card" id="cardTwitchminer">
+        <div>
+          <div class="bot-header">
+            <div class="bot-name-group">
+              <h3 style="color: #9146ff;">🟣 Twitch Miner Go</h3>
+              <span class="bot-port" style="color: #9146ff; background: rgba(145, 70, 255, 0.12); border: 1px solid rgba(145, 70, 255, 0.25);">PORTA 3010 • ZERO-VIDEO WS</span>
+            </div>
+            <span class="badge-status badge-online" id="twitchBadge" style="background: rgba(145, 70, 255, 0.15); color: #9146ff; border-color: #9146ff;">ONLINE</span>
+          </div>
+
+          <div class="acc-list" id="twitchAccList">
+            <div style="color: var(--text-muted); font-size: 0.8rem;">Carregando status do minerador...</div>
+          </div>
+        </div>
+
+        <div class="bot-footer">
+          <span style="font-size: 0.72rem; color: var(--text-dim);" id="twitchSummary">⭐ Auto-Baú (+50) • RAM: ~2 MB</span>
+          <a href="https://kbelludoo.github.io/twitch-miner-go/" target="_blank" class="btn-link" style="color: #9146ff; border-color: rgba(145, 70, 255, 0.3); background: rgba(145, 70, 255, 0.08);">
+            Abrir Dashboard Twitch Miner ↗
+          </a>
+        </div>
+      </div>
     </div>
 
     <!-- STARTER KIT DOCUMENTATION SECTION -->
@@ -1268,6 +1292,49 @@
         document.getElementById('kickBadge').textContent = `${kmStatus.totalStreams || 12} LIVES ATIVAS`;
       } else {
         kickAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados do minerador...</div>`;
+      }
+
+      // 10. Twitch Miner Go
+      const twitchminer = bots.twitchminer || {};
+      const tmStatus = twitchminer.status || {};
+      const tmStatuses = tmStatus.statuses || {};
+      const tmAccNames = Object.keys(tmStatuses);
+      const twitchAccList = document.getElementById('twitchAccList');
+
+      if (tmAccNames.length > 0) {
+        let totalPts = 0;
+        let livesActive = 0;
+        twitchAccList.innerHTML = tmAccNames.map((name, idx) => {
+          const acc = tmStatuses[name] || {};
+          const streamers = acc.streamers || {};
+          const liveList = Object.values(streamers).filter(s => s.isLive);
+          livesActive += liveList.length;
+          const ptsSum = Object.values(streamers).reduce((sum, s) => sum + (s.points || 0), 0);
+          totalPts += ptsSum;
+          const liveNames = liveList.map(s => s.displayName || s.login).slice(0, 4).join(', ');
+          return `
+            <div class="acc-item">
+              <div class="acc-item-header">
+                <span class="acc-name">🟣 Minerador #${idx + 1}</span>
+                <span class="acc-level" style="color: #a855f7;">⭐ ${ptsSum.toLocaleString('pt-BR')} pts</span>
+              </div>
+              <div class="stat-row">
+                <span>📡 Canais Monitorados</span>
+                <span>${Object.keys(streamers).length} canais (${liveList.length} ao vivo)</span>
+              </div>
+              <div class="bar-slim"><div class="progress-fill fill-live" style="width: 100%; background: #9146ff;"></div></div>
+              <div class="stat-row" style="margin-top: 4px; font-size: 0.7rem; color: var(--text-dim);">
+                <span>🟣 Ao Vivo: ${liveNames || 'Aguardando live'}</span>
+                <span>⚡ Auto-Baú (+50)</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        document.getElementById('twitchSummary').textContent = `⭐ ${totalPts.toLocaleString('pt-BR')} pts • RAM: ~2.1 MB • Auto-Baú`;
+        document.getElementById('twitchBadge').textContent = `${livesActive} LIVES ATIVAS`;
+      } else {
+        twitchAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados da Twitch...</div>`;
       }
     }
 

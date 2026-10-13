@@ -103,7 +103,7 @@ function getSystemMetrics() {
 async function main() {
   const vps = getSystemMetrics();
 
-  const [huntera, tibidle, sigma, leveling, pokeidle, pokeidleworld, kickminer, baiak] = await Promise.all([
+  const [huntera, tibidle, sigma, leveling, pokeidle, pokeidleworld, kickminer, baiak, twitchminer] = await Promise.all([
     fetchJson('http://127.0.0.1:3000/api/status'),
     fetchJson('http://127.0.0.1:3001/api/status'),
     fetchJson('http://127.0.0.1:3002/api/status'),
@@ -111,7 +111,8 @@ async function main() {
     fetchJson('http://127.0.0.1:3006/api/status'),
     fetchJson('http://127.0.0.1:3007/api/status'),
     fetchJson('http://127.0.0.1:3009/api/status'),
-    fetchJson('http://127.0.0.1:8090/api/fleet')
+    fetchJson('http://127.0.0.1:8090/api/fleet'),
+    fetchJson('http://127.0.0.1:3010/api/status')
   ]);
 
   const bots = {
@@ -171,6 +172,14 @@ async function main() {
       dashboardUrl: 'https://kbelludoo.github.io/kick-miner-go/',
       status: kickminer
     },
+    twitchminer: {
+      name: 'Twitch Channel Points Miner',
+      game: 'Twitch.tv',
+      engine: 'Go Native (Zero-Video WS)',
+      port: 3010,
+      dashboardUrl: 'https://kbelludoo.github.io/twitch-miner-go/',
+      status: twitchminer
+    },
     baiak: {
       name: 'Baiak Idle Terminal Bot',
       game: 'Baiak Idle',
@@ -189,6 +198,7 @@ async function main() {
   if (pokeidle.online) activeBotsCount++;
   if (pokeidleworld.online) activeBotsCount++;
   if (kickminer.online) activeBotsCount++;
+  if (twitchminer && (twitchminer.online || (twitchminer.statuses && Object.keys(twitchminer.statuses).length > 0))) activeBotsCount++;
   if (baiak.online && (baiak.fleet?.botsOnline > 0 || baiak.online)) activeBotsCount++;
 
   // Função de anonimização (Modo Stealth / Anti-Ban)
@@ -278,6 +288,29 @@ async function main() {
       clean.kickminer.status.accounts = sanitizedAccs;
     }
 
+    // Twitch Miner: statuses e logs
+    if (clean.twitchminer?.status?.statuses) {
+      const safeStatuses = {};
+      let idx = 1;
+      for (const [u, acc] of Object.entries(clean.twitchminer.status.statuses)) {
+        const label = `Minerador #${idx++}`;
+        safeStatuses[label] = {
+          username: label,
+          userId: 'anonimo',
+          streamers: acc.streamers || {}
+        };
+      }
+      clean.twitchminer.status.statuses = safeStatuses;
+    }
+    if (clean.twitchminer?.status?.logs) {
+      clean.twitchminer.status.logs = clean.twitchminer.status.logs.map(l =>
+        typeof l === 'string'
+          ? l.replace(NICK_RE, 'Minerador #1')
+             .replace(/\(ID:\s*\d+,\s*Login:\s*[^)]+\)/gi, '(Sessão Autenticada)')
+          : l
+      );
+    }
+
     // Varredura profunda final (garante zero vazamento de emails, IPs e nicks)
     function deepScrub(val) {
       if (typeof val === 'string') {
@@ -306,7 +339,7 @@ async function main() {
     timestamp: new Date().toISOString(),
     vps,
     summary: {
-      totalBots: 8,
+      totalBots: 9,
       activeBots: activeBotsCount
     },
     bots: sanitizeBotPayload(bots)

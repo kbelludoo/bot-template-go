@@ -10,6 +10,7 @@ const repos = [
   'pokeidle-go',
   'pokeidleworld-bot',
   'kick-miner-go',
+  'twitch-miner-go',
   'huntera-bot'
 ];
 
@@ -42,7 +43,7 @@ try {
 }
 
 // 2. Verificar status.json em cada repositório
-const statusRepos = ['bot-template-go', 'sigma-bot', 'tibidle-bot', 'leveling-bot', 'pokeidle-go', 'pokeidleworld-bot'];
+const statusRepos = ['bot-template-go', 'sigma-bot', 'tibidle-bot', 'leveling-bot', 'pokeidle-go', 'pokeidleworld-bot', 'twitch-miner-go'];
 for (const repo of statusRepos) {
   try {
     const raw = Buffer.from(execSync(`gh api repos/kbelludoo/${repo}/contents/docs/status.json --jq .content 2>/dev/null`).toString().trim(), 'base64').toString('utf8');

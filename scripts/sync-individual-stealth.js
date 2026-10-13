@@ -34,13 +34,13 @@ function stealthScrub(value) {
   return value;
 }
 
-// Máscara por bot: substitui nicks reais por rótulos anônimos por conta.
 const BOTS = [
   { repo: 'sigma-bot', port: 3002, label: 'Treinador', fields: ['trainerName', 'alias'] },
   { repo: 'tibidle-bot', port: 3001, label: 'Conta', fields: ['name'] },
   { repo: 'leveling-bot', port: 3003, label: 'Party', fields: ['name'] },
   { repo: 'pokeidle-go', port: 3006, label: 'Treinador', fields: ['name'] },
-  { repo: 'pokeidleworld-bot', port: 3007, label: 'Treinador', fields: ['name'] }
+  { repo: 'pokeidleworld-bot', port: 3007, label: 'Treinador', fields: ['name'] },
+  { repo: 'twitch-miner-go', port: 3010, label: 'Minerador', fields: ['username'] }
 ];
 
 function fetchJson(url) {
@@ -56,7 +56,34 @@ function fetchJson(url) {
 }
 
 function anonymizeAccounts(payload, bot) {
-  if (!payload || !Array.isArray(payload.accounts)) return payload;
+  if (!payload) return payload;
+
+  if (bot.repo === 'twitch-miner-go') {
+    if (payload.statuses && typeof payload.statuses === 'object') {
+      const safeStatuses = {};
+      let idx = 1;
+      for (const [u, acc] of Object.entries(payload.statuses)) {
+        const label = `Minerador #${idx++}`;
+        safeStatuses[label] = {
+          username: label,
+          userId: 'anonimo',
+          streamers: acc.streamers || {}
+        };
+      }
+      payload.statuses = safeStatuses;
+    }
+    if (Array.isArray(payload.logs)) {
+      payload.logs = payload.logs.map(l =>
+        typeof l === 'string'
+          ? l.replace(NICK_RE, 'Minerador #1')
+             .replace(/\(ID:\s*\d+,\s*Login:\s*[^)]+\)/gi, '(Sessão Autenticada)')
+          : l
+      );
+    }
+    return payload;
+  }
+
+  if (!Array.isArray(payload.accounts)) return payload;
   payload.accounts.forEach((acc, i) => {
     const label = `${bot.label} #${i + 1}`;
     bot.fields.forEach(f => { if (typeof acc[f] === 'string') acc[f] = label; });
@@ -110,16 +137,19 @@ function sanitizeHunteraIndex() {
     if (!sha) return;
     const rawB64 = execSync(`gh api repos/kbelludoo/${repo}/contents/docs/index.html --jq .content 2>/dev/null`, { timeout: 10000 }).toString().trim();
     const raw = Buffer.from(rawB64, 'base64').toString('utf8');
+    const PUBLIC_IP_RE = /\b\d{1,3}(?:\.\d{1,3}){3}\b/g;
 
-    if (raw.includes('129.153.157.17')) {
-      const sanitized = raw.split('129.153.157.17').join('127.0.0.1');
+    if (PUBLIC_IP_RE.test(raw)) {
+      PUBLIC_IP_RE.lastIndex = 0;
+      const sanitized = raw.replace(PUBLIC_IP_RE, (ip) =>
+        ip.startsWith('127.') || ip === '0.0.0.0' ? ip : '127.0.0.1');
       const b64 = Buffer.from(sanitized).toString('base64');
       fs.writeFileSync('/tmp/huntera_index.json', JSON.stringify({
         message: 'security: sanitize raw VPS IP from index template',
         content: b64,
         sha: sha
       }));
-      execSync(`gh api -X PUT repos/kbelludoo/${repo}/contents/docs/index.html --input ${tmpPath} >/dev/null 2>&1`, { timeout: 15000 });
+      execSync(`gh api -X PUT repos/kbelludoo/${repo}/contents/docs/index.html --input /tmp/huntera_index.json >/dev/null 2>&1`, { timeout: 15000 });
       console.log(`✓ [${repo}] docs/index.html sanitizado (IP removido)!`);
     }
   } catch (err) {

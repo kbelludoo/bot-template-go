@@ -80,6 +80,14 @@ const BOTS_CONFIG = [
     type: 'systemd'
   },
   {
+    id: 'twitchminer',
+    name: '🟣 Twitch Miner Go',
+    port: 3010,
+    checkUrl: 'http://127.0.0.1:3010/api/status',
+    restartCmd: 'sudo systemctl restart twitch-miner.service',
+    type: 'systemd'
+  },
+  {
     id: 'baiak',
     name: '🏰 Baiak Idle (Fleet)',
     port: 8090,
