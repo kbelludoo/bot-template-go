@@ -99,7 +99,35 @@ Mantenha `pkg/engine/`, `pkg/network/` e `pkg/server/` intactos. Concentre **100
 
 ---
 
+## 🧠 REGRAS DE OURO DA IA: GAMEPLAY AUTÔNOMO INTELIGENTE
+
+Sempre que construir um novo bot usando este template, a IA deve projetar e codificar os **4 Pilares da Eficiência Máxima**:
+
+### 1. Algoritmo de Melhor Rota de EXP/h (Dynamic Route Solver)
+- **Mineração do Catálogo do Jogo:** A IA deve analisar o código JavaScript/bundle do jogo e extrair todos os monstros, mapas, fraquezas elementais, dano base e requisitos de nível para um catálogo estático ou dinâmico (`pkg/game/catalog.go`).
+- **Cálculo da Rota Ótima:**
+  - **Fator Nível:** $\text{Nível da Área} \le \text{Nível do Personagem}$ (evitar penalidades ou bloqueios).
+  - **Multiplicador Elemental / Fraqueza:** Se o jogo tiver sistema de fraquezas elementais ou tipos (ex: 4.0x no Poke Idle World), o algoritmo deve priorizar alvos onde o dano do bot seja maximizado para matar monstros em 1 ou 2 turnos (aumentando *kills por minuto*).
+  - **Risco Defensivo:** Evitar monstros que causem dano super efetivo ou possam nocautear o jogador, eliminando o tempo morto de morte/revive.
+  - **Reavaliação Contínua:** Ao subir de nível (Level Up) ou trocar de equipamento, o bot deve recalcular instantaneamente e transitar para a nova melhor rota.
+
+### 2. Auto-Sell Inteligente (Gestão de Inventário)
+- Monitorar a capacidade da mochila/inventário.
+- Manter uma lista de itens protegidos (itens equipados, itens de tier alto, consumíveis raros).
+- Vender automaticamente o lixo/loot acumulado assim que o inventário atingir o limite ou a cada intervalo programado, convertendo em ouro sem travar a caça.
+
+### 3. Auto-Equip e Auto-Upgrade
+- Sempre que dropar um equipamento superior ao atual (maior ataque, maior defesa, melhor tier), o bot deve equipar automaticamente.
+- Se o jogo tiver sistema de pontos de atributos (força, agilidade, talentos), distribuir automaticamente conforme a vocação/classe configurada.
+
+### 4. Extração Contínua de Informações (Engenharia Reversa Ativa)
+- **A IA deve "ler o jogo":** Inspecionar pacotes de rede, analisar o código-fonte client-side (JS/Wasm) e salvar o maior número de tabelas de dados possíveis (`hunts.json`, `items.json`, `monsters.json`).
+- Toda informação descoberta deve ser persistida para enriquecer o algoritmo e tornar o bot 100% autônomo sem necessidade de intervenção humana.
+
+---
+
 ## ⚠️ ARMADILHAS COMUNS QUE A IA DEVE EVITAR
 - ❌ **NÃO crie dependências de CGO:** Mantenha `CGO_ENABLED=0` para que o binário rode em qualquer distro Linux sem exigir bibliotecas glibc externas.
 - ❌ **NÃO faça escrita concorrente no WebSocket:** Sempre use o método `s.SendJSON()` ou `s.SendText()` do `pkg/network/socket.go` porque ele já protege contra concorrência com mutex (`writeMu`).
 - ❌ **NÃO deixe loops sem select em `ctx.Done()`:** Todo loop `for` com ticker deve escutar `case <-ctx.Done(): return` para permitir encerramento limpo via SIGTERM.
+
