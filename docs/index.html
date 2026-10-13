@@ -804,7 +804,7 @@
               <h3>🏰 Baiak Idle</h3>
               <span class="bot-port" style="color: #c084fc; background: rgba(192, 132, 252, 0.12); border: 1px solid rgba(192, 132, 252, 0.25);">PORTA 8090 • FLEET CLUSTER</span>
             </div>
-            <span class="badge-status badge-online" id="baiakBadge">3 CONTAS ONLINE</span>
+            <span class="badge-status badge-online" id="baiakBadge">ONLINE</span>
           </div>
 
           <div class="acc-list" id="baiakAccList">
@@ -813,7 +813,7 @@
         </div>
 
         <div class="bot-footer">
-          <span style="font-size: 0.72rem; color: var(--text-dim);" id="baiakSummary">💰 202M gp somados</span>
+          <span style="font-size: 0.72rem; color: var(--text-dim);" id="baiakSummary">Frota em execução</span>
           <a href="https://kbelludoo.github.io/baiak-idle-bot/" target="_blank" class="btn-link" style="color: #c084fc; border-color: rgba(192, 132, 252, 0.3); background: rgba(192, 132, 252, 0.08);">
             Abrir Dashboard Baiak ↗
           </a>
@@ -838,7 +838,9 @@
 
         <div class="bot-footer">
           <span style="font-size: 0.72rem; color: var(--text-dim);" id="pokeidleSummary">Twitch Lurker Ativo (+20% XP)</span>
-          <span class="badge-status badge-online" style="font-size: 0.72rem;">24/7 VPS</span>
+          <a href="https://kbelludoo.github.io/pokeidle-go/" target="_blank" class="btn-link" style="color: #38bdf8; border-color: rgba(56, 189, 248, 0.3); background: rgba(56, 189, 248, 0.08);">
+            Abrir Dashboard PokeIdle ↗
+          </a>
         </div>
       </div>
 
@@ -860,7 +862,9 @@
 
         <div class="bot-footer">
           <span style="font-size: 0.72rem; color: var(--text-dim);" id="pokeidleworldSummary">Auto-Catch & 4.0x Dano</span>
-          <span class="badge-status badge-online" style="font-size: 0.72rem;">24/7 VPS</span>
+          <a href="https://kbelludoo.github.io/pokeidleworld-bot/" target="_blank" class="btn-link" style="color: #fb923c; border-color: rgba(251, 146, 60, 0.3); background: rgba(251, 146, 60, 0.08);">
+            Abrir Dashboard World ↗
+          </a>
         </div>
       </div>
 
@@ -1144,11 +1148,15 @@
           `;
         }).join('');
 
-        const totalGoldM = bFleet.totalGold ? (bFleet.totalGold / 1000000).toFixed(1) : '202';
-        const totalXpM = bFleet.totalXpPerHour ? (bFleet.totalXpPerHour / 1000000).toFixed(1) : '10';
-        document.getElementById('baiakSummary').textContent = `💰 ${totalGoldM}M gp • ⚡ ${totalXpM}M XP/h`;
-        document.getElementById('baiakBadge').textContent = `${bFleet.botsOnline || botKeys.length} CONTAS ONLINE`;
+        const realGold = Number(bFleet.totalGold || 0);
+        const realXp = Number(bFleet.totalXpPerHour || 0);
+        const goldDisplay = realGold > 0 ? (realGold / 1000000).toFixed(1) + 'M' : realGold.toLocaleString('pt-BR');
+        const xpDisplay = realXp > 0 ? (realXp / 1000000).toFixed(1) + 'M' : '0';
+        document.getElementById('baiakSummary').textContent = `💰 ${goldDisplay} gp • ⚡ ${xpDisplay} XP/h`;
+        const onlineCount = Object.values(bBots).filter(b => b.online).length;
+        document.getElementById('baiakBadge').textContent = `${onlineCount} / ${botKeys.length} CONTAS ONLINE`;
       } else {
+        document.getElementById('baiakBadge').textContent = 'AGUARDANDO DADOS';
         baiakAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados da frota...</div>`;
       }
 

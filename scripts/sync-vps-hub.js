@@ -122,7 +122,7 @@ async function main() {
       game: 'PokeIdle.io',
       engine: 'Go Native Engine (Twitch Lurker)',
       port: 3006,
-      dashboardUrl: '#',
+      dashboardUrl: 'https://kbelludoo.github.io/pokeidle-go/',
       status: pokeidle
     },
     pokeidleworld: {
@@ -130,7 +130,7 @@ async function main() {
       game: 'Poke Idle World',
       engine: 'Go Native Engine (Auto-Catch)',
       port: 3007,
-      dashboardUrl: '#',
+      dashboardUrl: 'https://kbelludoo.github.io/pokeidleworld-bot/',
       status: pokeidleworld
     },
     kickminer: {
