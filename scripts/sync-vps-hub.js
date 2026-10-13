@@ -2,6 +2,36 @@
 const http = require('http');
 const { execSync } = require('child_process');
 
+// MODO STEALTH: scrub profundo aplicado a TODO o payload antes do push.
+// Remove nicks, e-mails e IPs de qualquer campo (inclusive logs e chaves de objeto),
+// preservando apenas URLs http(s) (dashboards/túneis).
+const NICK_RE = /kbelludoo[0-9]*|lohmoreira|\blrn\b/gi;
+const EMAIL_RE = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+const IP_RE = /\b\d{1,3}(?:\.\d{1,3}){3}\b/g;
+
+function stealthScrub(value) {
+  if (typeof value === 'string') {
+    if (/^https?:\/\//i.test(value)) return value;
+    return value
+      .replace(EMAIL_RE, 'usuario@privado.com')
+      .replace(IP_RE, 'x.x.x.x')
+      .replace(NICK_RE, 'treinador');
+  }
+  if (Array.isArray(value)) return value.map(stealthScrub);
+  if (value && typeof value === 'object') {
+    const out = {};
+    let n = 0;
+    for (const rawKey of Object.keys(value)) {
+      let key = rawKey;
+      if (!/^https?:\/\//i.test(rawKey)) key = rawKey.replace(NICK_RE, 'treinador');
+      while (Object.prototype.hasOwnProperty.call(out, key)) key = `${key}_${++n}`;
+      out[key] = stealthScrub(value[rawKey]);
+    }
+    return out;
+  }
+  return value;
+}
+
 function fetchJson(url) {
   return new Promise((resolve) => {
     const req = http.get(url, { timeout: 2500 }, (res) => {
@@ -170,37 +200,59 @@ async function main() {
     if (clean.huntera?.status?.accounts) {
       clean.huntera.status.accounts.forEach((acc, i) => {
         acc.charName = `Personagem #${i + 1}`;
+        if (typeof acc.id === 'string') acc.id = `acc${i + 1}`;
       });
     }
-    // Tibidle: name
+    // Tibidle: name, id, recentLogs
     if (clean.tibidle?.status?.accounts) {
       clean.tibidle.status.accounts.forEach((acc, i) => {
         acc.name = `Conta #${i + 1}`;
+        if (typeof acc.id === 'string') acc.id = `acc${i + 1}`;
+        if (Array.isArray(acc.recentLogs)) {
+          acc.recentLogs = acc.recentLogs.map(l =>
+            typeof l === 'string' ? l.replace(/Conectado como [^)]*\)/g, `Conectado como Conta #${i + 1}`) : l);
+        }
       });
     }
-    // Sigma: trainerName, alias
+    // Sigma: trainerName, alias, id, IPs
     if (clean.sigma?.status?.accounts) {
       clean.sigma.status.accounts.forEach((acc, i) => {
         acc.trainerName = `Treinador #${i + 1}`;
         acc.alias = `Treinador #${i + 1}`;
+        if (typeof acc.id === 'string') acc.id = `acc${i + 1}`;
+        delete acc.bindIp;
+        delete acc.outboundIp;
       });
     }
-    // Leveling: name
+    // Leveling: name, id, logs
     if (clean.leveling?.status?.accounts) {
       clean.leveling.status.accounts.forEach((acc, i) => {
         acc.name = `Party #${i + 1}`;
+        if (typeof acc.id === 'string') acc.id = `acc-${i + 1}`;
+        if (Array.isArray(acc.logs)) {
+          acc.logs = acc.logs.map(l => typeof l === 'string' ? l.replace(NICK_RE, `Party #${i + 1}`) : l);
+        }
       });
     }
-    // PokeIdle: name
+    // PokeIdle: name, id, logs
     if (clean.pokeidle?.status?.accounts) {
       clean.pokeidle.status.accounts.forEach((acc, i) => {
         acc.name = `Treinador #${i + 1}`;
+        if (typeof acc.id === 'string') acc.id = `acc-${i + 1}`;
+        if (Array.isArray(acc.logs)) {
+          acc.logs = acc.logs.map(l => typeof l === 'string' ? l.replace(NICK_RE, `Treinador #${i + 1}`) : l);
+        }
       });
     }
-    // Poke Idle World: name
+    // Poke Idle World: name, id, logs e extra.trainerName
     if (clean.pokeidleworld?.status?.accounts) {
       clean.pokeidleworld.status.accounts.forEach((acc, i) => {
         acc.name = `Treinador #${i + 1}`;
+        if (typeof acc.id === 'string') acc.id = `acc-${i + 1}`;
+        if (acc.extra && typeof acc.extra.trainerName === 'string') acc.extra.trainerName = `Treinador #${i + 1}`;
+        if (Array.isArray(acc.logs)) {
+          acc.logs = acc.logs.map(l => typeof l === 'string' ? l.replace(NICK_RE, `Treinador #${i + 1}`) : l);
+        }
       });
     }
     // Baiak: bots[key].name e label
@@ -226,7 +278,28 @@ async function main() {
       clean.kickminer.status.accounts = sanitizedAccs;
     }
 
-    return clean;
+    // Varredura profunda final (garante zero vazamento de emails, IPs e nicks)
+    function deepScrub(val) {
+      if (typeof val === 'string') {
+        if (/^https?:\/\//i.test(val)) return val;
+        return val
+          .replace(/\([^)]*@[^)]*\)/g, '(Sessão Autenticada)')
+          .replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/gi, 'protegido')
+          .replace(/\b(?:129\.153|141\.148|193\.122)\.\d{1,3}\.\d{1,3}\b/g, '127.0.0.1')
+          .replace(/kbelludoo[0-9]*|lohmoreira|\blrn\b/gi, 'anonimo');
+      }
+      if (Array.isArray(val)) return val.map(deepScrub);
+      if (val && typeof val === 'object') {
+        const o = {};
+        for (const k of Object.keys(val)) {
+          o[k] = deepScrub(val[k]);
+        }
+        return o;
+      }
+      return val;
+    }
+
+    return deepScrub(clean);
   }
 
   const payload = {
@@ -239,7 +312,7 @@ async function main() {
     bots: sanitizeBotPayload(bots)
   };
 
-  const jsonStr = JSON.stringify(payload, null, 2);
+  const jsonStr = JSON.stringify(stealthScrub(payload), null, 2);
 
   // Se executado com push (--push) ou standalone no crontab
   if (process.argv.includes('--push')) {
