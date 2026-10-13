@@ -36,13 +36,27 @@ bot-template-go/
 │   ├── network/                # Conexões: WebSocket thread-safe e cliente HTTP
 │   ├── auth/                   # Autenticação e CDP bridge para Cloudflare
 │   ├── server/                 # Servidor HTTP e Dashboard embutido local
+│   ├── stealth/                # Scrub de anonimização (nicks, e-mails, IPs)
+│   ├── ghsync/                 # Wrappers da GitHub API via gh CLI
+│   ├── vpsmetrics/             # Métricas nativas da VPS (/proc)
+│   ├── scan/                   # Scanner de padrões de vazamento
 │   └── game/                   # 🎮 AQUI ENTRA A LÓGICA DO NOVO JOGO
 │
+├── cmd/
+│   ├── sync-vps-hub/           # Agregador de telemetria da VPS (hub 9 bots)
+│   ├── sync-stealth/           # Telemetria individual anonimizada por repo
+│   ├── sync-pages/             # Sync por bot (sigma/tibidle/leveling/generic)
+│   ├── watchdog/               # Monitor de saúde + auto-cura + alertas Telegram
+│   ├── huntera-web/            # Dashboard web leve com /api/status anônimo
+│   ├── audit/                  # Auditoria de vazamentos (anon/verify/live/docs/...)
+│   ├── deploy/                 # Aplicação de patches stealth na VPS
+│   ├── fix-history/            # Scrub de token/IP no histórico git
+│   ├── build/                  # Cross-compile para Linux/Windows
+│   └── telegram-agent/         # Agente Telegram
+│
 └── scripts/
-    ├── build-linux.bat         # Compila para Linux na VPS com 1 clique (Windows)
     ├── bot.service             # Template para systemd na VPS Ubuntu
-    ├── sync-vps-hub.js         # Agregador de telemetria da VPS para o GitHub Pages
-    └── sync-vps-hub.sh         # Script cron de sincronização automática
+    └── telegram-chat.service   # Template systemd do agente Telegram
 ```
 
 ---
@@ -62,9 +76,9 @@ bot-template-go/
 
 ## 📦 Como Compilar para VPS Linux
 
-No Windows (usando o batch incluído):
+No Windows ou Linux (cmd Go nativo):
 ```cmd
-scripts\build-linux.bat
+go run ./cmd/build linux
 ```
 Ou manualmente no terminal:
 ```cmd
@@ -83,9 +97,26 @@ scp bot-app-linux ubuntu@seu-servidor-ip:/home/ubuntu/meu-bot/
 Para manter o status da VPS e de todos os bots atualizado automaticamente no GitHub Pages a cada 2 minutos via cron:
 
 ```bash
-# Na VPS:
-chmod +x /home/ubuntu/sync-vps-hub.sh
+# Na VPS (binário Go nativo):
+go build -o sync-vps-hub ./cmd/sync-vps-hub
 crontab -e
 # Adicione a linha:
-*/2 * * * * /home/ubuntu/sync-vps-hub.sh >/dev/null 2>&1
+*/2 * * * * /home/ubuntu/bot/sync-vps-hub --push >/dev/null 2>&1
+```
+
+### Outros cmds úteis (cron / manual)
+
+```bash
+# Telemetria individual anonimizada (sigma/tibidle/leveling/etc)
+go build -o sync-stealth ./cmd/sync-stealth
+
+# Watchdog de saúde dos 9 bots + auto-cura + alertas Telegram
+go build -o watchdog ./cmd/watchdog
+* * * * * /home/ubuntu/bot/watchdog >/dev/null 2>&1
+
+# Auditoria de vazamentos
+go build -o audit ./cmd/audit
+./audit anon -deep
+./audit verify
+./audit live
 ```
