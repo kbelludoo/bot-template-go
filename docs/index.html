@@ -436,6 +436,39 @@
       .container { max-width: 1840px; }
     }
 
+    .stream-qr-banner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 5px 12px;
+      background: rgba(0, 240, 255, 0.06);
+      border: 1px solid rgba(0, 240, 255, 0.25);
+      border-radius: 10px;
+    }
+    .qr-img {
+      border-radius: 5px;
+      border: 1px solid rgba(0, 240, 255, 0.4);
+      background: #07090e;
+      display: block;
+    }
+    .qr-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+    .qr-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+    }
+    .qr-url {
+      font-size: 0.72rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: #fff;
+    }
+
     body.stream-mode, html.stream-mode body {
       height: 1080px !important;
       max-height: 1080px !important;
@@ -598,6 +631,16 @@
           </p>
         </div>
       </div>
+
+      <!-- BANNER DE ACESSO AO VIVO & QR CODE -->
+      <div class="stream-qr-banner">
+        <img class="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https%3A%2F%2Fkbelludoo.github.io%2Fbot-template-go%2F&color=00f0ff&bgcolor=07090e" alt="QR Code" width="38" height="38">
+        <div class="qr-info">
+          <div class="qr-label">📱 LINKS & DASHBOARDS 24/7</div>
+          <div class="qr-url">kbelludoo.github.io/bot-template-go</div>
+        </div>
+      </div>
+
       <div class="header-right">
         <div class="live-badge">
           <span class="pulse-dot"></span>
