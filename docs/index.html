@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>⚡ Bot Hub — VPS Command Center & Game Bot Starter Kit</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -429,7 +430,157 @@
     }
     .footer a { color: var(--accent); text-decoration: none; }
     .footer a:hover { text-decoration: underline; }
+
+    /* WIDE SCREEN / STREAM 1080P FULLSCREEN MODE */
+    @media (min-width: 1400px) {
+      .container { max-width: 1840px; }
+    }
+
+    body.stream-mode, html.stream-mode body {
+      height: 1080px !important;
+      max-height: 1080px !important;
+      width: 1920px !important;
+      max-width: 1920px !important;
+      padding: 12px 18px !important;
+      overflow: hidden !important;
+      display: flex !important;
+      flex-direction: column !important;
+      box-sizing: border-box !important;
+    }
+    body.stream-mode .container, html.stream-mode body .container {
+      max-width: 100% !important;
+      width: 100% !important;
+      height: 100% !important;
+      display: flex !important;
+      flex-direction: column !important;
+      margin: 0 !important;
+    }
+    body.stream-mode .header, html.stream-mode body .header {
+      padding: 8px 16px !important;
+      margin-bottom: 8px !important;
+      border-radius: 12px !important;
+      flex-shrink: 0 !important;
+    }
+    body.stream-mode .logo-badge, html.stream-mode body .logo-badge {
+      width: 36px !important;
+      height: 36px !important;
+      font-size: 1.15rem !important;
+      border-radius: 10px !important;
+    }
+    body.stream-mode .header-title h1, html.stream-mode body .header-title h1 {
+      font-size: 1.1rem !important;
+    }
+    body.stream-mode .header-title p, html.stream-mode body .header-title p {
+      font-size: 0.72rem !important;
+    }
+    body.stream-mode .vps-grid, html.stream-mode body .vps-grid {
+      display: grid !important;
+      grid-template-columns: repeat(4, 1fr) !important;
+      gap: 10px !important;
+      margin-bottom: 8px !important;
+      flex-shrink: 0 !important;
+    }
+    body.stream-mode .metric-card, html.stream-mode body .metric-card {
+      padding: 8px 14px !important;
+      border-radius: 10px !important;
+    }
+    body.stream-mode .metric-label, html.stream-mode body .metric-label {
+      font-size: 0.65rem !important;
+      margin-bottom: 2px !important;
+    }
+    body.stream-mode .metric-value, html.stream-mode body .metric-value {
+      font-size: 1.25rem !important;
+    }
+    body.stream-mode .metric-sub, html.stream-mode body .metric-sub {
+      font-size: 0.68rem !important;
+      margin-top: 2px !important;
+    }
+    body.stream-mode .progress-bar-wrap, html.stream-mode body .progress-bar-wrap {
+      margin-top: 5px !important;
+      height: 4px !important;
+    }
+    body.stream-mode .section-title, html.stream-mode body .section-title {
+      font-size: 0.88rem !important;
+      margin-bottom: 6px !important;
+      flex-shrink: 0 !important;
+    }
+    body.stream-mode .bots-grid, html.stream-mode body .bots-grid {
+      display: grid !important;
+      grid-template-columns: repeat(4, 1fr) !important;
+      grid-template-rows: repeat(2, 1fr) !important;
+      gap: 10px !important;
+      flex: 1 !important;
+      margin-bottom: 0 !important;
+      min-height: 0 !important;
+    }
+    body.stream-mode .bot-card, html.stream-mode body .bot-card {
+      padding: 10px 12px !important;
+      border-radius: 12px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      overflow: hidden !important;
+    }
+    body.stream-mode .bot-header, html.stream-mode body .bot-header {
+      margin-bottom: 4px !important;
+    }
+    body.stream-mode .bot-name-group h3, html.stream-mode body .bot-name-group h3 {
+      font-size: 0.85rem !important;
+    }
+    body.stream-mode .bot-port, html.stream-mode body .bot-port {
+      font-size: 0.6rem !important;
+      padding: 1px 5px !important;
+    }
+    body.stream-mode .badge-status, html.stream-mode body .badge-status {
+      font-size: 0.62rem !important;
+      padding: 2px 6px !important;
+    }
+    body.stream-mode .acc-list, html.stream-mode body .acc-list {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 4px !important;
+    }
+    body.stream-mode .acc-item, html.stream-mode body .acc-item {
+      padding: 4px 6px !important;
+      margin-top: 3px !important;
+      border-radius: 6px !important;
+    }
+    body.stream-mode .acc-name, html.stream-mode body .acc-name {
+      font-size: 0.72rem !important;
+    }
+    body.stream-mode .acc-level, html.stream-mode body .acc-level {
+      font-size: 0.66rem !important;
+    }
+    body.stream-mode .stat-row, html.stream-mode body .stat-row {
+      font-size: 0.64rem !important;
+      margin-top: 1px !important;
+    }
+    body.stream-mode .bar-slim, html.stream-mode body .bar-slim {
+      height: 3px !important;
+      margin-top: 2px !important;
+    }
+    body.stream-mode .bot-footer, html.stream-mode body .bot-footer {
+      padding-top: 4px !important;
+      margin-top: 4px !important;
+      font-size: 0.68rem !important;
+    }
+    body.stream-mode .btn-link, html.stream-mode body .btn-link {
+      font-size: 0.65rem !important;
+      padding: 2px 6px !important;
+    }
+    body.stream-mode .starter-kit, html.stream-mode body .starter-kit,
+    body.stream-mode .footer, html.stream-mode body .footer {
+      display: none !important;
+    }
   </style>
+  <script>
+    if (window.location.search.includes('stream') || window.location.hash.includes('stream')) {
+      document.documentElement.classList.add('stream-mode');
+      document.addEventListener('DOMContentLoaded', function() {
+        document.body.classList.add('stream-mode');
+      });
+    }
+  </script>
 </head>
 <body>
   <div class="container">
@@ -667,6 +818,42 @@
         <div class="bot-footer">
           <span style="font-size: 0.72rem; color: var(--text-dim);" id="pokeidleworldSummary">Auto-Catch & 4.0x Dano</span>
           <span class="badge-status badge-online" style="font-size: 0.72rem;">24/7 VPS</span>
+        </div>
+      </div>
+
+      <!-- Kick Live & Bot Card -->
+      <div class="bot-card" id="cardKick">
+        <div>
+          <div class="bot-header">
+            <div class="bot-name-group">
+              <h3 style="color: #53fc18;">🟢 Kick Stream & Miner</h3>
+              <span class="bot-port" style="color: #53fc18; background: rgba(83, 252, 24, 0.12); border: 1px solid rgba(83, 252, 24, 0.25);">RTMP 443 • LIVE</span>
+            </div>
+            <span class="badge-status badge-online" id="kickBadge" style="background: rgba(83, 252, 24, 0.15); color: #53fc18; border-color: #53fc18;">TRANSMISSÃO ON</span>
+          </div>
+
+          <div class="acc-list" id="kickAccList">
+            <div class="acc-item">
+              <div class="acc-item-header">
+                <span class="acc-name">📺 kick.com/kbelludoo</span>
+                <span class="acc-level" style="color: #53fc18;">1080p @ 30 FPS</span>
+              </div>
+              <div class="stat-row">
+                <span>📡 Bitrate de Vídeo</span>
+                <span>3.000 kbps (CBR)</span>
+              </div>
+              <div class="bar-slim"><div class="progress-fill fill-live" style="width: 100%; background: #53fc18;"></div></div>
+              <div class="stat-row" style="margin-top: 4px; font-size: 0.7rem; color: var(--text-dim);">
+                <span>⚡ Restream: Go + Xvfb</span>
+                <span>⛏️ Miner: Kick Drops Ativo</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bot-footer">
+          <span style="font-size: 0.72rem; color: var(--text-dim);" id="kickSummary">100% VPS • Zero OBS</span>
+          <span class="badge-status badge-online" style="font-size: 0.72rem; border-color: #53fc18; color: #53fc18;">24/7 ONLINE</span>
         </div>
       </div>
     </div>
