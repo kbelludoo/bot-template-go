@@ -1,0 +1,16 @@
+[Unit]
+Description=Telegram Chat Agent - Interactive AI Bridge
+After=network.target agent-go.service
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu
+ExecStart=/usr/bin/node /home/ubuntu/telegram-chat-agent.js
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
