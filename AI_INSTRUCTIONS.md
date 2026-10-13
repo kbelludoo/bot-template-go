@@ -14,6 +14,7 @@ Você está construindo um bot autônomo nativo em **Go (Golang)** de altíssima
 3. **Resiliência Total contra Crash:** Toda conta roda em Goroutine protegida com `engine.RunWithSupervisor` e `recover()`. Um panic de unmarshal ou erro de rede NUNCA deve derrubar o executável principal.
 4. **Isolamento de Portas Web:** Cada bot tem sua própria porta no dashboard embutido (ex: Huntera usa 3000, Tibidle usa 3001, Sigma usa 3002). Nunca crie conflito de portas.
 5. **Segurança de Segredos:** `accounts.json`, cookies, senhas e chaves SSH (`*.key`) NUNCA podem ser adicionados ao Git. O `.gitignore` deste template já está calibrado.
+6. **Modo Stealth & Anti-Ban (Zero Nicks Públicos):** NUNCA exponha o nome real do personagem/treinador/streamer nos dashboards web do GitHub Pages (`docs/index.html` ou `status.json`). Sempre exiba apenas a classe/vocação, índice anônimo (ex: `Conta #1`, `Treinador #1`, `Guerreiro`, `Arqueiro`) e estatísticas técnicas (Level, EXP/h, Kills, Gold, Mapa). Transmitir nicks reais gera denúncias e banimentos manuais imediatos!
 
 ---
 

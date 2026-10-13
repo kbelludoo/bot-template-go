@@ -161,6 +161,74 @@ async function main() {
   if (kickminer.online) activeBotsCount++;
   if (baiak.online && (baiak.fleet?.botsOnline > 0 || baiak.online)) activeBotsCount++;
 
+  // Função de anonimização (Modo Stealth / Anti-Ban)
+  function sanitizeBotPayload(b) {
+    if (!b || typeof b !== 'object') return b;
+    const clean = JSON.parse(JSON.stringify(b));
+
+    // Huntera: charName
+    if (clean.huntera?.status?.accounts) {
+      clean.huntera.status.accounts.forEach((acc, i) => {
+        acc.charName = `Personagem #${i + 1}`;
+      });
+    }
+    // Tibidle: name
+    if (clean.tibidle?.status?.accounts) {
+      clean.tibidle.status.accounts.forEach((acc, i) => {
+        acc.name = `Conta #${i + 1}`;
+      });
+    }
+    // Sigma: trainerName, alias
+    if (clean.sigma?.status?.accounts) {
+      clean.sigma.status.accounts.forEach((acc, i) => {
+        acc.trainerName = `Treinador #${i + 1}`;
+        acc.alias = `Treinador #${i + 1}`;
+      });
+    }
+    // Leveling: name
+    if (clean.leveling?.status?.accounts) {
+      clean.leveling.status.accounts.forEach((acc, i) => {
+        acc.name = `Party #${i + 1}`;
+      });
+    }
+    // PokeIdle: name
+    if (clean.pokeidle?.status?.accounts) {
+      clean.pokeidle.status.accounts.forEach((acc, i) => {
+        acc.name = `Treinador #${i + 1}`;
+      });
+    }
+    // Poke Idle World: name
+    if (clean.pokeidleworld?.status?.accounts) {
+      clean.pokeidleworld.status.accounts.forEach((acc, i) => {
+        acc.name = `Treinador #${i + 1}`;
+      });
+    }
+    // Baiak: bots[key].name e label
+    if (clean.baiak?.status?.bots) {
+      Object.keys(clean.baiak.status.bots).forEach((k, i) => {
+        clean.baiak.status.bots[k].name = `Frota #${i + 1}`;
+        clean.baiak.status.bots[k].label = `Conta #${i + 1}`;
+        if (clean.baiak.status.bots[k].status?.characters) {
+          clean.baiak.status.bots[k].status.characters.forEach((c, ci) => {
+            c.name = `Personagem #${ci + 1}`;
+          });
+        }
+      });
+    }
+    // Kick Miner: username e chaves de contas
+    if (clean.kickminer?.status?.accounts) {
+      const sanitizedAccs = {};
+      Object.keys(clean.kickminer.status.accounts).forEach((name, i) => {
+        const item = clean.kickminer.status.accounts[name];
+        item.username = `Minerador #${i + 1}`;
+        sanitizedAccs[`miner_${i + 1}`] = item;
+      });
+      clean.kickminer.status.accounts = sanitizedAccs;
+    }
+
+    return clean;
+  }
+
   const payload = {
     timestamp: new Date().toISOString(),
     vps,
@@ -168,7 +236,7 @@ async function main() {
       totalBots: 8,
       activeBots: activeBotsCount
     },
-    bots
+    bots: sanitizeBotPayload(bots)
   };
 
   const jsonStr = JSON.stringify(payload, null, 2);

@@ -989,14 +989,14 @@
       
       if (hAccounts.length > 0) {
         let totalGold = 0;
-        hunteraAccList.innerHTML = hAccounts.map(acc => {
+        hunteraAccList.innerHTML = hAccounts.map((acc, idx) => {
           totalGold += (acc.gold || 0);
           const hpPct = acc.maxHp ? Math.round((acc.hp / acc.maxHp) * 100) : 100;
           const manaPct = acc.maxMana ? Math.round((acc.mana / acc.maxMana) * 100) : 100;
           return `
             <div class="acc-item">
               <div class="acc-item-header">
-                <span class="acc-name">👤 ${acc.charName || acc.id}</span>
+                <span class="acc-name">⚔️ Personagem #${idx + 1}</span>
                 <span class="acc-level">Nível ${acc.level || 1}</span>
               </div>
               <div class="stat-row">
@@ -1029,14 +1029,14 @@
       const tibidleAccList = document.getElementById('tibidleAccList');
       
       if (tAccounts.length > 0) {
-        tibidleAccList.innerHTML = tAccounts.map(acc => `
+        tibidleAccList.innerHTML = tAccounts.map((acc, idx) => `
           <div class="acc-item">
             <div class="acc-item-header">
-              <span class="acc-name">👤 ${acc.name || acc.id}</span>
+              <span class="acc-name">🛡️ Conta #${idx + 1} • ${acc.vocation || 'Guerreiro'}</span>
               <span class="acc-level" style="color: var(--cyan);">${acc.status || 'Conectado'}</span>
             </div>
             <div class="stat-row" style="margin-top: 6px;">
-              <span>Vocao: ${acc.vocation || 'Guerreiro'}</span>
+              <span>Status: Ativo</span>
               <span>Uptime: ${tStatus.uptime || '41h'}</span>
             </div>
           </div>
@@ -1053,11 +1053,11 @@
       const sigmaAccList = document.getElementById('sigmaAccList');
 
       if (sAccounts.length > 0) {
-        sigmaAccList.innerHTML = sAccounts.map(acc => {
+        sigmaAccList.innerHTML = sAccounts.map((acc, idx) => {
           return `
             <div class="acc-item">
               <div class="acc-item-header">
-                <span class="acc-name">⚡ ${acc.trainerName || acc.alias}</span>
+                <span class="acc-name">⚡ Treinador #${idx + 1}</span>
                 <span class="acc-level">Lv ${acc.level || 1} • ${acc.leaderName || 'Pokemon'}</span>
               </div>
               <div class="stat-row">
@@ -1086,14 +1086,15 @@
 
       if (lAccounts.length > 0) {
         let lTotalGold = 0;
-        levelingAccList.innerHTML = lAccounts.map(acc => {
+        levelingAccList.innerHTML = lAccounts.map((acc, idx) => {
           lTotalGold += (acc.gold || 0);
           const vocIcon = acc.vocation === 'arqueiro' ? '🏹' : acc.vocation === 'healer' ? '✨' : acc.vocation === 'mago' ? '🔮' : '🛡️';
+          const vocName = (acc.vocation || 'Membro').toUpperCase();
           return `
             <div class="acc-item">
               <div class="acc-item-header">
-                <span class="acc-name">${vocIcon} ${acc.name || acc.id}</span>
-                <span class="acc-level" style="color: #34d399;">Lv ${acc.level || 1} • ${(acc.vocation || '').toUpperCase()}</span>
+                <span class="acc-name">${vocIcon} Party #${idx + 1} (${vocName})</span>
+                <span class="acc-level" style="color: #34d399;">Lv ${acc.level || 1}</span>
               </div>
               <div class="stat-row">
                 <span>💰 ${(acc.gold || 0).toLocaleString('pt-BR')} gold</span>
@@ -1121,7 +1122,7 @@
 
       const botKeys = Object.keys(bBots);
       if (botKeys.length > 0) {
-        baiakAccList.innerHTML = botKeys.map(k => {
+        baiakAccList.innerHTML = botKeys.map((k, idx) => {
           const b = bBots[k];
           const t = b.status?.telemetry || {};
           const rates = b.status?.rates || {};
@@ -1133,7 +1134,7 @@
           return `
             <div class="acc-item">
               <div class="acc-item-header">
-                <span class="acc-name">👤 ${b.name || b.label}</span>
+                <span class="acc-name">🏰 Frota #${idx + 1}</span>
                 <span class="acc-level" style="color: #c084fc;">Lv ${t.level || 1} • ${hunt.name || 'Hunt'}</span>
               </div>
               <div class="stat-row">
@@ -1167,13 +1168,13 @@
       const pokeidleAccList = document.getElementById('pokeidleAccList');
 
       if (piAccounts.length > 0) {
-        pokeidleAccList.innerHTML = piAccounts.map(acc => {
+        pokeidleAccList.innerHTML = piAccounts.map((acc, idx) => {
           const extra = acc.extra || {};
           const lives = (extra.kickLives || []).length;
           return `
             <div class="acc-item">
               <div class="acc-item-header">
-                <span class="acc-name">⚡ ${acc.name || acc.id}</span>
+                <span class="acc-name">⚡ Treinador #${idx + 1}</span>
                 <span class="acc-level" style="color: #38bdf8;">Lv ${acc.level || 1} • ${acc.vocation || 'Pokemon'}</span>
               </div>
               <div class="stat-row">
@@ -1201,12 +1202,12 @@
       const pokeidleworldAccList = document.getElementById('pokeidleworldAccList');
 
       if (pwAccounts.length > 0) {
-        pokeidleworldAccList.innerHTML = pwAccounts.map(acc => {
+        pokeidleworldAccList.innerHTML = pwAccounts.map((acc, idx) => {
           const extra = acc.extra || {};
           return `
             <div class="acc-item">
               <div class="acc-item-header">
-                <span class="acc-name">🌍 ${acc.name || acc.id}</span>
+                <span class="acc-name">🌍 Treinador #${idx + 1}</span>
                 <span class="acc-level" style="color: #fb923c;">Lv ${acc.level || 1} • ${extra.activePokemon || 'Pokemon'}</span>
               </div>
               <div class="stat-row">
@@ -1237,7 +1238,7 @@
       if (kmAccNames.length > 0) {
         let totalPts = 0;
         let totalStreams = kmStatus.totalStreams || 0;
-        kickAccList.innerHTML = kmAccNames.map(name => {
+        kickAccList.innerHTML = kmAccNames.map((name, idx) => {
           const acc = kmAccMap[name];
           totalPts += (acc.totalPoints || 0);
           const streamersMap = acc.streamers || {};
@@ -1246,7 +1247,7 @@
           return `
             <div class="acc-item">
               <div class="acc-item-header">
-                <span class="acc-name">⛏️ Kick: ${acc.username || name}</span>
+                <span class="acc-name">⛏️ Minerador #${idx + 1}</span>
                 <span class="acc-level" style="color: #53fc18;">⭐ ${(acc.totalPoints || 0).toLocaleString('pt-BR')} pts</span>
               </div>
               <div class="stat-row">
