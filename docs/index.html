@@ -686,10 +686,11 @@
 
     /* LIVE ACTIVITY TICKER (RODAPÉ) */
     .stream-ticker-wrap {
-      display: none;
-      height: 30px;
+      display: flex;
+      height: 32px;
+      margin: 14px 0 16px 0;
       background: #090d16;
-      border: 1px solid rgba(0, 240, 255, 0.2);
+      border: 1px solid rgba(0, 240, 255, 0.25);
       border-radius: 8px;
       overflow: hidden;
       align-items: center;
@@ -697,7 +698,8 @@
       flex-shrink: 0;
     }
     body.stream-mode .stream-ticker-wrap {
-      display: flex !important;
+      margin: 0 !important;
+      height: 30px !important;
     }
     .ticker-badge {
       background: linear-gradient(90deg, #ff0055, #a855f7);
@@ -814,6 +816,15 @@
     }
   </style>
   <script>
+    function toggleStreamMode() {
+      const isStream = document.body.classList.toggle('stream-mode');
+      document.documentElement.classList.toggle('stream-mode', isStream);
+      const btn = document.getElementById('btnToggleStream');
+      if (btn) {
+        btn.innerHTML = isStream ? '<span>🖥️</span> Sair do Modo Stream' : '<span>📺</span> Modo Stream (1080p)';
+      }
+    }
+
     function checkStreamMode() {
       const isStream = window.location.search.includes('stream') || 
                        window.location.hash.includes('stream') ||
@@ -821,14 +832,15 @@
       if (isStream) {
         document.documentElement.classList.add('stream-mode');
         if (document.body) document.body.classList.add('stream-mode');
+        const btn = document.getElementById('btnToggleStream');
+        if (btn) btn.innerHTML = '<span>🖥️</span> Sair do Modo Stream';
       }
     }
     checkStreamMode();
     document.addEventListener('DOMContentLoaded', checkStreamMode);
     window.addEventListener('keydown', (e) => {
       if (e.key === 's' || e.key === 'S') {
-        document.body.classList.toggle('stream-mode');
-        document.documentElement.classList.toggle('stream-mode');
+        toggleStreamMode();
       }
       if (e.key === 'l' || e.key === 'L') {
         if (window.testLevelUp) window.testLevelUp();
@@ -844,7 +856,10 @@
       <div class="header-left">
         <div class="logo-badge">⚡</div>
         <div class="header-title">
-          <h1>VPS BOT COMMAND CENTER</h1>
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <h1>VPS BOT COMMAND CENTER</h1>
+            <span style="background: rgba(0, 240, 255, 0.15); color: #00f0ff; border: 1px solid rgba(0, 240, 255, 0.35); padding: 1px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.04em;">v2.5 STREAM HUD & LEVEL-UP FX</span>
+          </div>
           <p>
             <span>Multi-Bot Cluster</span>
             <span>•</span>
@@ -867,6 +882,12 @@
           <span class="pulse-dot"></span>
           <span id="liveStatusText">TELEMETRIA ATIVA</span>
         </div>
+        <button class="btn-refresh" id="btnToggleStream" onclick="toggleStreamMode()" style="background: rgba(0, 240, 255, 0.12); border-color: rgba(0, 240, 255, 0.35); color: #00f0ff;">
+          <span>📺</span> Modo Stream (1080p)
+        </button>
+        <button class="btn-refresh" onclick="testLevelUp()" style="background: rgba(245, 158, 11, 0.12); border-color: rgba(245, 158, 11, 0.35); color: #f59e0b;">
+          <span>⭐</span> Testar Level Up
+        </button>
         <button class="btn-refresh" onclick="fetchStatus()">
           <span>🔄</span> Atualizar
         </button>
