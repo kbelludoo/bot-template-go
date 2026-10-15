@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="notranslate" translate="no">
 <head>
   <meta charset="UTF-8">
   <meta name="google" content="notranslate">
+  <meta name="googlebot" content="notranslate">
+  <meta name="robots" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>⚡ Bot Hub — VPS Command Center & Game Bot Starter Kit</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -472,16 +474,26 @@
       color: #fff;
     }
 
+    /* =========================================================================
+       STREAM MODE — ULTRA-LEVE PARA VPS (1 vCPU, 1 GB RAM)
+       ZERO BACKDROP-FILTER, ZERO CANVAS, 100% HARDWARE COMPOSITED
+       ========================================================================= */
     body.stream-mode, html.stream-mode body {
       height: 1080px !important;
       max-height: 1080px !important;
       width: 1920px !important;
       max-width: 1920px !important;
-      padding: 12px 18px !important;
+      padding: 8px 12px !important;
       overflow: hidden !important;
       display: flex !important;
       flex-direction: column !important;
+      justify-content: space-between !important;
       box-sizing: border-box !important;
+      background: #060911 !important;
+    }
+    body.stream-mode * {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
     }
     body.stream-mode .container, html.stream-mode body .container {
       max-width: 100% !important;
@@ -489,136 +501,342 @@
       height: 100% !important;
       display: flex !important;
       flex-direction: column !important;
+      justify-content: space-between !important;
       margin: 0 !important;
     }
+    /* SLIM COMMAND HEADER (50px) */
     body.stream-mode .header, html.stream-mode body .header {
-      padding: 8px 16px !important;
-      margin-bottom: 8px !important;
-      border-radius: 12px !important;
-      flex-shrink: 0 !important;
-    }
-    body.stream-mode .logo-badge, html.stream-mode body .logo-badge {
-      width: 36px !important;
-      height: 36px !important;
-      font-size: 1.15rem !important;
-      border-radius: 10px !important;
-    }
-    body.stream-mode .header-title h1, html.stream-mode body .header-title h1 {
-      font-size: 1.1rem !important;
-    }
-    body.stream-mode .header-title p, html.stream-mode body .header-title p {
-      font-size: 0.72rem !important;
-    }
-    body.stream-mode .vps-grid, html.stream-mode body .vps-grid {
-      display: grid !important;
-      grid-template-columns: repeat(4, 1fr) !important;
-      gap: 10px !important;
-      margin-bottom: 8px !important;
-      flex-shrink: 0 !important;
-    }
-    body.stream-mode .metric-card, html.stream-mode body .metric-card {
-      padding: 8px 14px !important;
-      border-radius: 10px !important;
-    }
-    body.stream-mode .metric-label, html.stream-mode body .metric-label {
-      font-size: 0.65rem !important;
-      margin-bottom: 2px !important;
-    }
-    body.stream-mode .metric-value, html.stream-mode body .metric-value {
-      font-size: 1.25rem !important;
-    }
-    body.stream-mode .metric-sub, html.stream-mode body .metric-sub {
-      font-size: 0.68rem !important;
-      margin-top: 2px !important;
-    }
-    body.stream-mode .progress-bar-wrap, html.stream-mode body .progress-bar-wrap {
-      margin-top: 5px !important;
-      height: 4px !important;
-    }
-    body.stream-mode .section-title, html.stream-mode body .section-title {
-      font-size: 0.88rem !important;
+      padding: 6px 14px !important;
       margin-bottom: 6px !important;
+      border-radius: 10px !important;
       flex-shrink: 0 !important;
+      height: 48px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      background: #0b101d !important;
+      border: 1px solid rgba(0, 240, 255, 0.25) !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6) !important;
     }
+    body.stream-mode .logo-badge {
+      width: 32px !important;
+      height: 32px !important;
+      font-size: 1.05rem !important;
+      border-radius: 8px !important;
+    }
+    body.stream-mode .header-title h1 {
+      font-size: 0.98rem !important;
+      letter-spacing: -0.01em !important;
+    }
+    body.stream-mode .header-title p {
+      display: none !important;
+    }
+    body.stream-mode .stream-qr-banner {
+      padding: 3px 8px !important;
+      height: 36px !important;
+    }
+    body.stream-mode .qr-img {
+      width: 30px !important;
+      height: 30px !important;
+    }
+    body.stream-mode .qr-label {
+      font-size: 0.55rem !important;
+    }
+    body.stream-mode .qr-url {
+      font-size: 0.65rem !important;
+    }
+    /* INLINE VPS METRICS IN HEADER */
+    body.stream-mode .vps-grid {
+      display: flex !important;
+      gap: 8px !important;
+      margin-bottom: 0 !important;
+      flex-shrink: 0 !important;
+      background: transparent !important;
+    }
+    body.stream-mode .vps-grid .metric-card {
+      padding: 4px 10px !important;
+      border-radius: 8px !important;
+      background: rgba(255, 255, 255, 0.04) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      min-width: 0 !important;
+      transform: none !important;
+    }
+    body.stream-mode .vps-grid .metric-label {
+      font-size: 0.58rem !important;
+      margin-bottom: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+      color: var(--text-dim) !important;
+    }
+    body.stream-mode .vps-grid .metric-value {
+      font-size: 0.82rem !important;
+      font-weight: 700 !important;
+    }
+    body.stream-mode .vps-grid .metric-sub,
+    body.stream-mode .vps-grid .progress-bar-wrap {
+      display: none !important;
+    }
+    body.stream-mode .section-title,
+    body.stream-mode .starter-kit,
+    body.stream-mode .footer {
+      display: none !important;
+    }
+
+    /* 3x3 BOTS GRID (9 BOTS VISIBLE AT ONCE) */
     body.stream-mode .bots-grid, html.stream-mode body .bots-grid {
       display: grid !important;
-      grid-template-columns: repeat(4, 1fr) !important;
-      grid-template-rows: repeat(2, 1fr) !important;
-      gap: 10px !important;
+      grid-template-columns: repeat(3, 1fr) !important;
+      grid-template-rows: repeat(3, 1fr) !important;
+      gap: 8px !important;
       flex: 1 !important;
-      margin-bottom: 0 !important;
+      margin-bottom: 6px !important;
       min-height: 0 !important;
+      height: calc(1080px - 48px - 32px - 34px) !important;
     }
     body.stream-mode .bot-card, html.stream-mode body .bot-card {
-      padding: 10px 12px !important;
-      border-radius: 12px !important;
+      padding: 8px 12px !important;
+      border-radius: 10px !important;
+      background: #0b0f19 !important;
+      border: 1px solid rgba(255, 255, 255, 0.09) !important;
       display: flex !important;
       flex-direction: column !important;
       justify-content: space-between !important;
       overflow: hidden !important;
+      position: relative !important;
+      transform: none !important;
+      transition: border-color 0.25s ease !important;
     }
-    body.stream-mode .bot-header, html.stream-mode body .bot-header {
+    body.stream-mode .bot-header {
       margin-bottom: 4px !important;
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
     }
-    body.stream-mode .bot-name-group h3, html.stream-mode body .bot-name-group h3 {
-      font-size: 0.85rem !important;
+    body.stream-mode .bot-name-group h3 {
+      font-size: 0.86rem !important;
+      font-weight: 700 !important;
     }
-    body.stream-mode .bot-port, html.stream-mode body .bot-port {
+    body.stream-mode .bot-port {
+      font-size: 0.58rem !important;
+      padding: 1px 4px !important;
+    }
+    body.stream-mode .badge-status {
       font-size: 0.6rem !important;
-      padding: 1px 5px !important;
-    }
-    body.stream-mode .badge-status, html.stream-mode body .badge-status {
-      font-size: 0.62rem !important;
       padding: 2px 6px !important;
     }
-    body.stream-mode .acc-list, html.stream-mode body .acc-list {
-      display: flex !important;
-      flex-direction: column !important;
+    body.stream-mode .acc-list {
+      display: grid !important;
+      grid-template-columns: repeat(2, 1fr) !important;
       gap: 4px !important;
+      overflow: hidden !important;
     }
-    body.stream-mode .acc-item, html.stream-mode body .acc-item {
+    body.stream-mode .acc-item {
       padding: 4px 6px !important;
-      margin-top: 3px !important;
+      margin-top: 0 !important;
       border-radius: 6px !important;
+      background: rgba(255, 255, 255, 0.03) !important;
+      border: 1px solid rgba(255, 255, 255, 0.05) !important;
+      position: relative !important;
     }
-    body.stream-mode .acc-name, html.stream-mode body .acc-name {
+    body.stream-mode .acc-item-header {
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+    }
+    body.stream-mode .acc-name {
+      font-size: 0.68rem !important;
+      font-weight: 700 !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
+    body.stream-mode .acc-level {
       font-size: 0.72rem !important;
+      font-weight: 800 !important;
+      font-family: 'JetBrains Mono', monospace !important;
+      color: var(--accent) !important;
     }
-    body.stream-mode .acc-level, html.stream-mode body .acc-level {
-      font-size: 0.66rem !important;
-    }
-    body.stream-mode .stat-row, html.stream-mode body .stat-row {
-      font-size: 0.64rem !important;
+    body.stream-mode .stat-row {
+      font-size: 0.6rem !important;
       margin-top: 1px !important;
+      color: var(--text-dim) !important;
     }
-    body.stream-mode .bar-slim, html.stream-mode body .bar-slim {
+    body.stream-mode .bar-slim {
       height: 3px !important;
       margin-top: 2px !important;
+      background: rgba(255, 255, 255, 0.08) !important;
     }
-    body.stream-mode .bot-footer, html.stream-mode body .bot-footer {
+    body.stream-mode .bot-footer {
       padding-top: 4px !important;
       margin-top: 4px !important;
-      font-size: 0.68rem !important;
+      font-size: 0.64rem !important;
+      border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
     }
-    body.stream-mode .btn-link, html.stream-mode body .btn-link {
-      font-size: 0.65rem !important;
-      padding: 2px 6px !important;
+    body.stream-mode .btn-link {
+      font-size: 0.6rem !important;
+      padding: 1px 6px !important;
     }
-    body.stream-mode .starter-kit, html.stream-mode body .starter-kit,
-    body.stream-mode .footer, html.stream-mode body .footer {
-      display: none !important;
+
+    /* LIVE ACTIVITY TICKER (RODAPÉ) */
+    .stream-ticker-wrap {
+      display: none;
+      height: 30px;
+      background: #090d16;
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      border-radius: 8px;
+      overflow: hidden;
+      align-items: center;
+      position: relative;
+      flex-shrink: 0;
+    }
+    body.stream-mode .stream-ticker-wrap {
+      display: flex !important;
+    }
+    .ticker-badge {
+      background: linear-gradient(90deg, #ff0055, #a855f7);
+      color: #fff;
+      font-size: 0.62rem;
+      font-weight: 800;
+      padding: 0 10px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      letter-spacing: 0.06em;
+      flex-shrink: 0;
+      z-index: 2;
+    }
+    .stream-ticker-track {
+      display: flex;
+      gap: 28px;
+      white-space: nowrap;
+      animation: tickerMarquee 38s linear infinite;
+      will-change: transform;
+      padding-left: 20px;
+      font-size: 0.68rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: #94a3b8;
+    }
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    @keyframes tickerMarquee {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-50%, 0, 0); }
+    }
+
+    /* LEVEL UP TOAST (TOPO) */
+    .levelup-toast {
+      position: fixed;
+      top: 14px;
+      left: 50%;
+      transform: translate3d(-50%, 0, 0);
+      z-index: 9999;
+      padding: 10px 24px;
+      border-radius: 10px;
+      background: #0b1120;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.85);
+      color: #fff;
+      text-align: center;
+      animation: toastIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      pointer-events: none;
+    }
+    @keyframes toastIn {
+      0% { transform: translate3d(-50%, -60px, 0); opacity: 0; }
+      100% { transform: translate3d(-50%, 0, 0); opacity: 1; }
+    }
+    .levelup-toast.tier-1 { border: 2px solid #00f0ff; color: #00f0ff; }
+    .levelup-toast.tier-2 { border: 2px solid #10b981; color: #10b981; }
+    .levelup-toast.tier-3 { border: 2px solid #f59e0b; color: #f59e0b; }
+    .levelup-toast.tier-4 { border: 2px solid #a855f7; color: #a855f7; }
+    .levelup-toast.tier-5 { border: 2px solid #ff0055; color: #ff0055; }
+
+    /* CARD PULSE WHEN LEVEL UP OCCURS (100% CSS ZERO CPU) */
+    .card-levelup-1 { animation: pulseCyan 3s ease forwards !important; }
+    .card-levelup-2 { animation: pulseGreen 3s ease forwards !important; }
+    .card-levelup-3 { animation: pulseGold 3s ease forwards !important; }
+    .card-levelup-4 { animation: pulsePurple 3s ease forwards !important; }
+    .card-levelup-5 { animation: pulseLegendary 3.5s ease forwards !important; }
+
+    @keyframes pulseCyan {
+      0% { border-color: #00f0ff; }
+      50% { border-color: rgba(0, 240, 255, 0.8); }
+      100% { border-color: rgba(255, 255, 255, 0.09); }
+    }
+    @keyframes pulseGreen {
+      0% { border-color: #10b981; }
+      50% { border-color: rgba(16, 185, 129, 0.8); }
+      100% { border-color: rgba(255, 255, 255, 0.09); }
+    }
+    @keyframes pulseGold {
+      0% { border-color: #f59e0b; }
+      50% { border-color: rgba(245, 158, 11, 0.8); }
+      100% { border-color: rgba(255, 255, 255, 0.09); }
+    }
+    @keyframes pulsePurple {
+      0% { border-color: #a855f7; }
+      50% { border-color: rgba(168, 85, 247, 0.8); }
+      100% { border-color: rgba(255, 255, 255, 0.09); }
+    }
+    @keyframes pulseLegendary {
+      0% { border-color: #ff0055; }
+      33% { border-color: #a855f7; }
+      66% { border-color: #00f0ff; }
+      100% { border-color: rgba(255, 255, 255, 0.09); }
+    }
+
+    /* FLOATING LEVEL UP BADGE */
+    .float-levelup-badge {
+      position: absolute;
+      top: 2px;
+      right: 6px;
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 4px;
+      color: #000;
+      animation: floatUp 2.8s ease forwards;
+      pointer-events: none;
+      z-index: 10;
+    }
+    @keyframes floatUp {
+      0% { transform: translate3d(0, 0, 0); opacity: 1; }
+      80% { transform: translate3d(0, -18px, 0); opacity: 0.9; }
+      100% { transform: translate3d(0, -25px, 0); opacity: 0; }
     }
   </style>
   <script>
-    if (window.location.search.includes('stream') || window.location.hash.includes('stream')) {
-      document.documentElement.classList.add('stream-mode');
-      document.addEventListener('DOMContentLoaded', function() {
-        document.body.classList.add('stream-mode');
-      });
+    function checkStreamMode() {
+      const isStream = window.location.search.includes('stream') || 
+                       window.location.hash.includes('stream') ||
+                       (window.innerWidth === 1920 && window.innerHeight === 1080);
+      if (isStream) {
+        document.documentElement.classList.add('stream-mode');
+        if (document.body) document.body.classList.add('stream-mode');
+      }
     }
+    checkStreamMode();
+    document.addEventListener('DOMContentLoaded', checkStreamMode);
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 's' || e.key === 'S') {
+        document.body.classList.toggle('stream-mode');
+        document.documentElement.classList.toggle('stream-mode');
+      }
+      if (e.key === 'l' || e.key === 'L') {
+        if (window.testLevelUp) window.testLevelUp();
+      }
+    });
   </script>
 </head>
-<body>
+<body class="notranslate" translate="no">
   <div class="container">
     
     <!-- HEADER -->
@@ -920,6 +1138,22 @@
       </div>
     </div>
 
+    <!-- LIVE ACTIVITY TICKER (RODAPÉ DO MODO STREAM) -->
+    <div class="stream-ticker-wrap" id="streamTickerWrap">
+      <div class="ticker-badge">🔴 LIVE EVENTS</div>
+      <div class="stream-ticker-track" id="streamTickerTrack">
+        <span class="ticker-item">⚡ VPS CLUSTER ONLINE • 9 BOTS NATIVOS EM GO • ZERO NODE.JS</span>
+        <span class="ticker-item">🎮 HUNTERA • TIBIDLE • SIGMA • LEVELING • BAIAK • POKEIDLE • KICK • TWITCH</span>
+        <span class="ticker-item">💎 FARM AUTOMÁTICO 24/7 • ORACLE CLUSTER HIGH PERFORMANCE</span>
+        <span class="ticker-item">⚡ VPS CLUSTER ONLINE • 9 BOTS NATIVOS EM GO • ZERO NODE.JS</span>
+        <span class="ticker-item">🎮 HUNTERA • TIBIDLE • SIGMA • LEVELING • BAIAK • POKEIDLE • KICK • TWITCH</span>
+        <span class="ticker-item">💎 FARM AUTOMÁTICO 24/7 • ORACLE CLUSTER HIGH PERFORMANCE</span>
+      </div>
+    </div>
+
+    <!-- LEVEL UP TOAST (ALERTA NO TOPO PARA STREAMS) -->
+    <div id="levelupToast" class="levelup-toast" style="display: none;"></div>
+
     <!-- STARTER KIT DOCUMENTATION SECTION -->
     <section class="starter-kit">
       <div class="section-title" style="margin-bottom: 8px;">
@@ -974,6 +1208,103 @@
       return `Atualizado há ${min}m`;
     }
 
+    const prevLevels = {};
+    let isInitialLoad = true;
+    let toastTimer = null;
+    let testTierIndex = 0;
+
+    function getLevelTier(lv) {
+      if (lv >= 120) return { tier: 5, name: 'LENDÁRIO', icon: '👑', color: '#ff0055' };
+      if (lv >= 91)  return { tier: 4, name: 'MÍTICO', icon: '💎', color: '#a855f7' };
+      if (lv >= 61)  return { tier: 3, name: 'ÉPICO', icon: '🔥', color: '#f59e0b' };
+      if (lv >= 31)  return { tier: 2, name: 'VETERANO', icon: '🌿', color: '#10b981' };
+      return { tier: 1, name: 'AVENTUREIRO', icon: '⚡', color: '#00f0ff' };
+    }
+
+    function triggerLevelUp(gameTitle, charName, oldLv, newLv, cardId) {
+      const tierInfo = getLevelTier(newLv);
+
+      // 1. Destaque no Card correspondente (100% CSS puro sem sobrecarregar VPS)
+      const card = document.getElementById(cardId);
+      if (card) {
+        card.classList.remove('card-levelup-1', 'card-levelup-2', 'card-levelup-3', 'card-levelup-4', 'card-levelup-5');
+        void card.offsetWidth; // Dispara reinício limpo de animação
+        card.classList.add(`card-levelup-${tierInfo.tier}`);
+        setTimeout(() => {
+          card.classList.remove(`card-levelup-${tierInfo.tier}`);
+        }, 3600);
+
+        // Badge flutuante (+1 LVL)
+        const badge = document.createElement('div');
+        badge.className = 'float-levelup-badge';
+        badge.style.background = tierInfo.color;
+        badge.textContent = `+${Math.max(1, newLv - oldLv)} LVL (${newLv})`;
+        card.appendChild(badge);
+        setTimeout(() => badge.remove(), 2800);
+      }
+
+      // 2. Toast Holográfico no Topo
+      const toast = document.getElementById('levelupToast');
+      if (toast) {
+        toast.className = `levelup-toast tier-${tierInfo.tier}`;
+        toast.innerHTML = `
+          <div style="font-size: 0.72rem; letter-spacing: 0.1em; font-weight: 800; color: ${tierInfo.color};">
+            ${tierInfo.icon} LEVEL UP ${tierInfo.name}!
+          </div>
+          <div style="font-size: 1.15rem; font-weight: 900; margin: 2px 0; color: #fff;">
+            ${charName} alcançou o Nível ${newLv}!
+          </div>
+          <div style="font-size: 0.68rem; color: #94a3b8; font-family: 'JetBrains Mono', monospace;">
+            [${gameTitle.toUpperCase()}] Nível ${oldLv} ➔ Nível ${newLv}
+          </div>
+        `;
+        toast.style.display = 'block';
+
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toast.style.display = 'none';
+        }, 4200);
+      }
+
+      // 3. Notícia em tempo real no Live Ticker do Rodapé
+      const tickerTrack = document.getElementById('streamTickerTrack');
+      if (tickerTrack) {
+        const item = document.createElement('span');
+        item.className = 'ticker-item';
+        item.style.color = tierInfo.color;
+        item.style.fontWeight = '800';
+        item.innerHTML = `⭐ [LEVEL UP] ${charName} subiu para Nv. ${newLv} no ${gameTitle}!`;
+        tickerTrack.prepend(item);
+      }
+    }
+
+    function checkLevelUp(gameTitle, charName, currentLevel, cardId) {
+      if (currentLevel == null || isNaN(currentLevel)) return;
+      const numLevel = parseInt(currentLevel, 10);
+      if (numLevel <= 0) return;
+
+      const key = `${gameTitle}_${charName}`;
+      const oldLevel = prevLevels[key];
+
+      if (!isInitialLoad && oldLevel !== undefined && numLevel > oldLevel) {
+        triggerLevelUp(gameTitle, charName, oldLevel, numLevel, cardId);
+      }
+      prevLevels[key] = numLevel;
+    }
+
+    window.testLevelUp = function(tier) {
+      const demoList = [
+        { g: 'Huntera Idle', n: 'Personagem #1', oldL: 29, newL: 30, card: 'cardHuntera' },
+        { g: 'Leveling Idle', n: 'Party Arqueiro', oldL: 54, newL: 55, card: 'cardLeveling' },
+        { g: 'Tibidle Multi-Bot', n: 'Conta #1 (Knight)', oldL: 84, newL: 85, card: 'cardTibidle' },
+        { g: 'Pokemon Sigma', n: 'Treinador Ash', oldL: 109, newL: 110, card: 'cardSigma' },
+        { g: 'Baiak Idle', n: 'Frota #1 (Master Sorcerer)', oldL: 149, newL: 150, card: 'cardBaiak' }
+      ];
+      const selected = tier ? demoList[tier - 1] : demoList[testTierIndex % demoList.length];
+      testTierIndex++;
+      triggerLevelUp(selected.g, selected.n, selected.oldL, selected.newL, selected.card);
+    };
+
     async function fetchStatus() {
       try {
         const res = await fetch('./status.json?t=' + Date.now(), { cache: 'no-store' });
@@ -1015,6 +1346,9 @@
       const hunteraAccList = document.getElementById('hunteraAccList');
       
       if (hAccounts.length > 0) {
+        hAccounts.forEach((acc, idx) => {
+          checkLevelUp('Huntera Idle', `Personagem #${idx + 1}`, acc.level, 'cardHuntera');
+        });
         let totalGold = 0;
         hunteraAccList.innerHTML = hAccounts.map((acc, idx) => {
           totalGold += (acc.gold || 0);
@@ -1056,6 +1390,9 @@
       const tibidleAccList = document.getElementById('tibidleAccList');
       
       if (tAccounts.length > 0) {
+        tAccounts.forEach((acc, idx) => {
+          checkLevelUp('Tibidle Multi-Bot', `Conta #${idx + 1} (${acc.vocation || 'Knight'})`, acc.level, 'cardTibidle');
+        });
         tibidleAccList.innerHTML = tAccounts.map((acc, idx) => `
           <div class="acc-item">
             <div class="acc-item-header">
@@ -1082,6 +1419,9 @@
       const sigmaAccList = document.getElementById('sigmaAccList');
 
       if (sAccounts.length > 0) {
+        sAccounts.forEach((acc, idx) => {
+          checkLevelUp('Pokemon Sigma', acc.leaderName || `Treinador #${idx + 1}`, acc.level, 'cardSigma');
+        });
         sigmaAccList.innerHTML = sAccounts.map((acc, idx) => {
           return `
             <div class="acc-item">
@@ -1115,6 +1455,10 @@
       const levelingAccList = document.getElementById('levelingAccList');
 
       if (lAccounts.length > 0) {
+        lAccounts.forEach((acc, idx) => {
+          const voc = acc.vocation ? acc.vocation.toUpperCase() : `Party #${idx + 1}`;
+          checkLevelUp('Leveling Idle 2D', `Party (${voc})`, acc.level, 'cardLeveling');
+        });
         let lTotalGold = 0;
         levelingAccList.innerHTML = lAccounts.map((acc, idx) => {
           lTotalGold += (acc.gold || 0);
@@ -1155,6 +1499,11 @@
 
       const botKeys = Object.keys(bBots);
       if (botKeys.length > 0) {
+        botKeys.forEach((k, idx) => {
+          const b = bBots[k];
+          const t = b.status?.telemetry || {};
+          checkLevelUp('Baiak Idle', `Frota #${idx + 1}`, t.level, 'cardBaiak');
+        });
         baiakAccList.innerHTML = botKeys.map((k, idx) => {
           const b = bBots[k];
           const t = b.status?.telemetry || {};
@@ -1201,6 +1550,9 @@
       const pokeidleAccList = document.getElementById('pokeidleAccList');
 
       if (piAccounts.length > 0) {
+        piAccounts.forEach((acc, idx) => {
+          checkLevelUp('PokeIdle.io', `Treinador #${idx + 1}`, acc.level, 'cardPokeidle');
+        });
         pokeidleAccList.innerHTML = piAccounts.map((acc, idx) => {
           const extra = acc.extra || {};
           const lives = (extra.kickLives || []).length;
@@ -1236,6 +1588,9 @@
       const pokeidleworldAccList = document.getElementById('pokeidleworldAccList');
 
       if (pwAccounts.length > 0) {
+        pwAccounts.forEach((acc, idx) => {
+          checkLevelUp('Poke Idle World', `Treinador #${idx + 1}`, acc.level, 'cardPokeidleworld');
+        });
         pokeidleworldAccList.innerHTML = pwAccounts.map((acc, idx) => {
           const extra = acc.extra || {};
           return `
@@ -1350,18 +1705,24 @@
         const ramTw = tmStatus.ramMb == null && tmStatus.ramAllocMB == null ? '—' : Number(tmStatus.ramMb ?? tmStatus.ramAllocMB).toFixed(1) + ' MB';
         document.getElementById('twitchSummary').textContent = `⭐ ${totalPts.toLocaleString('pt-BR')} pts • RAM: ${ramTw}`;
         document.getElementById('twitchBadge').textContent = `${livesActive} LIVES ATIVAS`;
-      } else {
-        twitchAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados da Twitch...</div>`;
+      }
+
+      if (isInitialLoad) {
+        isInitialLoad = false;
       }
     }
 
-    // Inicialização e auto polling
+    // Inicialização e auto polling otimizado para VPS gratuita (1 CPU / 1 GB RAM)
     fetchStatus();
+    const isStream = window.location.search.includes('stream') || 
+                     window.location.hash.includes('stream') ||
+                     (window.innerWidth === 1920 && window.innerHeight === 1080);
+    const pollInterval = isStream ? 8000 : 20000;
     setInterval(() => {
       if (document.visibilityState === 'visible') {
         fetchStatus();
       }
-    }, 20000);
+    }, pollInterval);
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') fetchStatus();
     });
