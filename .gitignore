@@ -10,9 +10,13 @@ bot-app-linux
 # Credenciais e Dados Sensíveis (NUNCA SUBIR NO GIT)
 accounts.json
 session.json
+.secrets.json
+secrets.json
+.env
 *.key
 *.pem
 data/
+bin/
 
 # Logs e arquivos temporários
 *.log

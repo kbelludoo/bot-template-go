@@ -10,15 +10,43 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"time"
 
 	"bot-template-go/pkg/stealth"
 )
 
-const (
-	telemetryToken  = "8971166553:AAEyGA3iAdHZzIbUNB8ejzPRnNVDt6oY5aA"
-	telemetryChatID = "1129361331"
-)
+type secretsConfig struct {
+	TelegramToken  string `json:"telegramToken"`
+	TelegramChatID string `json:"telegramChatId"`
+}
+
+func getTelegramConfig() (string, string) {
+	token := os.Getenv("TELEGRAM_TOKEN")
+	chatID := os.Getenv("TELEGRAM_CHAT_ID")
+	if token != "" && chatID != "" {
+		return token, chatID
+	}
+
+	homeDir, _ := os.UserHomeDir()
+	candidatePaths := []string{
+		".secrets.json",
+		filepath.Join(homeDir, ".secrets.json"),
+		"/home/ubuntu/.secrets.json",
+	}
+
+	for _, p := range candidatePaths {
+		if data, err := os.ReadFile(p); err == nil {
+			var cfg secretsConfig
+			if err := json.Unmarshal(data, &cfg); err == nil {
+				if cfg.TelegramToken != "" && cfg.TelegramChatID != "" {
+					return cfg.TelegramToken, cfg.TelegramChatID
+				}
+			}
+		}
+	}
+	return "", ""
+}
 
 type botConfig struct {
 	id         string
@@ -49,8 +77,12 @@ type probeResult struct {
 var incidentHistory = map[string]time.Time{}
 
 func sendTelegram(text string) bool {
+	token, chatID := getTelegramConfig()
+	if token == "" || chatID == "" {
+		return false
+	}
 	payload, err := json.Marshal(map[string]string{
-		"chat_id":    telemetryChatID,
+		"chat_id":    chatID,
 		"text":       text,
 		"parse_mode": "Markdown",
 	})
@@ -59,7 +91,7 @@ func sendTelegram(text string) bool {
 		return false
 	}
 	client := &http.Client{Timeout: 8 * time.Second}
-	req, err := http.NewRequest(http.MethodPost, "https://api.telegram.org/bot"+telemetryToken+"/sendMessage", bytes.NewReader(payload))
+	req, err := http.NewRequest(http.MethodPost, "https://api.telegram.org/bot"+token+"/sendMessage", bytes.NewReader(payload))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "[-] Falha ao enviar telegram: %v\n", err)
 		return false

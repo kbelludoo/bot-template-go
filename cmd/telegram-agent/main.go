@@ -9,17 +9,58 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
 )
 
-const (
-	TelegramToken = "8971166553:AAEyGA3iAdHZzIbUNB8ejzPRnNVDt6oY5aA"
-	AllowedChatID = 1129361331
-	AgentURL      = "http://127.0.0.1:8888/agent"
+var (
+	TelegramToken string
+	AllowedChatID int64
 )
+
+const (
+	AgentURL = "http://127.0.0.1:8888/agent"
+)
+
+type SecretsConfig struct {
+	TelegramToken  string `json:"telegramToken"`
+	TelegramChatID string `json:"telegramChatId"`
+}
+
+func initTelegramConfig() {
+	TelegramToken = os.Getenv("TELEGRAM_TOKEN")
+	if idStr := os.Getenv("TELEGRAM_CHAT_ID"); idStr != "" {
+		AllowedChatID, _ = strconv.ParseInt(idStr, 10, 64)
+	}
+
+	if TelegramToken != "" && AllowedChatID != 0 {
+		return
+	}
+
+	homeDir, _ := os.UserHomeDir()
+	candidatePaths := []string{
+		".secrets.json",
+		filepath.Join(homeDir, ".secrets.json"),
+		"/home/ubuntu/.secrets.json",
+	}
+
+	for _, p := range candidatePaths {
+		if data, err := os.ReadFile(p); err == nil {
+			var cfg SecretsConfig
+			if err := json.Unmarshal(data, &cfg); err == nil {
+				if TelegramToken == "" && cfg.TelegramToken != "" {
+					TelegramToken = cfg.TelegramToken
+				}
+				if AllowedChatID == 0 && cfg.TelegramChatID != "" {
+					AllowedChatID, _ = strconv.ParseInt(cfg.TelegramChatID, 10, 64)
+				}
+			}
+		}
+	}
+}
 
 type BotInfo struct {
 	Name       string
@@ -388,6 +429,11 @@ func handleMessage(msg *Message) {
 }
 
 func main() {
+	initTelegramConfig()
+	if TelegramToken == "" || AllowedChatID == 0 {
+		log.Fatal("[-] ERRO CRÍTICO: TELEGRAM_TOKEN ou TELEGRAM_CHAT_ID não definidos em env ou .secrets.json")
+	}
+
 	log.Println("=======================================================")
 	log.Println("🚀 TELEGRAM AGENT GO (NATIVE LINUX DAEMON)")
 	log.Printf("Chat ID Autorizado: %d\n", AllowedChatID)

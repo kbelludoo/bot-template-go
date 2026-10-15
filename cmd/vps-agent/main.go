@@ -18,10 +18,37 @@ import (
 	"time"
 )
 
-const (
-	TelegramToken  = "8971166553:AAEyGA3iAdHZzIbUNB8ejzPRnNVDt6oY5aA"
-	TelegramChatID = "1129361331"
-)
+type SecretsConfig struct {
+	TelegramToken  string `json:"telegramToken"`
+	TelegramChatID string `json:"telegramChatId"`
+}
+
+func getTelegramConfig() (string, string) {
+	token := os.Getenv("TELEGRAM_TOKEN")
+	chatID := os.Getenv("TELEGRAM_CHAT_ID")
+	if token != "" && chatID != "" {
+		return token, chatID
+	}
+
+	homeDir, _ := os.UserHomeDir()
+	candidatePaths := []string{
+		".secrets.json",
+		filepath.Join(homeDir, ".secrets.json"),
+		"/home/ubuntu/.secrets.json",
+	}
+
+	for _, p := range candidatePaths {
+		if data, err := os.ReadFile(p); err == nil {
+			var cfg SecretsConfig
+			if err := json.Unmarshal(data, &cfg); err == nil {
+				if cfg.TelegramToken != "" && cfg.TelegramChatID != "" {
+					return cfg.TelegramToken, cfg.TelegramChatID
+				}
+			}
+		}
+	}
+	return "", ""
+}
 
 var (
 	nickRegex        = regexp.MustCompile(`(?i)(kbelludoo\d*|lohmoreira|\blrn\b)`)
@@ -57,8 +84,12 @@ var allBots = []BotProbe{
 // -------------------------------------------------------------
 
 func sendTelegram(text string) {
+	token, chatID := getTelegramConfig()
+	if token == "" || chatID == "" {
+		return
+	}
 	payload := map[string]string{
-		"chat_id":    TelegramChatID,
+		"chat_id":    chatID,
 		"text":       text,
 		"parse_mode": "Markdown",
 	}
@@ -66,7 +97,7 @@ func sendTelegram(text string) {
 	if err != nil {
 		return
 	}
-	url := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", TelegramToken)
+	url := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", token)
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(body))
 	if err != nil {
 		return
