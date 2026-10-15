@@ -306,10 +306,10 @@
     }
 
     .acc-item {
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 10px;
-      padding: 12px 14px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 14px 16px;
     }
 
     .acc-item-header {
@@ -317,30 +317,35 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 8px;
-      font-size: 0.85rem;
-      font-weight: 700;
+      font-size: 1rem;
+      font-weight: 800;
     }
 
-    .acc-name { color: #fff; display: flex; align-items: center; gap: 6px; }
-    .acc-level { color: var(--yellow); font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; }
+    .acc-name { color: #f8fafc; display: flex; align-items: center; gap: 8px; font-size: 1.05rem; }
+    .acc-level { color: var(--yellow); font-family: 'JetBrains Mono', monospace; font-size: 1.15rem; font-weight: 900; }
 
     .stat-row {
       display: flex;
       justify-content: space-between;
-      font-size: 0.72rem;
-      color: var(--text-muted);
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #94a3b8;
       margin-bottom: 4px;
+    }
+    .stat-row span:last-child {
+      color: #f8fafc;
+      font-weight: 700;
     }
 
     .bar-slim {
-      height: 5px;
-      background: rgba(255, 255, 255, 0.07);
+      height: 7px;
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 999px;
       overflow: hidden;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
-    .fill-hp { background: linear-gradient(90deg, #ef4444, #f87171); }
+    .fill-hp { background: linear-gradient(90deg, #ef4444, #10b981); }
     .fill-mana { background: linear-gradient(90deg, #06b6d4, #38bdf8); }
     .fill-xp { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
 
@@ -349,8 +354,10 @@
       justify-content: space-between;
       align-items: center;
       padding-top: 14px;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
       margin-top: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
     }
 
     .btn-link {
@@ -548,33 +555,35 @@
     /* INLINE VPS METRICS IN HEADER */
     body.stream-mode .vps-grid {
       display: flex !important;
-      gap: 8px !important;
+      gap: 10px !important;
       margin-bottom: 0 !important;
       flex-shrink: 0 !important;
       background: transparent !important;
     }
     body.stream-mode .vps-grid .metric-card {
-      padding: 4px 10px !important;
+      padding: 6px 14px !important;
       border-radius: 8px !important;
-      background: rgba(255, 255, 255, 0.04) !important;
-      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      background: rgba(255, 255, 255, 0.05) !important;
+      border: 1px solid rgba(0, 240, 255, 0.2) !important;
       display: flex !important;
       align-items: center !important;
-      gap: 6px !important;
+      gap: 8px !important;
       min-width: 0 !important;
       transform: none !important;
     }
     body.stream-mode .vps-grid .metric-label {
-      font-size: 0.58rem !important;
+      font-size: 0.72rem !important;
+      font-weight: 700 !important;
       margin-bottom: 0 !important;
       display: flex !important;
       align-items: center !important;
       gap: 4px !important;
-      color: var(--text-dim) !important;
+      color: #94a3b8 !important;
     }
     body.stream-mode .vps-grid .metric-value {
-      font-size: 0.82rem !important;
-      font-weight: 700 !important;
+      font-size: 1.15rem !important;
+      font-weight: 900 !important;
+      color: #ffffff !important;
     }
     body.stream-mode .vps-grid .metric-sub,
     body.stream-mode .vps-grid .progress-bar-wrap {
@@ -586,22 +595,23 @@
       display: none !important;
     }
 
-    /* 3x3 BOTS GRID (9 BOTS VISIBLE AT ONCE) */
+    /* 3x3 BOTS GRID (9 BOTS VISÍVEIS DE UMA VEZ COM ZERO ESPAÇO MORTO) */
     body.stream-mode .bots-grid, html.stream-mode body .bots-grid {
       display: grid !important;
       grid-template-columns: repeat(3, 1fr) !important;
       grid-template-rows: repeat(3, 1fr) !important;
-      gap: 8px !important;
+      gap: 10px !important;
       flex: 1 !important;
       margin-bottom: 6px !important;
       min-height: 0 !important;
-      height: calc(1080px - 48px - 32px - 34px) !important;
+      height: calc(1080px - 48px - 34px - 30px) !important;
     }
     body.stream-mode .bot-card, html.stream-mode body .bot-card {
-      padding: 8px 12px !important;
-      border-radius: 10px !important;
-      background: #0b0f19 !important;
-      border: 1px solid rgba(255, 255, 255, 0.09) !important;
+      padding: 10px 14px !important;
+      border-radius: 12px !important;
+      background: #090e1a !important;
+      border: 1px solid rgba(0, 240, 255, 0.22) !important;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5) !important;
       display: flex !important;
       flex-direction: column !important;
       justify-content: space-between !important;
@@ -610,78 +620,124 @@
       transform: none !important;
       transition: border-color 0.25s ease !important;
     }
+    body.stream-mode .bot-card > div:first-child {
+      display: flex !important;
+      flex-direction: column !important;
+      flex: 1 !important;
+      min-height: 0 !important;
+    }
     body.stream-mode .bot-header {
-      margin-bottom: 4px !important;
+      margin-bottom: 6px !important;
+      padding-bottom: 6px !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
       display: flex !important;
       justify-content: space-between !important;
       align-items: center !important;
+      flex-shrink: 0 !important;
     }
     body.stream-mode .bot-name-group h3 {
-      font-size: 0.86rem !important;
-      font-weight: 700 !important;
+      font-size: 1.18rem !important;
+      font-weight: 800 !important;
+      color: #ffffff !important;
+      letter-spacing: -0.01em !important;
     }
     body.stream-mode .bot-port {
-      font-size: 0.58rem !important;
-      padding: 1px 4px !important;
+      font-size: 0.68rem !important;
+      font-weight: 700 !important;
+      padding: 2px 6px !important;
+      border-radius: 4px !important;
     }
     body.stream-mode .badge-status {
-      font-size: 0.6rem !important;
-      padding: 2px 6px !important;
+      font-size: 0.72rem !important;
+      font-weight: 800 !important;
+      padding: 3px 8px !important;
+      border-radius: 6px !important;
+      letter-spacing: 0.04em !important;
     }
     body.stream-mode .acc-list {
       display: grid !important;
       grid-template-columns: repeat(2, 1fr) !important;
-      gap: 4px !important;
-      overflow: hidden !important;
+      gap: 6px !important;
+      flex: 1 !important;
+      align-content: stretch !important;
     }
     body.stream-mode .acc-item {
-      padding: 4px 6px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-around !important;
+      padding: 8px 10px !important;
       margin-top: 0 !important;
-      border-radius: 6px !important;
-      background: rgba(255, 255, 255, 0.03) !important;
-      border: 1px solid rgba(255, 255, 255, 0.05) !important;
+      border-radius: 8px !important;
+      background: rgba(255, 255, 255, 0.04) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
       position: relative !important;
+    }
+    /* BOTS COM 1 CONTA EXPANDEM 100% PARA NÃO DEIXAR ESPAÇO PRETO */
+    body.stream-mode .acc-list > .acc-item:only-child {
+      grid-column: 1 / -1 !important;
+      padding: 10px 14px !important;
     }
     body.stream-mode .acc-item-header {
       display: flex !important;
       justify-content: space-between !important;
       align-items: center !important;
+      margin-bottom: 2px !important;
     }
     body.stream-mode .acc-name {
-      font-size: 0.68rem !important;
-      font-weight: 700 !important;
+      font-size: 0.92rem !important;
+      font-weight: 800 !important;
+      color: #f8fafc !important;
       white-space: nowrap !important;
       overflow: hidden !important;
       text-overflow: ellipsis !important;
     }
     body.stream-mode .acc-level {
-      font-size: 0.72rem !important;
-      font-weight: 800 !important;
+      font-size: 1.15rem !important;
+      font-weight: 900 !important;
       font-family: 'JetBrains Mono', monospace !important;
-      color: var(--accent) !important;
+      color: #00f0ff !important;
     }
     body.stream-mode .stat-row {
-      font-size: 0.6rem !important;
-      margin-top: 1px !important;
-      color: var(--text-dim) !important;
+      font-size: 0.82rem !important;
+      font-weight: 600 !important;
+      margin-top: 3px !important;
+      display: flex !important;
+      justify-content: space-between !important;
+      color: #cbd5e1 !important;
+    }
+    body.stream-mode .stat-row span:first-child {
+      color: #94a3b8 !important;
+    }
+    body.stream-mode .stat-row span:last-child {
+      font-weight: 800 !important;
+      color: #ffffff !important;
     }
     body.stream-mode .bar-slim {
-      height: 3px !important;
-      margin-top: 2px !important;
-      background: rgba(255, 255, 255, 0.08) !important;
+      height: 6px !important;
+      border-radius: 3px !important;
+      margin-top: 3px !important;
+      background: rgba(255, 255, 255, 0.1) !important;
+      overflow: hidden !important;
     }
     body.stream-mode .bot-footer {
-      padding-top: 4px !important;
+      padding-top: 6px !important;
       margin-top: 4px !important;
-      font-size: 0.64rem !important;
-      border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+      font-size: 0.8rem !important;
+      font-weight: 700 !important;
+      border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
       display: flex !important;
       justify-content: space-between !important;
       align-items: center !important;
+      flex-shrink: 0 !important;
+    }
+    body.stream-mode .bot-footer span {
+      color: #cbd5e1 !important;
     }
     body.stream-mode .btn-link {
-      font-size: 0.6rem !important;
-      padding: 1px 6px !important;
+      font-size: 0.72rem !important;
+      font-weight: 700 !important;
+      padding: 3px 8px !important;
+      border-radius: 6px !important;
     }
 
     /* LIVE ACTIVITY TICKER (RODAPÉ) */
@@ -1414,18 +1470,30 @@
         tAccounts.forEach((acc, idx) => {
           checkLevelUp('Tibidle Multi-Bot', `Conta #${idx + 1} (${acc.vocation || 'Knight'})`, acc.level, 'cardTibidle');
         });
-        tibidleAccList.innerHTML = tAccounts.map((acc, idx) => `
-          <div class="acc-item">
-            <div class="acc-item-header">
-              <span class="acc-name">🛡️ Conta #${idx + 1} • ${acc.vocation || '—'}</span>
-              <span class="acc-level" style="color: var(--cyan);">${acc.status || '—'}</span>
+        tibidleAccList.innerHTML = tAccounts.map((acc, idx) => {
+          const voc = (acc.vocation || '').toLowerCase();
+          const vocIcon = voc.includes('paladin') ? '🏹' : voc.includes('sorc') ? '🔮' : voc.includes('druid') ? '🌿' : '🛡️';
+          return `
+            <div class="acc-item">
+              <div class="acc-item-header">
+                <span class="acc-name">${vocIcon} Conta #${idx + 1} (${acc.vocation || 'Knight'})</span>
+                <span class="acc-level" style="color: #00f0ff;">Nv. ${acc.level ?? '—'}</span>
+              </div>
+              <div class="stat-row">
+                <span>Estado da Sessão</span>
+                <span style="color: #10b981;">🟢 ${acc.status || 'Conectado'}</span>
+              </div>
+              <div class="stat-row">
+                <span>Tempo Online</span>
+                <span>⏱️ ${tStatus.uptime || 'Ativo 24/7'}</span>
+              </div>
+              <div class="stat-row">
+                <span>Engine / Conexão</span>
+                <span>⚡ ${tStatus.goroutines || 6} goroutines • Go WS</span>
+              </div>
             </div>
-            <div class="stat-row" style="margin-top: 6px;">
-              <span>Nv. ${acc.level ?? '—'}</span>
-              <span>Uptime: ${tStatus.uptime || '—'}</span>
-            </div>
-          </div>
-        `).join('');
+          `;
+        }).join('');
         const ramTxt = tStatus.ramAllocMB == null ? '—' : Math.round(tStatus.ramAllocMB) + ' MB';
         const goTxt = tStatus.goroutines == null ? '—' : tStatus.goroutines;
         document.getElementById('tibidleSummary').textContent = `RAM: ${ramTxt} • Goroutines: ${goTxt}`;
