@@ -67,6 +67,24 @@ func (m *BotManager) SupplyTicket(accountID, ticket, wsURL string) error {
 	return m.bots[0].SupplyTicket(ticket, wsURL)
 }
 
+func (m *BotManager) SupplyTurnstileToken(accountID, token string) error {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+
+	if len(m.bots) == 0 {
+		return fmt.Errorf("nenhum bot ativo no momento")
+	}
+
+	if accountID != "" {
+		if b, ok := m.botByID[accountID]; ok {
+			return b.SupplyTurnstileToken(token)
+		}
+	}
+
+	// Fallback para primeira conta
+	return m.bots[0].SupplyTurnstileToken(token)
+}
+
 func (m *BotManager) ExecuteAction(accountID, action string, payload map[string]any) (any, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()

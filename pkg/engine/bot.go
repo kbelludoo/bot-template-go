@@ -27,6 +27,9 @@ type GameBot interface {
 
 	// SupplyTicket entrega um ticket ou token externo de sessão (ex: via bypass CDP ou POST manual)
 	SupplyTicket(ticket, wsURL string) error
+
+	// SupplyTurnstileToken entrega um token Turnstile roubado pelo runner externo para emissão local na VPS
+	SupplyTurnstileToken(token string) error
 }
 
 // AccountStatus estrutura padronizada para exibição no Terminal e na API HTTP/Web Dashboard

@@ -99,13 +99,24 @@ func (s *Server) handleAPITicket(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var body struct {
-		AccountID string `json:"accountId"`
-		Ticket    string `json:"ticket"`
-		WSURL     string `json:"wsUrl"`
+		AccountID      string `json:"accountId"`
+		Ticket         string `json:"ticket"`
+		WSURL          string `json:"wsUrl"`
+		TurnstileToken string `json:"turnstileToken"`
 	}
-	if err := json.NewDecoder(r.Body).Decode(&body); err != nil || body.Ticket == "" {
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil || (body.Ticket == "" && body.TurnstileToken == "") {
 		w.WriteHeader(http.StatusBadRequest)
-		_ = json.NewEncoder(w).Encode(map[string]any{"ok": false, "error": "Campo ticket é obrigatório"})
+		_ = json.NewEncoder(w).Encode(map[string]any{"ok": false, "error": "Campos 'ticket' ou 'turnstileToken' são obrigatórios"})
+		return
+	}
+
+	if body.TurnstileToken != "" {
+		if err := s.manager.SupplyTurnstileToken(body.AccountID, body.TurnstileToken); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			_ = json.NewEncoder(w).Encode(map[string]any{"ok": false, "error": err.Error()})
+			return
+		}
+		_ = json.NewEncoder(w).Encode(map[string]any{"ok": true, "message": "Turnstile token entregue com sucesso! O bot emitirá o ticket na VPS."})
 		return
 	}
 

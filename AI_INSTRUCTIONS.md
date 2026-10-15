@@ -172,6 +172,17 @@ Todo bot criado deve expor um endpoint HTTP leve em sua porta designada (`GET /a
 }
 ```
 
+### 11. Arquitetura Split-Resolver (Bypass de Captcha Turnstile/Cloudflare sem Gastar RAM na VPS e sem PC Ligado)
+Quando o jogo de navegador exigir resolução periódica de desafios Cloudflare Turnstile:
+- **O Desafio do IP/Sessão (Erro 4401):** O servidor do jogo valida o Turnstile e amarra o ticket de WebSocket ao IP e ao Cookie de Sessão (`sid`/`did`) da requisição emissora. Se um runner externo (ex: GitHub Actions) ou o seu PC pessoal emitir o ticket de lá, o servidor recusará a conexão da VPS com `4401 credencialInvalida`.
+- **A Estratégia de Separação (Split Solver vs Issuer):**
+  1. **GitHub Actions Runner (O Solver Gratuito):** Roda Chrome real em ambiente descartável (2 vCPU, 7 GB RAM) com `xvfb-run`. Injeta o cookie de sessão da VPS (secret `BOT_SESSION`).
+  2. **Interceptação CDP e Roubo do Token:** O script injetado no navegador hooka `window.fetch`. Quando a página do jogo tenta disparar `/auth/world-ticket` com o token do Turnstile resolvido, o hook **rouba o `turnstileToken` do corpo do request** e retorna uma `Promise` pendente (`new Promise(() => {})`), impedindo que o navegador gaste ou invalide o token. O WebSocket do navegador é substituído por um `DummyWebSocket` para não queimar conexões.
+  3. **Devolução via Túnel Seguro:** O runner envia o token Turnstile para a VPS via tunnel: `POST <tunnel_url>/api/ticket {"turnstileToken": token}`.
+  4. **Emissão Local pela VPS (Ticket 100% Válido):** O bot recebe o token pelo canal `b.turnstileChan` e a **própria VPS** executa o POST do `/auth/world-ticket`. Como o IP de origem e o cookie coincidem exatamente com a VPS, o ticket gerado passa liso na conexão WebSocket do jogo sem qualquer erro 4401.
+  5. **Gatilho Autônomo 24/7:** Ao receber `captcha_required` ou ticket expirado, o bot na VPS dispara o workflow automaticamente via CLI nativa (`gh workflow run ticket-relay.yml -R <repo> -f mode=push -f push_url=<tunnel>`) usando os helpers do `pkg/auth/relay.go`.
+  6. **Zero Carga na VPS e Zero PC Ligado:** A VPS de 1 vCPU / 1 GB RAM nunca precisa rodar navegadores pesados e o PC do usuário pode permanecer desligado permanentemente (aposentando ferramentas como `ticketd.exe`).
+
 ---
 
 ## ⚠️ ARMADILHAS COMUNS QUE A IA DEVE EVITAR

@@ -19,9 +19,10 @@ type Bot struct {
 	httpCli *network.HTTPClient
 
 	// Controle interno da sessão do jogo
-	isHunting    bool
-	lastActionAt time.Time
-	ticketChan   chan string
+	isHunting     bool
+	lastActionAt  time.Time
+	ticketChan    chan string
+	turnstileChan chan string
 }
 
 func NewBot(cfg AccountConfig) *Bot {
@@ -29,10 +30,11 @@ func NewBot(cfg AccountConfig) *Bot {
 	st.CurrentArea = cfg.Settings.HuntTarget
 
 	return &Bot{
-		config:     cfg,
-		status:     st,
-		httpCli:    network.NewHTTPClient("https://game-api.example.com", 10*time.Second),
-		ticketChan: make(chan string, 1),
+		config:        cfg,
+		status:        st,
+		httpCli:       network.NewHTTPClient("https://game-api.example.com", 10*time.Second),
+		ticketChan:    make(chan string, 1),
+		turnstileChan: make(chan string, 1),
 	}
 }
 
@@ -151,6 +153,15 @@ func (b *Bot) SupplyTicket(ticket, wsURL string) error {
 	log.Printf("[%s] Recebido ticket externo de jogo: %s", b.ID(), ticket)
 	select {
 	case b.ticketChan <- ticket:
+	default:
+	}
+	return nil
+}
+
+func (b *Bot) SupplyTurnstileToken(token string) error {
+	log.Printf("[%s] Recebido Turnstile Token roubado: %d chars", b.ID(), len(token))
+	select {
+	case b.turnstileChan <- token:
 	default:
 	}
 	return nil
