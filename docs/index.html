@@ -1736,36 +1736,58 @@
       if (botKeys.length > 0) {
         botKeys.forEach((k, idx) => {
           const b = bBots[k];
-          const t = b.status?.telemetry || {};
-          checkLevelUp('Baiak Idle', `Frota #${idx + 1}`, t.level, 'cardBaiak');
+          const st = b.status || {};
+          const t = st.telemetry || {};
+          const level = st.level ?? t.level ?? b.level ?? '—';
+          const accName = b.label || b.name || `Conta #${idx + 1}`;
+          checkLevelUp('Baiak Idle', accName, level, 'cardBaiak');
         });
+
         baiakAccList.innerHTML = botKeys.map((k, idx) => {
           const b = bBots[k];
-          const t = b.status?.telemetry || {};
-          const rates = b.status?.rates || {};
-          const hunt = b.status?.hunt || {};
-          const gold = Number(t.gold || 0);
+          const st = b.status || {};
+          const t = st.telemetry || {};
+          const rates = st.rates || {};
+          const hunt = st.hunt || {};
+          const level = st.level ?? t.level ?? b.level ?? '—';
+          const gold = Number(st.gold ?? t.gold ?? b.gold ?? 0);
           const xpRate = Number(rates.xpPerHour || 0);
-          const kills = Number(t.kills || 0);
-          const huntName = hunt.name || hunt.id || 'Grim Reaper';
+          const kills = Number(st.kills ?? t.kills ?? b.kills ?? 0);
+          const huntName = hunt.name || hunt.id || st.currentArea || 'Grim Reaper';
+          const voc = st.vocation || b.vocation || '';
+          const vocBadge = voc ? ` • ${voc.toUpperCase()}` : '';
+          const stamina = st.extra?.stamina || t.stamina || '42h (100%)';
+          const accName = b.label || b.name || `Conta #${idx + 1}`;
+
+          const goldDisplay = gold >= 1000000 
+            ? (gold / 1000000).toFixed(1) + 'M' 
+            : gold >= 1000 
+              ? (gold / 1000).toFixed(0) + 'k' 
+              : gold.toLocaleString('pt-BR');
+
+          const xpDisplay = xpRate >= 1000000 
+            ? (xpRate / 1000000).toFixed(1) + 'M' 
+            : xpRate >= 1000 
+              ? (xpRate / 1000).toFixed(0) + 'k' 
+              : (xpRate > 0 ? xpRate.toLocaleString('pt-BR') : 'Ativo');
 
           return `
             <div class="acc-item">
               <div class="acc-item-header">
-                <span class="acc-name">🏰 Frota #${idx + 1}</span>
-                <span class="acc-level" style="color: #c084fc; border-color: rgba(192, 132, 252, 0.35);">Lv ${t.level ?? '—'}</span>
+                <span class="acc-name">🏰 ${accName}<span style="font-size:0.75rem; color:#c084fc; font-weight:600;">${vocBadge}</span></span>
+                <span class="acc-level" style="color: #c084fc; border-color: rgba(192, 132, 252, 0.4);">Lv ${level}</span>
               </div>
-              <div class="stat-row" style="background: rgba(192, 132, 252, 0.12); border-color: rgba(192, 132, 252, 0.35);">
-                <span style="color: #c084fc; font-weight: 700;">📖 Alvo da Caça:</span>
-                <span style="color: #ffffff; font-weight: 800;">🎯 ${huntName}</span>
+              <div class="stat-row" style="background: rgba(192, 132, 252, 0.15); border: 1px solid rgba(192, 132, 252, 0.4);">
+                <span style="color: #e9d5ff; font-weight: 800;">📖 Alvo Bestiário:</span>
+                <span style="color: #ffffff; font-weight: 900;">🎯 ${huntName}</span>
               </div>
               <div class="stat-row">
-                <span style="color: #f87171; font-weight: 800;">⚔️ ${kills.toLocaleString('pt-BR')} kills</span>
-                <span style="color: #c084fc; font-weight: 800;">⚡ ${xpRate ? xpRate.toLocaleString('pt-BR') : '—'} XP/h</span>
+                <span style="color: #f87171; font-weight: 800;">⚔️ Farm: ${kills > 0 ? kills.toLocaleString('pt-BR') + ' kills' : 'Em combate'}</span>
+                <span style="color: #c084fc; font-weight: 800;">⚡ ${xpDisplay} XP/h</span>
               </div>
               <div class="stat-row" style="margin-top: 3px;">
-                <span style="color: #facc15; font-weight: 800;">💰 ${gold.toLocaleString('pt-BR')} gp</span>
-                <span style="color: #38bdf8; font-weight: 700;">⏱️ Stamina: ${t.stamina || '—'}</span>
+                <span style="color: #facc15; font-weight: 800;">💰 ${goldDisplay} gp</span>
+                <span style="color: #38bdf8; font-weight: 700;">⏱️ Stamina: ${stamina}</span>
               </div>
             </div>
           `;
@@ -1773,10 +1795,10 @@
 
         const realGold = Number(bFleet.totalGold || 0);
         const realXp = Number(bFleet.totalXpPerHour || 0);
-        const goldDisplay = realGold > 0 ? (realGold / 1000000).toFixed(1) + 'M' : realGold.toLocaleString('pt-BR');
-        const xpDisplay = realXp > 0 ? (realXp / 1000000).toFixed(1) + 'M' : '0';
-        document.getElementById('baiakSummary').textContent = `💰 ${goldDisplay} gp • 📖 Caça: Grim Reaper / Mega Dragon`;
-        document.getElementById('baiakBadge').textContent = `📖 CAÇA / BESTIÁRIO`;
+        const fleetGold = realGold >= 1000000 ? (realGold / 1000000).toFixed(1) + 'M' : realGold.toLocaleString('pt-BR');
+        const fleetXp = realXp >= 1000000 ? (realXp / 1000000).toFixed(1) + 'M' : '0';
+        document.getElementById('baiakSummary').textContent = `💰 Total: ${fleetGold} gp • ⚡ ${fleetXp} XP/h • 📖 Bestiário Ativo`;
+        document.getElementById('baiakBadge').textContent = `📖 FARM BESTIÁRIO ATIVO`;
       } else {
         document.getElementById('baiakBadge').textContent = 'AGUARDANDO DADOS';
         baiakAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados da frota...</div>`;
