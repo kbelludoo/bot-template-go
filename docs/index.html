@@ -1030,6 +1030,7 @@
           <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
             <h1>VPS BOT COMMAND CENTER</h1>
             <span style="background: rgba(0, 240, 255, 0.15); color: #00f0ff; border: 1px solid rgba(0, 240, 255, 0.35); padding: 1px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.04em;">v2.5 STREAM HUD & LEVEL-UP FX</span>
+            <span style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); padding: 1px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.04em;">📖 FARM BESTIÁRIO ATIVO</span>
           </div>
           <p>
             <span>Multi-Bot Cluster</span>
@@ -1109,7 +1110,7 @@
 
     <!-- ACTIVE BOTS SECTION -->
     <div class="section-title">
-      <span>🎮</span> Bots em Execução 24/7 na VPS
+      <span>🎮</span> Bots em Execução 24/7 na VPS • <span style="color: #fbbf24; font-size: 0.85rem; font-weight: 700;">📖 Modo Bestiário & Pokédex Ativo</span>
     </div>
 
     <div class="bots-grid" id="botsGrid">
@@ -1334,12 +1335,11 @@
     <div class="stream-ticker-wrap" id="streamTickerWrap">
       <div class="ticker-badge">🔴 LIVE EVENTS</div>
       <div class="stream-ticker-track" id="streamTickerTrack">
+        <span class="ticker-item" style="color: #fbbf24; font-weight: 800;">📖 ESTRATÉGIA ATIVA: FARM DE BESTIÁRIO & POKÉDEX 24/7 EM TODOS OS JOGOS</span>
         <span class="ticker-item">⚡ VPS CLUSTER ONLINE • 9 BOTS NATIVOS EM GO • ZERO NODE.JS</span>
         <span class="ticker-item">🎮 HUNTERA • TIBIDLE • SIGMA • LEVELING • BAIAK • POKEIDLE • KICK • TWITCH</span>
-        <span class="ticker-item">💎 FARM AUTOMÁTICO 24/7 • ORACLE CLUSTER HIGH PERFORMANCE</span>
-        <span class="ticker-item">⚡ VPS CLUSTER ONLINE • 9 BOTS NATIVOS EM GO • ZERO NODE.JS</span>
-        <span class="ticker-item">🎮 HUNTERA • TIBIDLE • SIGMA • LEVELING • BAIAK • POKEIDLE • KICK • TWITCH</span>
-        <span class="ticker-item">💎 FARM AUTOMÁTICO 24/7 • ORACLE CLUSTER HIGH PERFORMANCE</span>
+        <span class="ticker-item" style="color: #fbbf24; font-weight: 800;">📖 ESTRATÉGIA ATIVA: FARM DE BESTIÁRIO & POKÉDEX 24/7 EM TODOS OS JOGOS</span>
+        <span class="ticker-item">💎 AUTO HUNT INTELIGENTE • RECONEXÃO AUTOMÁTICA • HIGH PERFORMANCE</span>
       </div>
     </div>
 
@@ -1542,35 +1542,45 @@
           checkLevelUp('Huntera Idle', `Personagem #${idx + 1}`, acc.level, 'cardHuntera');
         });
         let totalGold = 0;
+        let totalCompletedMonsters = 0;
         hunteraAccList.innerHTML = hAccounts.map((acc, idx) => {
           totalGold += (acc.gold || 0);
           const hpPct = acc.maxHp ? Math.round((acc.hp / acc.maxHp) * 100) : null;
           const manaPct = acc.maxMana ? Math.round((acc.mana / acc.maxMana) * 100) : null;
+          const b = acc.bestiary || {};
+          const curMonster = b.currentMonster || 'Smuggler';
+          const bKills = b.kills || 0;
+          const bReq = b.required || 2500;
+          const bPct = Math.min(100, Math.round((bKills / bReq) * 100));
+          const bComp = b.completedMonsters || 5;
+          const bTot = b.totalMonsters || 186;
+          totalCompletedMonsters = Math.max(totalCompletedMonsters, bComp);
+
           return `
             <div class="acc-item">
               <div class="acc-item-header">
                 <span class="acc-name">⚔️ Personagem #${idx + 1}</span>
                 <span class="acc-level" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.35);">Nv. ${acc.level ?? '—'}</span>
               </div>
+              <div class="stat-row" style="background: rgba(239, 68, 68, 0.12); border-color: rgba(239, 68, 68, 0.35);">
+                <span style="color: #f87171; font-weight: 700;">📖 Alvo Bestiário: <b>${curMonster}</b></span>
+                <span style="color: #facc15; font-weight: 800;">${bKills.toLocaleString('pt-BR')} / ${bReq.toLocaleString('pt-BR')} (${bPct}%)</span>
+              </div>
+              <div class="bar-slim" style="margin-top: 2px;"><div class="progress-fill" style="width: ${bPct}%; background: linear-gradient(90deg, #dc2626, #facc15);"></div></div>
               <div class="stat-row">
                 <span>❤️ HP (${hpPct == null ? '—' : hpPct + '%'})</span>
                 <span style="color: #4ade80;">${acc.hp ?? '—'} / ${acc.maxHp ?? '—'}</span>
               </div>
               <div class="bar-slim"><div class="progress-fill fill-hp" style="width: ${hpPct == null ? 0 : hpPct}%"></div></div>
               <div class="stat-row">
-                <span>💧 Mana (${manaPct == null ? '—' : manaPct + '%'})</span>
-                <span style="color: #38bdf8;">${acc.mana ?? '—'} / ${acc.maxMana ?? '—'}</span>
-              </div>
-              <div class="bar-slim"><div class="progress-fill fill-mana" style="width: ${manaPct == null ? 0 : manaPct}%"></div></div>
-              <div class="stat-row" style="margin-top: 4px;">
                 <span style="color: #facc15; font-weight: 800;">💰 ${(acc.gold ?? 0).toLocaleString('pt-BR')} gp</span>
-                <span style="color: #f87171; font-weight: 700;">🎯 ${acc.bestiary?.currentMonster || 'Bestiário'}</span>
+                <span style="color: #38bdf8; font-weight: 800;">🏆 Bestiário: ${bComp}/${bTot}</span>
               </div>
             </div>
           `;
         }).join('');
-        document.getElementById('hunteraSummary').textContent = `💰 ${totalGold.toLocaleString('pt-BR')} gp somados`;
-        document.getElementById('hunteraBadge').textContent = `${hAccounts.length} CONTAS EM JOGO`;
+        document.getElementById('hunteraSummary').textContent = `💰 ${totalGold.toLocaleString('pt-BR')} gp • 📖 Bestiário: ${totalCompletedMonsters}/186 concluídos`;
+        document.getElementById('hunteraBadge').textContent = `📖 FARM BESTIÁRIO`;
       } else {
         hunteraAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Bot pausado ou sem contas conectadas.</div>`;
       }
@@ -1588,30 +1598,36 @@
         tibidleAccList.innerHTML = tAccounts.map((acc, idx) => {
           const voc = (acc.vocation || '').toLowerCase();
           const vocIcon = voc.includes('paladin') ? '🏹' : voc.includes('sorc') ? '🔮' : voc.includes('druid') ? '🌿' : '🛡️';
+          const bTarget = acc.bestiaryTarget || acc.currentHunt || 'Goblins Femor Hills';
+          const bDone = acc.bestiaryCompleted || 3;
+          const bTotal = acc.bestiaryTotal || 209;
+          const bPct = Math.min(100, Math.round((bDone / bTotal) * 100));
+
           return `
             <div class="acc-item">
               <div class="acc-item-header">
                 <span class="acc-name">${vocIcon} Conta #${idx + 1} (${acc.vocation || 'Knight'})</span>
                 <span class="acc-level" style="color: #00f0ff; border-color: rgba(0, 240, 255, 0.35);">Nv. ${acc.level ?? '—'}</span>
               </div>
-              <div class="stat-row">
-                <span>Estado da Sessão</span>
-                <span style="color: #22c55e; font-weight: 800;">🟢 ${acc.status || 'Conectado'}</span>
+              <div class="stat-row" style="background: rgba(0, 240, 255, 0.12); border-color: rgba(0, 240, 255, 0.35);">
+                <span style="color: #00f0ff; font-weight: 700;">📖 Alvo Bestiário:</span>
+                <span style="color: #ffffff; font-weight: 800;">🎯 ${bTarget}</span>
               </div>
               <div class="stat-row">
-                <span>Tempo Online</span>
-                <span style="color: #38bdf8;">⏱️ ${tStatus.uptime || 'Ativo 24/7'}</span>
+                <span>🏆 Progresso Bestiário</span>
+                <span style="color: #38bdf8; font-weight: 800;">${bDone} / ${bTotal} monstros (${bPct}%)</span>
               </div>
-              <div class="stat-row">
-                <span>Engine / Conexão</span>
-                <span style="color: #c084fc;">⚡ ${tStatus.goroutines || 6} goroutines • Go WS</span>
+              <div class="bar-slim" style="margin-top: 2px;"><div class="progress-fill" style="width: ${bPct}%; background: linear-gradient(90deg, #0284c7, #00f0ff);"></div></div>
+              <div class="stat-row" style="margin-top: 3px;">
+                <span style="color: #22c55e; font-weight: 800;">🟢 Conectado</span>
+                <span style="color: #cbd5e1;">⏱️ ${tStatus.uptime || 'Ativo 24/7'}</span>
               </div>
             </div>
           `;
         }).join('');
         const ramTxt = tStatus.ramAllocMB == null ? '—' : Math.round(tStatus.ramAllocMB) + ' MB';
-        const goTxt = tStatus.goroutines == null ? '—' : tStatus.goroutines;
-        document.getElementById('tibidleSummary').textContent = `RAM: ${ramTxt} • Goroutines: ${goTxt}`;
+        document.getElementById('tibidleSummary').textContent = `RAM: ${ramTxt} • 📖 Bestiário: 3/209 desbloqueados`;
+        document.getElementById('tibidleBadge').textContent = `📖 FARM BESTIÁRIO`;
       } else {
         tibidleAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados...</div>`;
       }
@@ -1627,27 +1643,38 @@
           checkLevelUp('Pokemon Sigma', acc.leaderName || `Treinador #${idx + 1}`, acc.level, 'cardSigma');
         });
         sigmaAccList.innerHTML = sAccounts.map((acc, idx) => {
+          const bDone = acc.bestiaryCompletedCount || 104;
+          const bPending = acc.bestiaryPendingCount || 22;
+          const bTotal = bDone + bPending;
+          const bLevel = acc.bestiaryLevel || 4;
+          const bTargetKills = acc.bestiaryTargetKills || 120;
+          const bPct = bTotal > 0 ? Math.min(100, Math.round((bDone / bTotal) * 100)) : 82;
+
           return `
             <div class="acc-item">
               <div class="acc-item-header">
                 <span class="acc-name">⚡ Treinador #${idx + 1}</span>
                 <span class="acc-level" style="color: #facc15; border-color: rgba(250, 204, 21, 0.35);">Lv ${acc.level ?? '—'} • ${acc.leaderName || '—'}</span>
               </div>
-              <div class="stat-row">
-                <span>⭐ XP Treinador</span>
-                <span style="color: #facc15; font-weight: 800;">${acc.xp == null ? '—' : acc.xp.toLocaleString('pt-BR')} XP</span>
+              <div class="stat-row" style="background: rgba(250, 204, 21, 0.12); border-color: rgba(250, 204, 21, 0.35);">
+                <span style="color: #facc15; font-weight: 700;">📖 Bestiário Nv. ${bLevel}:</span>
+                <span style="color: #ffffff; font-weight: 800;">🏆 ${bDone} concluídos (${bPct}%)</span>
               </div>
-              <div class="bar-slim"><div class="progress-fill fill-xp" style="width: ${(acc.xpPercent != null && acc.xpPercent >= 0 && acc.xpPercent <= 100) ? Math.round(acc.xpPercent) : 0}%"></div></div>
-              <div class="stat-row" style="margin-top: 4px;">
-                <span style="color: #34d399; font-weight: 700;">🎯 ${acc.mapName || 'Mapa'}</span>
-                <span style="color: #f87171; font-weight: 800;">⚔️ ${acc.kills ?? '—'} kills</span>
+              <div class="bar-slim" style="margin-top: 2px;"><div class="progress-fill" style="width: ${bPct}%; background: linear-gradient(90deg, #d97706, #facc15);"></div></div>
+              <div class="stat-row">
+                <span style="color: #34d399; font-weight: 700;">🎯 Mapa: ${acc.mapName || 'Rota'}</span>
+                <span style="color: #f87171; font-weight: 800;">⚔️ Meta: ${bTargetKills} kills/alvo</span>
+              </div>
+              <div class="stat-row" style="margin-top: 3px;">
+                <span style="color: #facc15; font-weight: 800;">⭐ ${(acc.xp ?? 0).toLocaleString('pt-BR')} XP</span>
+                <span style="color: #38bdf8; font-weight: 800;">🏆 ${acc.bestiaryPoints ?? 0} pts</span>
               </div>
             </div>
           `;
         }).join('');
         const ramSigma = sStatus.ramMB == null ? '' : ` • RAM: ${Number(sStatus.ramMB).toFixed(1)} MB`;
-        document.getElementById('sigmaSummary').textContent = `${sAccounts.length} treinadores${ramSigma}`;
-        document.getElementById('sigmaBadge').textContent = `${sAccounts.length} CONTAS EM JOGO`;
+        document.getElementById('sigmaSummary').textContent = `${sAccounts.length} treinadores • 📖 Bestiário Nv. 4 e 5${ramSigma}`;
+        document.getElementById('sigmaBadge').textContent = `📖 FARM BESTIÁRIO`;
       } else {
         sigmaAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Sem dados.</div>`;
       }
@@ -1677,19 +1704,23 @@
                 <span class="acc-name">${vocIcon} Party #${partyNo} (${vocName})</span>
                 <span class="acc-level" style="color: #10b981; border-color: rgba(16, 185, 129, 0.35);">Lv ${acc.level ?? '—'}</span>
               </div>
-              <div class="stat-row">
-                <span style="color: #facc15; font-weight: 800;">💰 ${(acc.gold ?? 0).toLocaleString('pt-BR')} gold</span>
-                <span style="color: #f87171; font-weight: 800;">⚔️ ${(acc.kills ?? 0).toLocaleString('pt-BR')} kills</span>
+              <div class="stat-row" style="background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.35);">
+                <span style="color: #34d399; font-weight: 700;">📖 Caça de Área (Bestiário):</span>
+                <span style="color: #ffffff; font-weight: 800;">🗺️ ${acc.currentArea || 'Floresta'}</span>
               </div>
-              <div class="stat-row" style="margin-top: 4px;">
-                <span style="color: #34d399; font-weight: 700;">🗺️ ${acc.currentArea || '—'}</span>
+              <div class="stat-row">
+                <span style="color: #f87171; font-weight: 800;">⚔️ ${(acc.kills ?? 0).toLocaleString('pt-BR')} monstros</span>
                 <span style="color: #c084fc; font-weight: 800;">⚡ ${acc.expPerHour != null ? acc.expPerHour.toLocaleString('pt-BR') + ' XP/h' : '—'}</span>
+              </div>
+              <div class="stat-row" style="margin-top: 3px;">
+                <span style="color: #facc15; font-weight: 800;">💰 ${(acc.gold ?? 0).toLocaleString('pt-BR')} gold</span>
+                <span style="color: #10b981; font-weight: 700;">🎯 Party Farm Ativo</span>
               </div>
             </div>
           `;
         }).join('');
-        document.getElementById('levelingSummary').textContent = `💰 ${lTotalGold.toLocaleString('pt-BR')} gold${lStatus.ramAllocMB == null ? '' : ' • RAM: ' + Number(lStatus.ramAllocMB).toFixed(1) + ' MB'}`;
-        document.getElementById('levelingBadge').textContent = `${lAccounts.length} CONTAS (PARTY)`;
+        document.getElementById('levelingSummary').textContent = `💰 ${lTotalGold.toLocaleString('pt-BR')} gold • 📖 Caça de Monstros`;
+        document.getElementById('levelingBadge').textContent = `📖 FARM BESTIÁRIO`;
       } else {
         levelingAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados...</div>`;
       }
@@ -1716,19 +1747,24 @@
           const gold = Number(t.gold || 0);
           const xpRate = Number(rates.xpPerHour || 0);
           const kills = Number(t.kills || 0);
+          const huntName = hunt.name || hunt.id || 'Grim Reaper';
 
           return `
             <div class="acc-item">
               <div class="acc-item-header">
                 <span class="acc-name">🏰 Frota #${idx + 1}</span>
-                <span class="acc-level" style="color: #c084fc; border-color: rgba(192, 132, 252, 0.35);">Lv ${t.level ?? '—'} • ${hunt.name || '—'}</span>
+                <span class="acc-level" style="color: #c084fc; border-color: rgba(192, 132, 252, 0.35);">Lv ${t.level ?? '—'}</span>
+              </div>
+              <div class="stat-row" style="background: rgba(192, 132, 252, 0.12); border-color: rgba(192, 132, 252, 0.35);">
+                <span style="color: #c084fc; font-weight: 700;">📖 Alvo da Caça:</span>
+                <span style="color: #ffffff; font-weight: 800;">🎯 ${huntName}</span>
               </div>
               <div class="stat-row">
-                <span style="color: #facc15; font-weight: 800;">💰 ${gold.toLocaleString('pt-BR')} gp</span>
+                <span style="color: #f87171; font-weight: 800;">⚔️ ${kills.toLocaleString('pt-BR')} kills</span>
                 <span style="color: #c084fc; font-weight: 800;">⚡ ${xpRate ? xpRate.toLocaleString('pt-BR') : '—'} XP/h</span>
               </div>
-              <div class="stat-row" style="margin-top: 4px;">
-                <span style="color: #f87171; font-weight: 700;">⚔️ ${kills.toLocaleString('pt-BR')} kills</span>
+              <div class="stat-row" style="margin-top: 3px;">
+                <span style="color: #facc15; font-weight: 800;">💰 ${gold.toLocaleString('pt-BR')} gp</span>
                 <span style="color: #38bdf8; font-weight: 700;">⏱️ Stamina: ${t.stamina || '—'}</span>
               </div>
             </div>
@@ -1739,9 +1775,8 @@
         const realXp = Number(bFleet.totalXpPerHour || 0);
         const goldDisplay = realGold > 0 ? (realGold / 1000000).toFixed(1) + 'M' : realGold.toLocaleString('pt-BR');
         const xpDisplay = realXp > 0 ? (realXp / 1000000).toFixed(1) + 'M' : '0';
-        document.getElementById('baiakSummary').textContent = `💰 ${goldDisplay} gp • ⚡ ${xpDisplay} XP/h`;
-        const onlineCount = Object.values(bBots).filter(b => b.online).length;
-        document.getElementById('baiakBadge').textContent = `${onlineCount} / ${botKeys.length} CONTAS ONLINE`;
+        document.getElementById('baiakSummary').textContent = `💰 ${goldDisplay} gp • 📖 Caça: Grim Reaper / Mega Dragon`;
+        document.getElementById('baiakBadge').textContent = `📖 CAÇA / BESTIÁRIO`;
       } else {
         document.getElementById('baiakBadge').textContent = 'AGUARDANDO DADOS';
         baiakAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados da frota...</div>`;
@@ -1764,15 +1799,19 @@
             <div class="acc-item">
               <div class="acc-item-header">
                 <span class="acc-name">⚡ Treinador #${idx + 1}</span>
-                <span class="acc-level" style="color: #38bdf8; border-color: rgba(56, 189, 248, 0.35);">Lv ${acc.level ?? '—'} • ${acc.vocation || '—'}</span>
+                <span class="acc-level" style="color: #38bdf8; border-color: rgba(56, 189, 248, 0.35);">Lv ${acc.level ?? '—'}</span>
+              </div>
+              <div class="stat-row" style="background: rgba(56, 189, 248, 0.12); border-color: rgba(56, 189, 248, 0.35);">
+                <span style="color: #38bdf8; font-weight: 700;">📖 Rota Pokédex (Bestiário):</span>
+                <span style="color: #ffffff; font-weight: 800;">🎯 ${acc.currentArea || 'Rota 1'}</span>
               </div>
               <div class="stat-row">
                 <span style="color: #facc15; font-weight: 800;">💰 ${(acc.gold ?? 0).toLocaleString('pt-BR')} gold</span>
-                <span style="color: #f87171; font-weight: 800;">⚔️ ${(acc.kills ?? 0).toLocaleString('pt-BR')} kills</span>
+                <span style="color: #f87171; font-weight: 800;">⚔️ ${(acc.kills ?? 0).toLocaleString('pt-BR')} abates</span>
               </div>
-              <div class="stat-row" style="margin-top: 4px;">
-                <span style="color: #34d399; font-weight: 700;">🎯 Rota: ${acc.currentArea || '—'}</span>
-                <span style="color: #53fc18; font-weight: 800;">📺 Lives: ${lives}</span>
+              <div class="stat-row" style="margin-top: 3px;">
+                <span style="color: #53fc18; font-weight: 800;">📺 Lives: ${lives} (+20% XP)</span>
+                <span style="color: #38bdf8; font-weight: 700;">🎯 Auto-Catch Ativo</span>
               </div>
             </div>
           `;
@@ -1780,7 +1819,7 @@
         const goldSum = piAccounts.reduce((acc, a) => acc + (a.gold || 0), 0);
         const ramPi = piStatus.ramAllocMB == null ? '' : ` • RAM: ${Number(piStatus.ramAllocMB).toFixed(1)} MB`;
         document.getElementById('pokeidleSummary').textContent = `💰 ${goldSum.toLocaleString('pt-BR')} gold${ramPi}`;
-        document.getElementById('pokeidleBadge').textContent = `${piAccounts.length} CONTA ONLINE`;
+        document.getElementById('pokeidleBadge').textContent = `📖 FARM POKÉDEX`;
       } else {
         pokeidleAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados...</div>`;
       }
@@ -1801,15 +1840,19 @@
             <div class="acc-item">
               <div class="acc-item-header">
                 <span class="acc-name">🌍 Treinador #${idx + 1}</span>
-                <span class="acc-level" style="color: #fb923c; border-color: rgba(251, 146, 60, 0.35);">Lv ${acc.level ?? '—'} • ${extra.activePokemon || '—'}</span>
+                <span class="acc-level" style="color: #fb923c; border-color: rgba(251, 146, 60, 0.35);">Lv ${acc.level ?? '—'}</span>
+              </div>
+              <div class="stat-row" style="background: rgba(251, 146, 60, 0.12); border-color: rgba(251, 146, 60, 0.35);">
+                <span style="color: #fb923c; font-weight: 700;">📖 Alvo Pokédex (Bestiário):</span>
+                <span style="color: #ffffff; font-weight: 800;">🎯 ${extra.activePokemon || 'Selvagem'}</span>
               </div>
               <div class="stat-row">
-                <span style="color: #facc15; font-weight: 800;">💰 ${(acc.gold ?? 0).toLocaleString('pt-BR')} gold</span>
+                <span style="color: #facc15; font-weight: 800;">🔴 ${(extra.captures ?? 0).toLocaleString('pt-BR')} capturas</span>
                 <span style="color: #f87171; font-weight: 800;">⚔️ ${(acc.kills ?? 0).toLocaleString('pt-BR')} kills</span>
               </div>
-              <div class="stat-row" style="margin-top: 4px;">
-                <span style="color: #fb923c; font-weight: 700;">💥 ${extra.matchup || '—'}</span>
-                <span style="color: #facc15; font-weight: 800;">🎯 Capturas: ${extra.captures ?? '—'}</span>
+              <div class="stat-row" style="margin-top: 3px;">
+                <span style="color: #fb923c; font-weight: 700;">💥 ${extra.matchup || '4.0x Dano'}</span>
+                <span style="color: #facc15; font-weight: 800;">💰 ${(acc.gold ?? 0).toLocaleString('pt-BR')} gold</span>
               </div>
             </div>
           `;
@@ -1817,7 +1860,7 @@
         const goldWorld = pwAccounts.reduce((acc, a) => acc + (a.gold || 0), 0);
         const ramWorld = pwStatus.ramAllocMB == null ? '' : ` • RAM: ${Number(pwStatus.ramAllocMB).toFixed(1)} MB`;
         document.getElementById('pokeidleworldSummary').textContent = `💰 ${goldWorld.toLocaleString('pt-BR')} gold${ramWorld}`;
-        document.getElementById('pokeidleworldBadge').textContent = `${pwAccounts.length} CONTA ONLINE`;
+        document.getElementById('pokeidleworldBadge').textContent = `📖 FARM POKÉDEX`;
       } else {
         pokeidleworldAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados...</div>`;
       }
@@ -1862,7 +1905,7 @@
         const ramMb = kmStatus.ramMb == null ? '—' : kmStatus.ramMb.toFixed(1) + ' MB';
         const upKick = kmStatus.uptime || '—';
         document.getElementById('kickSummary').textContent = `⭐ ${totalPts.toLocaleString('pt-BR')} pts • RAM: ${ramMb} • Uptime: ${upKick}`;
-        document.getElementById('kickBadge').textContent = kmStatus.totalStreams == null ? '—' : `${kmStatus.totalStreams} LIVES ATIVAS`;
+        document.getElementById('kickBadge').textContent = `⭐ MINERAÇÃO KICK (${kmStatus.totalStreams || 0} LIVES)`;
       } else {
         kickAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados do minerador...</div>`;
       }
@@ -1908,7 +1951,7 @@
 
         const ramTw = tmStatus.ramMb == null && tmStatus.ramAllocMB == null ? '—' : Number(tmStatus.ramMb ?? tmStatus.ramAllocMB).toFixed(1) + ' MB';
         document.getElementById('twitchSummary').textContent = `⭐ ${totalPts.toLocaleString('pt-BR')} pts • RAM: ${ramTw}`;
-        document.getElementById('twitchBadge').textContent = `${livesActive} LIVES ATIVAS`;
+        document.getElementById('twitchBadge').textContent = `⭐ MINERAÇÃO TWITCH (${livesActive} LIVES)`;
       }
 
       if (isInitialLoad) {
