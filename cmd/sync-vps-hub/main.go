@@ -347,9 +347,9 @@ func buildBots(results map[string]map[string]any) map[string]any {
 			"status":       results["twitchminer"],
 		},
 		"baiak": map[string]any{
-			"name":         "Baiak Idle Terminal Bot",
+			"name":         "Baiak Idle Multi-Account",
 			"game":         "Baiak Idle",
-			"engine":       "Bun / Colyseus Headless",
+			"engine":       "Go Native Engine (Fleet)",
 			"port":         8090,
 			"dashboardUrl": "https://kbelludoo.github.io/baiak-idle-bot/",
 			"status":       results["baiak"],

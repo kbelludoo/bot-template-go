@@ -8,7 +8,7 @@ Template padronizado de altíssima performance desenvolvido em **Go (Golang)** p
 
 ## 🌟 Recursos Principais
 
-- 📊 **VPS Command Center Integrado:** Acompanhe a saúde da VPS (CPU load, memória RAM, uptime) e todos os 8 bots rodando simultaneamente (Huntera, Tibidle, Pokemon Sigma, Leveling Idle 2D, Baiak Idle, PokeIdle.io, Poke Idle World e Kick Miner Go) em uma única interface Cyberpunk / Dark.
+- 📊 **VPS Command Center Integrado:** Acompanhe a saúde da VPS (CPU load, memória RAM, uptime) e todos os 9 bots rodando simultaneamente (Huntera, Tibidle, Pokemon Sigma, Leveling Idle 2D, Baiak Idle, PokeIdle.io, Poke Idle World, Kick Miner Go e Twitch Miner Go) em uma única interface Cyberpunk / Dark — agora 100% nativos em Go (zero Node/Bun).
 - 🪶 **Ultra-leve:** Consumo típico entre **2 e 5 MB de RAM** por processo.
 - 🛡️ **Supervisão Contínua:** Múltiplas contas em Goroutines isoladas com auto-reconexão e recuperação contra panic via `engine.RunWithSupervisor`.
 - 🌐 **Web Dashboard Embutido:** Servidor HTTP local independente (`/api/status` e `/api/action`).

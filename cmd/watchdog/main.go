@@ -65,7 +65,7 @@ var botsConfig = []botConfig{
 	{id: "pokeidleworld", name: "🌍 Poke Idle World", port: 3007, checkURL: "http://127.0.0.1:3007/api/status", restartCmd: "sudo systemctl restart pokeidleworld.service"},
 	{id: "kickminer", name: "🟢 Kick Miner Go", port: 3009, checkURL: "http://127.0.0.1:3009/api/status", restartCmd: "sudo systemctl restart kick-miner.service"},
 	{id: "twitchminer", name: "🟣 Twitch Miner Go", port: 3010, checkURL: "http://127.0.0.1:3010/api/status", restartCmd: "sudo systemctl restart twitch-miner.service"},
-	{id: "baiak", name: "🏰 Baiak Idle (Fleet)", port: 8090, checkURL: "http://127.0.0.1:8090/api/fleet", restartCmd: "sudo systemctl restart baiak-fleet.service baiak-term.service baiak-term-acc2.service baiak-term-acc3.service"},
+	{id: "baiak", name: "🏰 Baiak Idle (Fleet)", port: 8090, checkURL: "http://127.0.0.1:8090/api/fleet", restartCmd: "sudo systemctl restart baiak-fleet.service"},
 }
 
 type probeResult struct {
