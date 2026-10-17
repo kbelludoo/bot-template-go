@@ -6,7 +6,119 @@
       "game": "Baiak Idle",
       "name": "Baiak Idle Multi-Account",
       "port": 8090,
-      "status": null
+      "status": {
+        "bots": {
+          "acc-1": {
+            "label": "Conta 1",
+            "name": "",
+            "online": true,
+            "reachable": true,
+            "status": {
+              "currentArea": "Vexclaw",
+              "gold": 46544281,
+              "hunt": {
+                "id": "Vexclaw",
+                "name": "Vexclaw"
+              },
+              "kills": 14,
+              "level": 361,
+              "online": true,
+              "rates": {
+                "goldPerHour": 1852651.7050352525,
+                "xpPerHour": 2897910.175957138
+              },
+              "state": {
+                "inTreino": false
+              },
+              "status": "hunting",
+              "telemetry": {
+                "gold": 46544281,
+                "kills": 14,
+                "level": 361,
+                "stamina": "26h 16m (63%)"
+              },
+              "treino": false,
+              "uptimeSec": 101,
+              "vocation": "paladin"
+            }
+          },
+          "acc-2": {
+            "label": "Conta 2",
+            "name": "",
+            "online": true,
+            "reachable": true,
+            "status": {
+              "currentArea": "Stone Refiner",
+              "gold": 98672247,
+              "hunt": {
+                "id": "Stone Refiner",
+                "name": "Stone Refiner"
+              },
+              "kills": 77,
+              "level": 234,
+              "online": true,
+              "rates": {
+                "goldPerHour": 1556231.109621772,
+                "xpPerHour": 1380895.259378353
+              },
+              "state": {
+                "inTreino": false
+              },
+              "status": "hunting",
+              "telemetry": {
+                "gold": 98672247,
+                "kills": 77,
+                "level": 234,
+                "stamina": "22h 19m (53%)"
+              },
+              "treino": false,
+              "uptimeSec": 102,
+              "vocation": "knight"
+            }
+          },
+          "acc-3": {
+            "label": "Conta 3",
+            "name": "",
+            "online": true,
+            "reachable": true,
+            "status": {
+              "currentArea": "Vexclaw",
+              "gold": 30978,
+              "hunt": {
+                "id": "Vexclaw",
+                "name": "Vexclaw"
+              },
+              "kills": 22,
+              "level": 489,
+              "online": true,
+              "rates": {
+                "goldPerHour": 3114848.5089457883,
+                "xpPerHour": 4872232.757837679
+              },
+              "state": {
+                "inTreino": false
+              },
+              "status": "hunting",
+              "telemetry": {
+                "gold": 30978,
+                "kills": 22,
+                "level": 489,
+                "stamina": "21h 31m (51%)"
+              },
+              "treino": false,
+              "uptimeSec": 102,
+              "vocation": "knight"
+            }
+          }
+        },
+        "fleet": {
+          "botsOnline": 3,
+          "botsTotal": 3,
+          "totalGold": 145247506,
+          "totalLootPerHour": 6523731.323602812,
+          "totalXpPerHour": 9151038.19317317
+        }
+      }
     },
     "huntera": {
       "dashboardUrl": "https://kbelludoo.github.io/huntera-bot/",
@@ -18,8 +130,8 @@
         "accounts": [
           {
             "analyzer": {
-              "experience": 9625,
-              "kills": 175,
+              "experience": 10065,
+              "kills": 183,
               "lootValue": 0,
               "waste": 0
             },
@@ -52,7 +164,7 @@
                 "skeleton": 44,
                 "smuggler": 3341,
                 "spider": 277,
-                "swampTroll": 2190,
+                "swampTroll": 2198,
                 "tarantula": 2556,
                 "troll": 46,
                 "valkyrie": 5205,
@@ -60,7 +172,7 @@
               },
               "completedMonsters": 10,
               "currentMonster": "Swamp Troll",
-              "kills": 2190,
+              "kills": 2198,
               "monsterId": "swampTroll",
               "required": 2500,
               "stage": 0,
@@ -68,32 +180,37 @@
                 "swampTroll": 0
               },
               "targetStage": 1,
-              "totalKills": 36936,
+              "totalKills": 36944,
               "totalMonsters": 186
             },
             "charName": "Personagem #1",
             "deaths": 0,
-            "experience": 186243,
+            "experience": 186683,
             "experienceNeeded": 221200,
-            "gold": 22323,
+            "gold": 22339,
             "hp": 785,
+            "hunt": {
+              "huntId": "swamp-troll-hunt",
+              "instanceId": "swamp-troll-hunt-112",
+              "tier": 0
+            },
             "id": "acc1",
             "inGame": true,
             "level": 68,
             "lootsTaken": 0,
-            "mana": 990,
+            "mana": 950,
             "maxHp": 785,
             "maxMana": 990,
-            "sessionRemainingMs": 0,
-            "staminaMs": 63734,
+            "sessionRemainingMs": 14333945,
+            "staminaMs": 241987,
             "staminaRefillCost": 110976,
             "staminaRefillsLeft": 6,
             "updatedAt": 1792257474007
           },
           {
             "analyzer": {
-              "experience": 49093,
-              "kills": 276,
+              "experience": 52760,
+              "kills": 296,
               "lootValue": 0,
               "waste": 0
             },
@@ -103,12 +220,12 @@
                 "acolyteOfTheCult": 9684,
                 "adeptOfTheCult": 50,
                 "amazon": 18956,
-                "assassin": 2702,
-                "bandit": 2708,
+                "assassin": 2706,
+                "bandit": 2711,
                 "bonelord": 70,
                 "corymCharlatan": 18,
                 "cyclops": 32,
-                "darkMonk": 2755,
+                "darkMonk": 2759,
                 "dragon": 9,
                 "elderBonelord": 22,
                 "enlightenedOfTheCult": 45,
@@ -124,18 +241,18 @@
                 "rotworm": 31,
                 "scarab": 78,
                 "skeleton": 800,
-                "smuggler": 3450,
+                "smuggler": 3453,
                 "spider": 2505,
                 "swampTroll": 2500,
                 "tarantula": 2856,
                 "troll": 2505,
                 "valkyrie": 11838,
-                "wildWarrior": 3453,
+                "wildWarrior": 3457,
                 "winterWolf": 2501
               },
               "completedMonsters": 19,
               "currentMonster": "Smuggler",
-              "kills": 3450,
+              "kills": 3453,
               "monsterId": "smuggler",
               "required": 5000,
               "stage": 1,
@@ -152,14 +269,14 @@
                 "wildWarrior": 0
               },
               "targetStage": 1,
-              "totalKills": 108060,
+              "totalKills": 108078,
               "totalMonsters": 186
             },
             "charName": "Personagem #2",
             "deaths": 0,
-            "experience": 96696,
+            "experience": 100363,
             "experienceNeeded": 308200,
-            "gold": 58298,
+            "gold": 58623,
             "hp": 545,
             "hunt": {
               "huntId": "dark-cathedral-hunt",
@@ -173,9 +290,9 @@
             "mana": 2250,
             "maxHp": 545,
             "maxMana": 2250,
-            "sessionRemainingMs": 12138899,
-            "staminaMs": 40938949,
-            "staminaRefillCost": 24118,
+            "sessionRemainingMs": 12029896,
+            "staminaMs": 40829949,
+            "staminaRefillCost": 25281,
             "staminaRefillsLeft": 6,
             "updatedAt": 1792257474007
           },
@@ -333,7 +450,7 @@
             "updatedAt": 1792257474007
           }
         ],
-        "serverTime": 1792259161197
+        "serverTime": 1792259281651
       }
     },
     "kickminer": {
@@ -360,7 +477,7 @@
                 "isLive": true,
                 "points": 300,
                 "streamer": "alinex",
-                "watchTime": "6h11m1s",
+                "watchTime": "6h13m1s",
                 "watching": true
               },
               "amouranth": {
@@ -368,7 +485,7 @@
                 "isLive": true,
                 "points": 2380,
                 "streamer": "amouranth",
-                "watchTime": "3h12m36s",
+                "watchTime": "3h14m37s",
                 "watching": true
               },
               "anonimo": {
@@ -376,7 +493,7 @@
                 "isLive": true,
                 "points": 0,
                 "streamer": "anonimo",
-                "watchTime": "39h51m44s",
+                "watchTime": "39h53m45s",
                 "watching": true
               },
               "axtlol": {
@@ -392,7 +509,7 @@
                 "isLive": true,
                 "points": 0,
                 "streamer": "baianotv",
-                "watchTime": "32m55s",
+                "watchTime": "34m55s",
                 "watching": true
               },
               "bkinho": {
@@ -400,7 +517,7 @@
                 "isLive": true,
                 "points": 560,
                 "streamer": "bkinho",
-                "watchTime": "9h24m28s",
+                "watchTime": "9h26m29s",
                 "watching": true
               },
               "brtt": {
@@ -432,7 +549,7 @@
                 "isLive": true,
                 "points": 1530,
                 "streamer": "classybeef",
-                "watchTime": "11h44m52s",
+                "watchTime": "11h46m52s",
                 "watching": true
               },
               "cogu": {
@@ -464,7 +581,7 @@
                 "isLive": true,
                 "points": 120,
                 "streamer": "dona",
-                "watchTime": "12h55m19s",
+                "watchTime": "12h57m19s",
                 "watching": true
               },
               "faasii": {
@@ -488,7 +605,7 @@
                 "isLive": true,
                 "points": 0,
                 "streamer": "gabepeixe",
-                "watchTime": "1h5m47s",
+                "watchTime": "1h7m47s",
                 "watching": true
               },
               "gaules": {
@@ -496,7 +613,7 @@
                 "isLive": true,
                 "points": 4860,
                 "streamer": "gaules",
-                "watchTime": "6h35m56s",
+                "watchTime": "6h37m56s",
                 "watching": true
               },
               "hasanabi": {
@@ -600,7 +717,7 @@
                 "isLive": true,
                 "points": 1750,
                 "streamer": "onezeratv",
-                "watchTime": "6h3m34s",
+                "watchTime": "6h5m34s",
                 "watching": true
               },
               "reverso": {
@@ -664,7 +781,7 @@
                 "isLive": true,
                 "points": 450,
                 "streamer": "tftoddy",
-                "watchTime": "3h47m12s",
+                "watchTime": "3h49m13s",
                 "watching": true
               },
               "titanloloficial": {
@@ -672,7 +789,7 @@
                 "isLive": true,
                 "points": 10,
                 "streamer": "titanloloficial",
-                "watchTime": "22m18s",
+                "watchTime": "24m18s",
                 "watching": true
               },
               "trainwreckstv": {
@@ -712,11 +829,8 @@
             "username": "Minerador #1"
           }
         },
-        "goroutines": 51,
+        "goroutines": 48,
         "logs": [
-          "[17:09:10] [anonimo] 💰 Live de 'anonimo': saldo atualizado para 0 pontos (+10 creditados)!",
-          "[17:09:11] [anonimo] 💰 Live de 'gaules': saldo atualizado para 4850 pontos (+10 creditados)!",
-          "[17:09:33] [anonimo] 💰 Live de 'alinex': saldo atualizado para 270 pontos (+10 creditados)!",
           "[17:10:06] [anonimo] 💰 Live de 'classybeef': saldo atualizado para 1530 pontos (+10 creditados)!",
           "[17:10:15] [anonimo] 💰 Live de 'gabepeixe': saldo atualizado para 0 pontos (+10 creditados)!",
           "[17:10:47] [anonimo] 💰 Live de 'onezeratv': saldo atualizado para 1680 pontos (+10 creditados)!",
@@ -813,11 +927,14 @@
           "[17:44:33] [anonimo] 💰 Live de 'alinex': saldo atualizado para 300 pontos (+10 creditados)!",
           "[17:45:06] [anonimo] 💰 Live de 'classybeef': saldo atualizado para 1530 pontos (+10 creditados)!",
           "[17:45:15] [anonimo] 💰 Live de 'gabepeixe': saldo atualizado para 0 pontos (+10 creditados)!",
-          "[17:45:47] [anonimo] 💰 Live de 'onezeratv': saldo atualizado para 1750 pontos (+10 creditados)!"
+          "[17:45:47] [anonimo] 💰 Live de 'onezeratv': saldo atualizado para 1750 pontos (+10 creditados)!",
+          "[17:46:39] [anonimo] 💰 Live de 'tftoddy': saldo atualizado para 450 pontos (+10 creditados)!",
+          "[17:47:55] [anonimo] 💰 Live de 'dona': saldo atualizado para 120 pontos (+10 creditados)!",
+          "[17:47:58] [anonimo] 💰 Live de 'bkinho': saldo atualizado para 560 pontos (+10 creditados)!"
         ],
-        "ramMb": 1.785064697265625,
+        "ramMb": 1.8847122192382812,
         "totalStreams": 12,
-        "uptime": "61h29m17s"
+        "uptime": "61h31m18s"
       }
     },
     "leveling": {
@@ -829,14 +946,14 @@
       "status": {
         "accounts": [
           {
-            "codexInfo": "0/1 mobs | Rato da Ruína (77/2000)",
+            "codexInfo": "0/1 mobs | Rato da Ruína (135/2000)",
             "currentArea": "Blue Gate (Rato da Ruína Nv 5)",
-            "durationSec": 1164,
-            "expPerHour": 2051,
-            "gold": 2295,
+            "durationSec": 339,
+            "expPerHour": 6307,
+            "gold": 827,
             "hp": 300,
             "id": "acc-1",
-            "kills": 81,
+            "kills": 1093,
             "level": 4,
             "logs": [
               "Party sincronizada.",
@@ -860,17 +977,17 @@
             "maxMana": 160,
             "name": "Party #1",
             "status": "hunting",
-            "updatedAt": 1792259161179
+            "updatedAt": 1792259281680
           },
           {
-            "codexInfo": "0/1 mobs | Rato da Ruína (77/2000)",
+            "codexInfo": "0/1 mobs | Rato da Ruína (135/2000)",
             "currentArea": "Blue Gate (Rato da Ruína Nv 5)",
-            "durationSec": 3621,
-            "expPerHour": 57315,
-            "gold": 18802,
+            "durationSec": 363,
+            "expPerHour": 62195,
+            "gold": 19084,
             "hp": 550,
             "id": "acc-2",
-            "kills": 11851,
+            "kills": 1108,
             "level": 14,
             "logs": [
               "Party sincronizada.",
@@ -894,17 +1011,17 @@
             "maxMana": 310,
             "name": "Party #2",
             "status": "hunting",
-            "updatedAt": 1792259161179
+            "updatedAt": 1792259281680
           },
           {
-            "codexInfo": "0/1 mobs | Rato da Ruína (77/2000)",
+            "codexInfo": "0/1 mobs | Rato da Ruína (135/2000)",
             "currentArea": "Blue Gate (Rato da Ruína Nv 5)",
-            "durationSec": 3909,
-            "expPerHour": 57059,
-            "gold": 19013,
+            "durationSec": 357,
+            "expPerHour": 61939,
+            "gold": 19286,
             "hp": 550,
             "id": "acc-3",
-            "kills": 11936,
+            "kills": 1107,
             "level": 14,
             "logs": [
               "Party sincronizada.",
@@ -928,17 +1045,17 @@
             "maxMana": 310,
             "name": "Party #3",
             "status": "hunting",
-            "updatedAt": 1792259161179
+            "updatedAt": 1792259281680
           },
           {
-            "codexInfo": "0/1 mobs | Rato da Ruína (77/2000)",
+            "codexInfo": "0/1 mobs | Rato da Ruína (135/2000)",
             "currentArea": "Blue Gate (Rato da Ruína Nv 5)",
-            "durationSec": 3822,
-            "expPerHour": 59183,
-            "gold": 19122,
+            "durationSec": 360,
+            "expPerHour": 64063,
+            "gold": 19405,
             "hp": 550,
             "id": "acc-4",
-            "kills": 11906,
+            "kills": 1108,
             "level": 14,
             "logs": [
               "Party sincronizada.",
@@ -962,13 +1079,13 @@
             "maxMana": 310,
             "name": "Party #4",
             "status": "hunting",
-            "updatedAt": 1792259161179
+            "updatedAt": 1792259281680
           }
         ],
-        "goroutines": 16,
-        "ramAllocMB": 1.2089996337890625,
-        "ramSysMB": 17.09986114501953,
-        "uptime": "18m30s"
+        "goroutines": 17,
+        "ramAllocMB": 2.1278305053710938,
+        "ramSysMB": 13.099861145019531,
+        "uptime": "1m49s"
       }
     },
     "lolidle": {
@@ -993,10 +1110,6 @@
             "kills": 0,
             "level": 0,
             "logs": [
-              "[17:38:33] Validando sessão e carregando dados reais do personagem via /api/eu...",
-              "[17:39:03] Validando sessão e carregando dados reais do personagem via /api/eu...",
-              "[17:39:48] Validando sessão e carregando dados reais do personagem via /api/eu...",
-              "[17:40:19] Validando sessão e carregando dados reais do personagem via /api/eu...",
               "[17:40:49] Validando sessão e carregando dados reais do personagem via /api/eu...",
               "[17:41:19] Validando sessão e carregando dados reais do personagem via /api/eu...",
               "[17:41:49] Validando sessão e carregando dados reais do personagem via /api/eu...",
@@ -1007,14 +1120,18 @@
               "[17:44:20] Validando sessão e carregando dados reais do personagem via /api/eu...",
               "[17:44:50] Validando sessão e carregando dados reais do personagem via /api/eu...",
               "[17:45:20] Validando sessão e carregando dados reais do personagem via /api/eu...",
-              "[17:45:50] Validando sessão e carregando dados reais do personagem via /api/eu..."
+              "[17:45:50] Validando sessão e carregando dados reais do personagem via /api/eu...",
+              "[17:46:21] Validando sessão e carregando dados reais do personagem via /api/eu...",
+              "[17:46:51] Validando sessão e carregando dados reais do personagem via /api/eu...",
+              "[17:47:21] Validando sessão e carregando dados reais do personagem via /api/eu...",
+              "[17:47:51] Validando sessão e carregando dados reais do personagem via /api/eu..."
             ],
             "mana": 0,
             "maxHp": 0,
             "maxMana": 0,
             "name": "Campeão #1",
             "status": "Erro na sessão: HTTP 401 em /api/eu: {\"erro\":\"Sessão expirada. Entre de novo.\"}",
-            "updatedAt": 1792259151071
+            "updatedAt": 1792259271714
           },
           {
             "currentArea": "auto",
@@ -1030,10 +1147,6 @@
             "kills": 0,
             "level": 0,
             "logs": [
-              "[17:38:33] Validando sessão e carregando dados reais do personagem via /api/eu...",
-              "[17:39:03] Validando sessão e carregando dados reais do personagem via /api/eu...",
-              "[17:39:48] Validando sessão e carregando dados reais do personagem via /api/eu...",
-              "[17:40:18] Validando sessão e carregando dados reais do personagem via /api/eu...",
               "[17:40:49] Validando sessão e carregando dados reais do personagem via /api/eu...",
               "[17:41:19] Validando sessão e carregando dados reais do personagem via /api/eu...",
               "[17:41:49] Validando sessão e carregando dados reais do personagem via /api/eu...",
@@ -1044,14 +1157,18 @@
               "[17:44:20] Validando sessão e carregando dados reais do personagem via /api/eu...",
               "[17:44:50] Validando sessão e carregando dados reais do personagem via /api/eu...",
               "[17:45:20] Validando sessão e carregando dados reais do personagem via /api/eu...",
-              "[17:45:50] Validando sessão e carregando dados reais do personagem via /api/eu..."
+              "[17:45:50] Validando sessão e carregando dados reais do personagem via /api/eu...",
+              "[17:46:20] Validando sessão e carregando dados reais do personagem via /api/eu...",
+              "[17:46:50] Validando sessão e carregando dados reais do personagem via /api/eu...",
+              "[17:47:21] Validando sessão e carregando dados reais do personagem via /api/eu...",
+              "[17:47:51] Validando sessão e carregando dados reais do personagem via /api/eu..."
             ],
             "mana": 0,
             "maxHp": 0,
             "maxMana": 0,
             "name": "Campeão #2",
             "status": "Erro na sessão: HTTP 401 em /api/eu: {\"erro\":\"Sessão expirada. Entre de novo.\"}",
-            "updatedAt": 1792259150727
+            "updatedAt": 1792259271354
           },
           {
             "currentArea": "auto",
@@ -1067,10 +1184,6 @@
             "kills": 0,
             "level": 0,
             "logs": [
-              "[17:38:32] Validando sessão e carregando dados reais do personagem via /api/eu...",
-              "[17:39:03] Validando sessão e carregando dados reais do personagem via /api/eu...",
-              "[17:39:41] Validando sessão e carregando dados reais do personagem via /api/eu...",
-              "[17:40:11] Validando sessão e carregando dados reais do personagem via /api/eu...",
               "[17:40:41] Validando sessão e carregando dados reais do personagem via /api/eu...",
               "[17:41:12] Validando sessão e carregando dados reais do personagem via /api/eu...",
               "[17:41:42] Validando sessão e carregando dados reais do personagem via /api/eu...",
@@ -1081,14 +1194,18 @@
               "[17:44:13] Validando sessão e carregando dados reais do personagem via /api/eu...",
               "[17:44:43] Validando sessão e carregando dados reais do personagem via /api/eu...",
               "[17:45:13] Validando sessão e carregando dados reais do personagem via /api/eu...",
-              "[17:45:43] Validando sessão e carregando dados reais do personagem via /api/eu..."
+              "[17:45:43] Validando sessão e carregando dados reais do personagem via /api/eu...",
+              "[17:46:13] Validando sessão e carregando dados reais do personagem via /api/eu...",
+              "[17:46:43] Validando sessão e carregando dados reais do personagem via /api/eu...",
+              "[17:47:14] Validando sessão e carregando dados reais do personagem via /api/eu...",
+              "[17:47:44] Validando sessão e carregando dados reais do personagem via /api/eu..."
             ],
             "mana": 0,
             "maxHp": 0,
             "maxMana": 0,
             "name": "Campeão #3",
             "status": "Erro na sessão: HTTP 401 em /api/eu: {\"erro\":\"Sessão expirada. Entre de novo.\"}",
-            "updatedAt": 1792259143718
+            "updatedAt": 1792259264310
           },
           {
             "currentArea": "auto",
@@ -1104,10 +1221,6 @@
             "kills": 0,
             "level": 0,
             "logs": [
-              "[17:38:33] Validando sessão e carregando dados reais do personagem via /api/eu...",
-              "[17:39:03] Validando sessão e carregando dados reais do personagem via /api/eu...",
-              "[17:39:41] Validando sessão e carregando dados reais do personagem via /api/eu...",
-              "[17:40:11] Validando sessão e carregando dados reais do personagem via /api/eu...",
               "[17:40:41] Validando sessão e carregando dados reais do personagem via /api/eu...",
               "[17:41:12] Validando sessão e carregando dados reais do personagem via /api/eu...",
               "[17:41:42] Validando sessão e carregando dados reais do personagem via /api/eu...",
@@ -1118,20 +1231,24 @@
               "[17:44:13] Validando sessão e carregando dados reais do personagem via /api/eu...",
               "[17:44:43] Validando sessão e carregando dados reais do personagem via /api/eu...",
               "[17:45:13] Validando sessão e carregando dados reais do personagem via /api/eu...",
-              "[17:45:43] Validando sessão e carregando dados reais do personagem via /api/eu..."
+              "[17:45:43] Validando sessão e carregando dados reais do personagem via /api/eu...",
+              "[17:46:13] Validando sessão e carregando dados reais do personagem via /api/eu...",
+              "[17:46:43] Validando sessão e carregando dados reais do personagem via /api/eu...",
+              "[17:47:14] Validando sessão e carregando dados reais do personagem via /api/eu...",
+              "[17:47:44] Validando sessão e carregando dados reais do personagem via /api/eu..."
             ],
             "mana": 0,
             "maxHp": 0,
             "maxMana": 0,
             "name": "Campeão #4",
             "status": "Erro na sessão: HTTP 401 em /api/eu: {\"erro\":\"Sessão expirada. Entre de novo.\"}",
-            "updatedAt": 1792259143792
+            "updatedAt": 1792259264406
           }
         ],
         "goroutines": 18,
-        "ramAllocMB": 0.9203033447265625,
+        "ramAllocMB": 0.9184417724609375,
         "ramSysMB": 13.099861145019531,
-        "uptime": "12m46s"
+        "uptime": "14m46s"
       }
     },
     "pokeidle": {
@@ -1144,8 +1261,8 @@
         "accounts": [
           {
             "currentArea": "geodude",
-            "durationSec": 8111,
-            "expPerHour": 11815.752029353778,
+            "durationSec": 8241,
+            "expPerHour": 11807.764021784373,
             "extra": {
               "catches": 0,
               "diamonds": 0,
@@ -1160,10 +1277,10 @@
               "orbs": 0,
               "trainerName": "Treinador #1"
             },
-            "gold": 8491862,
-            "hp": 313,
+            "gold": 8493379,
+            "hp": 308,
             "id": "acc-1",
-            "kills": 2427,
+            "kills": 2464,
             "level": 47,
             "logs": [
               "Derrotou Geodude! Loot: Earth Stone",
@@ -1182,14 +1299,14 @@
             "maxMana": 133,
             "name": "Treinador #1",
             "status": "hunting",
-            "updatedAt": 1792259150742,
+            "updatedAt": 1792259280317,
             "vocation": "Bulbasaur (Nv. 47)"
           }
         ],
-        "goroutines": 11,
-        "ramAllocMB": 1.0852279663085938,
+        "goroutines": 10,
+        "ramAllocMB": 1.1107635498046875,
         "ramSysMB": 17.09986114501953,
-        "uptime": "2h15m22s"
+        "uptime": "2h17m22s"
       }
     },
     "pokeidleworld": {
@@ -1202,8 +1319,8 @@
         "accounts": [
           {
             "currentArea": "Larvitar",
-            "durationSec": 6453,
-            "expPerHour": 91.49232914923292,
+            "durationSec": 6577,
+            "expPerHour": 89.76737114185799,
             "extra": {
               "activePokemon": "Bulbasaur",
               "autoWeakness": true,
@@ -1220,7 +1337,7 @@
               "lootItems": 0,
               "matchup": "4.0x Dano",
               "matchupDetail": "4.0x (Fraqueza Dupla!) | Risco Moderado | XP Máxima (Lv. 30)",
-              "nextRecruit": "2h 41m",
+              "nextRecruit": "2h 39m",
               "pokeCount": 2,
               "pokedexCatalog": [
                 {
@@ -1273,21 +1390,6 @@
                   "claimed": false,
                   "kills": 0,
                   "level": 20,
-                  "name": "Wooper",
-                  "offensive": 4,
-                  "remaining": 100,
-                  "slug": "wooper",
-                  "speciesId": 194,
-                  "types": [
-                    "WATER",
-                    "GROUND"
-                  ]
-                },
-                {
-                  "canClaim": false,
-                  "claimed": false,
-                  "kills": 0,
-                  "level": 20,
                   "name": "Kabuto",
                   "offensive": 4,
                   "remaining": 100,
@@ -1296,6 +1398,21 @@
                   "types": [
                     "ROCK",
                     "WATER"
+                  ]
+                },
+                {
+                  "canClaim": false,
+                  "claimed": false,
+                  "kills": 0,
+                  "level": 20,
+                  "name": "Wooper",
+                  "offensive": 4,
+                  "remaining": 100,
+                  "slug": "wooper",
+                  "speciesId": 194,
+                  "types": [
+                    "WATER",
+                    "GROUND"
                   ]
                 },
                 {
@@ -1317,20 +1434,6 @@
                   "claimed": false,
                   "kills": 0,
                   "level": 30,
-                  "name": "Snubbull",
-                  "offensive": 2,
-                  "remaining": 100,
-                  "slug": "snubbull",
-                  "speciesId": 209,
-                  "types": [
-                    "FAIRY"
-                  ]
-                },
-                {
-                  "canClaim": false,
-                  "claimed": false,
-                  "kills": 0,
-                  "level": 30,
                   "name": "Poliwhirl",
                   "offensive": 2,
                   "remaining": 100,
@@ -1338,6 +1441,20 @@
                   "speciesId": 61,
                   "types": [
                     "WATER"
+                  ]
+                },
+                {
+                  "canClaim": false,
+                  "claimed": false,
+                  "kills": 0,
+                  "level": 30,
+                  "name": "Snubbull",
+                  "offensive": 2,
+                  "remaining": 100,
+                  "slug": "snubbull",
+                  "speciesId": 209,
+                  "types": [
+                    "FAIRY"
                   ]
                 },
                 {
@@ -1388,20 +1505,6 @@
                   "claimed": false,
                   "kills": 0,
                   "level": 20,
-                  "name": "Cleffa",
-                  "offensive": 2,
-                  "remaining": 100,
-                  "slug": "cleffa",
-                  "speciesId": 173,
-                  "types": [
-                    "FAIRY"
-                  ]
-                },
-                {
-                  "canClaim": false,
-                  "claimed": false,
-                  "kills": 0,
-                  "level": 20,
                   "name": "Squirtle",
                   "offensive": 2,
                   "remaining": 100,
@@ -1416,6 +1519,20 @@
                   "claimed": false,
                   "kills": 0,
                   "level": 20,
+                  "name": "Cleffa",
+                  "offensive": 2,
+                  "remaining": 100,
+                  "slug": "cleffa",
+                  "speciesId": 173,
+                  "types": [
+                    "FAIRY"
+                  ]
+                },
+                {
+                  "canClaim": false,
+                  "claimed": false,
+                  "kills": 0,
+                  "level": 20,
                   "name": "Totodile",
                   "offensive": 2,
                   "remaining": 100,
@@ -1423,6 +1540,35 @@
                   "speciesId": 158,
                   "types": [
                     "WATER"
+                  ]
+                },
+                {
+                  "canClaim": false,
+                  "claimed": false,
+                  "kills": 0,
+                  "level": 20,
+                  "name": "Staryu",
+                  "offensive": 2,
+                  "remaining": 100,
+                  "slug": "staryu",
+                  "speciesId": 120,
+                  "types": [
+                    "WATER"
+                  ]
+                },
+                {
+                  "canClaim": false,
+                  "claimed": false,
+                  "kills": 0,
+                  "level": 20,
+                  "name": "Marill",
+                  "offensive": 2,
+                  "remaining": 100,
+                  "slug": "marill",
+                  "speciesId": 183,
+                  "types": [
+                    "WATER",
+                    "FAIRY"
                   ]
                 },
                 {
@@ -1458,28 +1604,14 @@
                   "claimed": false,
                   "kills": 0,
                   "level": 20,
-                  "name": "Marill",
+                  "name": "Igglybuff",
                   "offensive": 2,
                   "remaining": 100,
-                  "slug": "marill",
-                  "speciesId": 183,
+                  "slug": "igglybuff",
+                  "speciesId": 174,
                   "types": [
-                    "WATER",
+                    "NORMAL",
                     "FAIRY"
-                  ]
-                },
-                {
-                  "canClaim": false,
-                  "claimed": false,
-                  "kills": 0,
-                  "level": 20,
-                  "name": "Staryu",
-                  "offensive": 2,
-                  "remaining": 100,
-                  "slug": "staryu",
-                  "speciesId": 120,
-                  "types": [
-                    "WATER"
                   ]
                 },
                 {
@@ -1515,21 +1647,6 @@
                   "claimed": false,
                   "kills": 0,
                   "level": 20,
-                  "name": "Igglybuff",
-                  "offensive": 2,
-                  "remaining": 100,
-                  "slug": "igglybuff",
-                  "speciesId": 174,
-                  "types": [
-                    "NORMAL",
-                    "FAIRY"
-                  ]
-                },
-                {
-                  "canClaim": false,
-                  "claimed": false,
-                  "kills": 0,
-                  "level": 20,
                   "name": "Sandshrew",
                   "offensive": 2,
                   "remaining": 100,
@@ -1537,34 +1654,6 @@
                   "speciesId": 27,
                   "types": [
                     "GROUND"
-                  ]
-                },
-                {
-                  "canClaim": false,
-                  "claimed": false,
-                  "kills": 0,
-                  "level": 10,
-                  "name": "Krabby",
-                  "offensive": 2,
-                  "remaining": 100,
-                  "slug": "krabby",
-                  "speciesId": 98,
-                  "types": [
-                    "WATER"
-                  ]
-                },
-                {
-                  "canClaim": false,
-                  "claimed": false,
-                  "kills": 0,
-                  "level": 10,
-                  "name": "Remoraid",
-                  "offensive": 2,
-                  "remaining": 100,
-                  "slug": "remoraid",
-                  "speciesId": 223,
-                  "types": [
-                    "WATER"
                   ]
                 },
                 {
@@ -1586,11 +1675,39 @@
                   "claimed": false,
                   "kills": 0,
                   "level": 10,
+                  "name": "Krabby",
+                  "offensive": 2,
+                  "remaining": 100,
+                  "slug": "krabby",
+                  "speciesId": 98,
+                  "types": [
+                    "WATER"
+                  ]
+                },
+                {
+                  "canClaim": false,
+                  "claimed": false,
+                  "kills": 0,
+                  "level": 10,
                   "name": "Horsea",
                   "offensive": 2,
                   "remaining": 100,
                   "slug": "horsea",
                   "speciesId": 116,
+                  "types": [
+                    "WATER"
+                  ]
+                },
+                {
+                  "canClaim": false,
+                  "claimed": false,
+                  "kills": 0,
+                  "level": 10,
+                  "name": "Remoraid",
+                  "offensive": 2,
+                  "remaining": 100,
+                  "slug": "remoraid",
+                  "speciesId": 223,
                   "types": [
                     "WATER"
                   ]
@@ -1629,14 +1746,14 @@
                   "claimed": false,
                   "kills": 0,
                   "level": 10,
-                  "name": "Swinub",
+                  "name": "Exeggcute",
                   "offensive": 2,
                   "remaining": 100,
-                  "slug": "swinub",
-                  "speciesId": 220,
+                  "slug": "exeggcute",
+                  "speciesId": 102,
                   "types": [
-                    "ICE",
-                    "GROUND"
+                    "GRASS",
+                    "PSYCHIC"
                   ]
                 },
                 {
@@ -1659,14 +1776,14 @@
                   "claimed": false,
                   "kills": 0,
                   "level": 10,
-                  "name": "Exeggcute",
+                  "name": "Swinub",
                   "offensive": 2,
                   "remaining": 100,
-                  "slug": "exeggcute",
-                  "speciesId": 102,
+                  "slug": "swinub",
+                  "speciesId": 220,
                   "types": [
-                    "GRASS",
-                    "PSYCHIC"
+                    "ICE",
+                    "GROUND"
                   ]
                 },
                 {
@@ -1688,20 +1805,6 @@
                   "claimed": false,
                   "kills": 0,
                   "level": 1,
-                  "name": "Poliwag",
-                  "offensive": 2,
-                  "remaining": 100,
-                  "slug": "poliwag",
-                  "speciesId": 60,
-                  "types": [
-                    "WATER"
-                  ]
-                },
-                {
-                  "canClaim": false,
-                  "claimed": false,
-                  "kills": 0,
-                  "level": 1,
                   "name": "Togepi",
                   "offensive": 2,
                   "remaining": 100,
@@ -1709,6 +1812,20 @@
                   "speciesId": 175,
                   "types": [
                     "FAIRY"
+                  ]
+                },
+                {
+                  "canClaim": false,
+                  "claimed": false,
+                  "kills": 0,
+                  "level": 1,
+                  "name": "Poliwag",
+                  "offensive": 2,
+                  "remaining": 100,
+                  "slug": "poliwag",
+                  "speciesId": 60,
+                  "types": [
+                    "WATER"
                   ]
                 },
                 {
@@ -1746,20 +1863,6 @@
                   "claimed": false,
                   "kills": 0,
                   "level": 30,
-                  "name": "Primeape",
-                  "offensive": 1,
-                  "remaining": 100,
-                  "slug": "primeape",
-                  "speciesId": 57,
-                  "types": [
-                    "FIGHTING"
-                  ]
-                },
-                {
-                  "canClaim": false,
-                  "claimed": false,
-                  "kills": 0,
-                  "level": 30,
                   "name": "Tyrogue",
                   "offensive": 1,
                   "remaining": 100,
@@ -1788,6 +1891,34 @@
                   "claimed": false,
                   "kills": 0,
                   "level": 30,
+                  "name": "Primeape",
+                  "offensive": 1,
+                  "remaining": 100,
+                  "slug": "primeape",
+                  "speciesId": 57,
+                  "types": [
+                    "FIGHTING"
+                  ]
+                },
+                {
+                  "canClaim": false,
+                  "claimed": false,
+                  "kills": 0,
+                  "level": 30,
+                  "name": "Dunsparce",
+                  "offensive": 1,
+                  "remaining": 100,
+                  "slug": "dunsparce",
+                  "speciesId": 206,
+                  "types": [
+                    "NORMAL"
+                  ]
+                },
+                {
+                  "canClaim": false,
+                  "claimed": false,
+                  "kills": 0,
+                  "level": 30,
                   "name": "Gloom",
                   "offensive": 1,
                   "remaining": 100,
@@ -1796,6 +1927,20 @@
                   "types": [
                     "GRASS",
                     "POISON"
+                  ]
+                },
+                {
+                  "canClaim": false,
+                  "claimed": false,
+                  "kills": 0,
+                  "level": 30,
+                  "name": "Dratini",
+                  "offensive": 1,
+                  "remaining": 100,
+                  "slug": "dratini",
+                  "speciesId": 147,
+                  "types": [
+                    "DRAGON"
                   ]
                 },
                 {
@@ -1818,34 +1963,6 @@
                   "claimed": false,
                   "kills": 0,
                   "level": 30,
-                  "name": "Teddiursa",
-                  "offensive": 1,
-                  "remaining": 100,
-                  "slug": "teddiursa",
-                  "speciesId": 216,
-                  "types": [
-                    "NORMAL"
-                  ]
-                },
-                {
-                  "canClaim": false,
-                  "claimed": false,
-                  "kills": 0,
-                  "level": 30,
-                  "name": "Dunsparce",
-                  "offensive": 1,
-                  "remaining": 100,
-                  "slug": "dunsparce",
-                  "speciesId": 206,
-                  "types": [
-                    "NORMAL"
-                  ]
-                },
-                {
-                  "canClaim": false,
-                  "claimed": false,
-                  "kills": 0,
-                  "level": 30,
                   "name": "Raticate",
                   "offensive": 1,
                   "remaining": 100,
@@ -1860,28 +1977,13 @@
                   "claimed": false,
                   "kills": 0,
                   "level": 30,
-                  "name": "Dratini",
+                  "name": "Teddiursa",
                   "offensive": 1,
                   "remaining": 100,
-                  "slug": "dratini",
-                  "speciesId": 147,
+                  "slug": "teddiursa",
+                  "speciesId": 216,
                   "types": [
-                    "DRAGON"
-                  ]
-                },
-                {
-                  "canClaim": false,
-                  "claimed": false,
-                  "kills": 0,
-                  "level": 30,
-                  "name": "Smoochum",
-                  "offensive": 1,
-                  "remaining": 100,
-                  "slug": "smoochum",
-                  "speciesId": 238,
-                  "types": [
-                    "ICE",
-                    "PSYCHIC"
+                    "NORMAL"
                   ]
                 },
                 {
@@ -1904,11 +2006,11 @@
                   "claimed": false,
                   "kills": 0,
                   "level": 30,
-                  "name": "Growlithe",
+                  "name": "Magby",
                   "offensive": 1,
                   "remaining": 100,
-                  "slug": "growlithe",
-                  "speciesId": 58,
+                  "slug": "magby",
+                  "speciesId": 240,
                   "types": [
                     "FIRE"
                   ]
@@ -1918,26 +2020,11 @@
                   "claimed": false,
                   "kills": 0,
                   "level": 30,
-                  "name": "Butterfree",
+                  "name": "Growlithe",
                   "offensive": 1,
                   "remaining": 100,
-                  "slug": "butterfree",
-                  "speciesId": 12,
-                  "types": [
-                    "BUG",
-                    "FLYING"
-                  ]
-                },
-                {
-                  "canClaim": false,
-                  "claimed": false,
-                  "kills": 0,
-                  "level": 30,
-                  "name": "Magby",
-                  "offensive": 1,
-                  "remaining": 100,
-                  "slug": "magby",
-                  "speciesId": 240,
+                  "slug": "growlithe",
+                  "speciesId": 58,
                   "types": [
                     "FIRE"
                   ]
@@ -1960,14 +2047,30 @@
                   "canClaim": false,
                   "claimed": false,
                   "kills": 0,
-                  "level": 20,
-                  "name": "Mareep",
+                  "level": 30,
+                  "name": "Smoochum",
                   "offensive": 1,
                   "remaining": 100,
-                  "slug": "mareep",
-                  "speciesId": 179,
+                  "slug": "smoochum",
+                  "speciesId": 238,
                   "types": [
-                    "ELECTRIC"
+                    "ICE",
+                    "PSYCHIC"
+                  ]
+                },
+                {
+                  "canClaim": false,
+                  "claimed": false,
+                  "kills": 0,
+                  "level": 30,
+                  "name": "Butterfree",
+                  "offensive": 1,
+                  "remaining": 100,
+                  "slug": "butterfree",
+                  "speciesId": 12,
+                  "types": [
+                    "BUG",
+                    "FLYING"
                   ]
                 },
                 {
@@ -1975,11 +2078,11 @@
                   "claimed": false,
                   "kills": 0,
                   "level": 20,
-                  "name": "Pichu",
+                  "name": "Mareep",
                   "offensive": 1,
                   "remaining": 100,
-                  "slug": "pichu",
-                  "speciesId": 172,
+                  "slug": "mareep",
+                  "speciesId": 179,
                   "types": [
                     "ELECTRIC"
                   ]
@@ -1996,6 +2099,20 @@
                   "speciesId": 66,
                   "types": [
                     "FIGHTING"
+                  ]
+                },
+                {
+                  "canClaim": false,
+                  "claimed": false,
+                  "kills": 0,
+                  "level": 20,
+                  "name": "Pichu",
+                  "offensive": 1,
+                  "remaining": 100,
+                  "slug": "pichu",
+                  "speciesId": 172,
+                  "types": [
+                    "ELECTRIC"
                   ]
                 },
                 {
@@ -2061,6 +2178,20 @@
                   "claimed": false,
                   "kills": 0,
                   "level": 20,
+                  "name": "Charmander",
+                  "offensive": 1,
+                  "remaining": 100,
+                  "slug": "charmander",
+                  "speciesId": 4,
+                  "types": [
+                    "FIRE"
+                  ]
+                },
+                {
+                  "canClaim": false,
+                  "claimed": false,
+                  "kills": 0,
+                  "level": 20,
                   "name": "Vulpix",
                   "offensive": 1,
                   "remaining": 100,
@@ -2083,20 +2214,6 @@
                   "types": [
                     "NORMAL",
                     "FLYING"
-                  ]
-                },
-                {
-                  "canClaim": false,
-                  "claimed": false,
-                  "kills": 0,
-                  "level": 20,
-                  "name": "Charmander",
-                  "offensive": 1,
-                  "remaining": 100,
-                  "slug": "charmander",
-                  "speciesId": 4,
-                  "types": [
-                    "FIRE"
                   ]
                 },
                 {
@@ -2133,20 +2250,6 @@
                   "claimed": false,
                   "kills": 0,
                   "level": 10,
-                  "name": "Voltorb",
-                  "offensive": 1,
-                  "remaining": 100,
-                  "slug": "voltorb",
-                  "speciesId": 100,
-                  "types": [
-                    "ELECTRIC"
-                  ]
-                },
-                {
-                  "canClaim": false,
-                  "claimed": false,
-                  "kills": 0,
-                  "level": 10,
                   "name": "Mankey",
                   "offensive": 1,
                   "remaining": 100,
@@ -2154,6 +2257,20 @@
                   "speciesId": 56,
                   "types": [
                     "FIGHTING"
+                  ]
+                },
+                {
+                  "canClaim": false,
+                  "claimed": false,
+                  "kills": 0,
+                  "level": 10,
+                  "name": "Voltorb",
+                  "offensive": 1,
+                  "remaining": 100,
+                  "slug": "voltorb",
+                  "speciesId": 100,
+                  "types": [
+                    "ELECTRIC"
                   ]
                 },
                 {
@@ -2204,6 +2321,34 @@
                   "claimed": false,
                   "kills": 0,
                   "level": 10,
+                  "name": "Sentret",
+                  "offensive": 1,
+                  "remaining": 100,
+                  "slug": "sentret",
+                  "speciesId": 161,
+                  "types": [
+                    "NORMAL"
+                  ]
+                },
+                {
+                  "canClaim": false,
+                  "claimed": false,
+                  "kills": 0,
+                  "level": 10,
+                  "name": "Pineco",
+                  "offensive": 1,
+                  "remaining": 100,
+                  "slug": "pineco",
+                  "speciesId": 204,
+                  "types": [
+                    "BUG"
+                  ]
+                },
+                {
+                  "canClaim": false,
+                  "claimed": false,
+                  "kills": 0,
+                  "level": 10,
                   "name": "Metapod",
                   "offensive": 1,
                   "remaining": 100,
@@ -2233,27 +2378,14 @@
                   "claimed": false,
                   "kills": 0,
                   "level": 10,
-                  "name": "Pineco",
+                  "name": "Ledyba",
                   "offensive": 1,
                   "remaining": 100,
-                  "slug": "pineco",
-                  "speciesId": 204,
+                  "slug": "ledyba",
+                  "speciesId": 165,
                   "types": [
-                    "BUG"
-                  ]
-                },
-                {
-                  "canClaim": false,
-                  "claimed": false,
-                  "kills": 0,
-                  "level": 10,
-                  "name": "Sentret",
-                  "offensive": 1,
-                  "remaining": 100,
-                  "slug": "sentret",
-                  "speciesId": 161,
-                  "types": [
-                    "NORMAL"
+                    "BUG",
+                    "FLYING"
                   ]
                 },
                 {
@@ -2283,21 +2415,6 @@
                   "speciesId": 63,
                   "types": [
                     "PSYCHIC"
-                  ]
-                },
-                {
-                  "canClaim": false,
-                  "claimed": false,
-                  "kills": 0,
-                  "level": 10,
-                  "name": "Ledyba",
-                  "offensive": 1,
-                  "remaining": 100,
-                  "slug": "ledyba",
-                  "speciesId": 165,
-                  "types": [
-                    "BUG",
-                    "FLYING"
                   ]
                 },
                 {
@@ -2437,6 +2554,64 @@
                   "claimed": false,
                   "kills": 0,
                   "level": 10,
+                  "name": "Ekans",
+                  "offensive": 0.5,
+                  "remaining": 100,
+                  "slug": "ekans",
+                  "speciesId": 23,
+                  "types": [
+                    "POISON"
+                  ]
+                },
+                {
+                  "canClaim": false,
+                  "claimed": false,
+                  "kills": 0,
+                  "level": 10,
+                  "name": "Nidoran Female",
+                  "offensive": 0.5,
+                  "remaining": 100,
+                  "slug": "nidoranfe",
+                  "speciesId": 29,
+                  "types": [
+                    "POISON"
+                  ]
+                },
+                {
+                  "canClaim": false,
+                  "claimed": false,
+                  "kills": 0,
+                  "level": 10,
+                  "name": "Magnemite",
+                  "offensive": 0.5,
+                  "remaining": 100,
+                  "slug": "magnemite",
+                  "speciesId": 81,
+                  "types": [
+                    "ELECTRIC",
+                    "STEEL"
+                  ]
+                },
+                {
+                  "canClaim": false,
+                  "claimed": false,
+                  "kills": 0,
+                  "level": 10,
+                  "name": "Spinarak",
+                  "offensive": 0.5,
+                  "remaining": 100,
+                  "slug": "spinarak",
+                  "speciesId": 167,
+                  "types": [
+                    "BUG",
+                    "POISON"
+                  ]
+                },
+                {
+                  "canClaim": false,
+                  "claimed": false,
+                  "kills": 0,
+                  "level": 10,
                   "name": "Koffing",
                   "offensive": 0.5,
                   "remaining": 100,
@@ -2466,49 +2641,6 @@
                   "claimed": false,
                   "kills": 0,
                   "level": 10,
-                  "name": "Magnemite",
-                  "offensive": 0.5,
-                  "remaining": 100,
-                  "slug": "magnemite",
-                  "speciesId": 81,
-                  "types": [
-                    "ELECTRIC",
-                    "STEEL"
-                  ]
-                },
-                {
-                  "canClaim": false,
-                  "claimed": false,
-                  "kills": 0,
-                  "level": 10,
-                  "name": "Grimer",
-                  "offensive": 0.5,
-                  "remaining": 100,
-                  "slug": "grimer",
-                  "speciesId": 88,
-                  "types": [
-                    "POISON"
-                  ]
-                },
-                {
-                  "canClaim": false,
-                  "claimed": false,
-                  "kills": 0,
-                  "level": 10,
-                  "name": "Ekans",
-                  "offensive": 0.5,
-                  "remaining": 100,
-                  "slug": "ekans",
-                  "speciesId": 23,
-                  "types": [
-                    "POISON"
-                  ]
-                },
-                {
-                  "canClaim": false,
-                  "claimed": false,
-                  "kills": 0,
-                  "level": 10,
                   "name": "Nidoran Male",
                   "offensive": 0.5,
                   "remaining": 100,
@@ -2523,27 +2655,12 @@
                   "claimed": false,
                   "kills": 0,
                   "level": 10,
-                  "name": "Nidoran Female",
+                  "name": "Grimer",
                   "offensive": 0.5,
                   "remaining": 100,
-                  "slug": "nidoranfe",
-                  "speciesId": 29,
+                  "slug": "grimer",
+                  "speciesId": 88,
                   "types": [
-                    "POISON"
-                  ]
-                },
-                {
-                  "canClaim": false,
-                  "claimed": false,
-                  "kills": 0,
-                  "level": 10,
-                  "name": "Spinarak",
-                  "offensive": 0.5,
-                  "remaining": 100,
-                  "slug": "spinarak",
-                  "speciesId": 167,
-                  "types": [
-                    "BUG",
                     "POISON"
                   ]
                 },
@@ -2673,24 +2790,6 @@
                   "claimed": false,
                   "kills": 0,
                   "level": 20,
-                  "name": "Wooper",
-                  "offensive": 4,
-                  "remaining": 100,
-                  "risk": 1,
-                  "score": 58850,
-                  "slug": "wooper",
-                  "speciesId": 194,
-                  "targetKills": 100,
-                  "types": [
-                    "WATER",
-                    "GROUND"
-                  ]
-                },
-                {
-                  "canClaim": false,
-                  "claimed": false,
-                  "kills": 0,
-                  "level": 20,
                   "name": "Kabuto",
                   "offensive": 4,
                   "remaining": 100,
@@ -2702,6 +2801,24 @@
                   "types": [
                     "ROCK",
                     "WATER"
+                  ]
+                },
+                {
+                  "canClaim": false,
+                  "claimed": false,
+                  "kills": 0,
+                  "level": 20,
+                  "name": "Wooper",
+                  "offensive": 4,
+                  "remaining": 100,
+                  "risk": 1,
+                  "score": 58850,
+                  "slug": "wooper",
+                  "speciesId": 194,
+                  "targetKills": 100,
+                  "types": [
+                    "WATER",
+                    "GROUND"
                   ]
                 },
                 {
@@ -2726,23 +2843,6 @@
                   "claimed": false,
                   "kills": 0,
                   "level": 30,
-                  "name": "Snubbull",
-                  "offensive": 2,
-                  "remaining": 100,
-                  "risk": 0.5,
-                  "score": 25425,
-                  "slug": "snubbull",
-                  "speciesId": 209,
-                  "targetKills": 100,
-                  "types": [
-                    "FAIRY"
-                  ]
-                },
-                {
-                  "canClaim": false,
-                  "claimed": false,
-                  "kills": 0,
-                  "level": 30,
                   "name": "Poliwhirl",
                   "offensive": 2,
                   "remaining": 100,
@@ -2753,6 +2853,23 @@
                   "targetKills": 100,
                   "types": [
                     "WATER"
+                  ]
+                },
+                {
+                  "canClaim": false,
+                  "claimed": false,
+                  "kills": 0,
+                  "level": 30,
+                  "name": "Snubbull",
+                  "offensive": 2,
+                  "remaining": 100,
+                  "risk": 0.5,
+                  "score": 25425,
+                  "slug": "snubbull",
+                  "speciesId": 209,
+                  "targetKills": 100,
+                  "types": [
+                    "FAIRY"
                   ]
                 }
               ],
@@ -2766,7 +2883,7 @@
               "trainerName": "Treinador #1",
               "trainerXP": 434510
             },
-            "gold": -5,
+            "gold": 59000,
             "hp": 564,
             "id": "acc-1",
             "kills": 1,
@@ -2790,13 +2907,13 @@
             "maxMana": 0,
             "name": "Treinador #1",
             "status": "idle (fora de caça)",
-            "updatedAt": 1792259160377
+            "updatedAt": 1792259281494
           }
         ],
-        "goroutines": 11,
-        "ramAllocMB": 2.914215087890625,
+        "goroutines": 10,
+        "ramAllocMB": 2.6654052734375,
         "ramSysMB": 17.59986114501953,
-        "uptime": "16h58m16s"
+        "uptime": "17h0m16s"
       }
     },
     "sigma": {
@@ -2818,25 +2935,25 @@
             "bestiaryTargetKills": 120,
             "bestiaryTotalKills": 27657,
             "captures": 0,
-            "connectedAt": 1792259158025,
+            "connectedAt": 1792259252914,
             "diamonds": 0,
             "gold": 2513782,
             "goldFound": 158445,
             "hp": 940,
             "hpPercent": 100,
             "id": "acc1",
-            "inGame": true,
+            "inGame": false,
             "inHunt": false,
             "kills": 0,
             "killsPerMin": 0,
-            "lastAction": "Conectado. Aguardando mundo...",
-            "lastError": "sua sessão foi encerrada porque você entrou em outro lugar",
-            "leaderHp": 0,
-            "leaderLevel": 47,
-            "leaderMaxHp": 768,
-            "leaderName": "Bellsprout",
+            "lastAction": "Curado no Centro Pokémon",
+            "lastError": "conexão websocket encerrada",
+            "leaderHp": 1872,
+            "leaderLevel": 91,
+            "leaderMaxHp": 1872,
+            "leaderName": "Bulbasaur",
             "leaderShiny": false,
-            "leaderSpeciesId": 69,
+            "leaderSpeciesId": 1,
             "level": 92,
             "mapName": "Na Cidade / PokéCenter",
             "mapSlug": "",
@@ -2845,7 +2962,7 @@
             "strategy": "bestiary",
             "trainerName": "Treinador #1",
             "trainerXpGained": 1345012,
-            "updatedAt": 1792259160304,
+            "updatedAt": 1792259281626,
             "wildHp": 0,
             "wildLevel": 0,
             "wildMaxHp": 0,
@@ -2865,45 +2982,45 @@
             "bestiaryNextPoints": 9790,
             "bestiaryPoints": 5175,
             "bestiaryTargetKills": 120,
-            "bestiaryTotalKills": 68743,
+            "bestiaryTotalKills": 68759,
             "captures": 0,
-            "connectedAt": 1792259117481,
+            "connectedAt": 1792259253517,
             "diamonds": 0,
-            "gold": 6210331,
-            "goldFound": 1045034,
+            "gold": 6212092,
+            "goldFound": 1046795,
             "hp": 1600,
             "hpPercent": 100,
             "id": "acc2",
             "inGame": false,
             "inHunt": true,
-            "kills": 40,
-            "killsPerMin": 29.629629629629626,
-            "lastAction": "Derrotou Pinsir (+0 XP, +0 Ouro)",
+            "kills": 1,
+            "killsPerMin": 1.889763779527559,
+            "lastAction": "Derrotou Arcanine (+0 XP, +0 Ouro)",
             "lastError": "conexão websocket encerrada",
-            "leaderHp": 78,
-            "leaderLevel": 147,
-            "leaderMaxHp": 2712,
-            "leaderName": "Charmander",
+            "leaderHp": 463,
+            "leaderLevel": 78,
+            "leaderMaxHp": 1344,
+            "leaderName": "Poliwag",
             "leaderShiny": false,
-            "leaderSpeciesId": 4,
+            "leaderSpeciesId": 60,
             "level": 158,
-            "mapName": "Pinsir",
-            "mapSlug": "pinsir",
+            "mapName": "Arcanine",
+            "mapSlug": "arcanine",
             "maxHp": 1600,
             "shinies": 0,
             "strategy": "bestiary",
             "trainerName": "Treinador #2",
-            "trainerXpGained": 60725,
-            "updatedAt": 1792259160873,
-            "wildHp": 1832,
+            "trainerXpGained": 1361,
+            "updatedAt": 1792259280851,
+            "wildHp": 1218,
             "wildLevel": 100,
-            "wildMaxHp": 5132,
+            "wildMaxHp": 5498,
             "wildShiny": false,
-            "wildTarget": "Pinsir",
-            "xp": 63435864,
-            "xpIntoLevel": 149164,
-            "xpPerHour": 2698888.888888889,
-            "xpPercent": 12.179635829182658,
+            "wildTarget": "Arcanine",
+            "xp": 63458164,
+            "xpIntoLevel": 171464,
+            "xpPerHour": 154318.11023622047,
+            "xpPercent": 14.00048991589777,
             "xpToNextLevel": 1224700
           },
           {
@@ -2914,50 +3031,50 @@
             "bestiaryNextPoints": 9790,
             "bestiaryPoints": 5745,
             "bestiaryTargetKills": 120,
-            "bestiaryTotalKills": 128768,
+            "bestiaryTotalKills": 128793,
             "captures": 0,
-            "connectedAt": 1792259161121,
+            "connectedAt": 1792259252097,
             "diamonds": 0,
-            "gold": 12447098,
-            "goldFound": 2435440,
+            "gold": 12448973,
+            "goldFound": 2437315,
             "hp": 1870,
             "hpPercent": 100,
             "id": "acc3",
-            "inGame": true,
+            "inGame": false,
             "inHunt": true,
-            "kills": 198,
-            "killsPerMin": 26.4,
-            "lastAction": "Conectado. Aguardando mundo...",
-            "lastError": "sua sessão foi encerrada porque você entrou em outro lugar",
-            "leaderHp": 1392,
-            "leaderLevel": 101,
-            "leaderMaxHp": 1392,
-            "leaderName": "Geodude",
+            "kills": 0,
+            "killsPerMin": 0,
+            "lastAction": "Viajando para Electabuzz (🏆 [Bestiário Completo!] Electabuzz (Alvo: Electabuzz) │ Vantagem: 2.0x (Risco: 0.2x) │ XP: 349)...",
+            "lastError": "conexão websocket encerrada",
+            "leaderHp": 976,
+            "leaderLevel": 97,
+            "leaderMaxHp": 1824,
+            "leaderName": "Bellsprout",
             "leaderShiny": false,
-            "leaderSpeciesId": 74,
+            "leaderSpeciesId": 69,
             "level": 185,
-            "mapName": "Arcanine",
-            "mapSlug": "arcanine",
+            "mapName": "Electabuzz",
+            "mapSlug": "electabuzz",
             "maxHp": 1870,
             "shinies": 0,
             "strategy": "bestiary",
             "trainerName": "Treinador #3",
-            "trainerXpGained": 282572,
-            "updatedAt": 1792259160429,
-            "wildHp": 3585,
+            "trainerXpGained": 35484644,
+            "updatedAt": 1792259281280,
+            "wildHp": 1913,
             "wildLevel": 100,
-            "wildMaxHp": 5498,
+            "wildMaxHp": 6240,
             "wildShiny": false,
-            "wildTarget": "Arcanine",
-            "xp": 146566118,
-            "xpIntoLevel": 1756743,
-            "xpPerHour": 2260576,
-            "xpPercent": 23.236489879934293,
+            "wildTarget": "Electabuzz",
+            "xp": 146603284,
+            "xpIntoLevel": 1793909,
+            "xpPerHour": 0,
+            "xpPercent": 23.728085624375932,
             "xpToNextLevel": 7560277
           }
         ],
-        "ramMB": 3.1448287963867188,
-        "serverTime": 1792259161197
+        "ramMB": 1.6895523071289062,
+        "serverTime": 1792259281653
       }
     },
     "tibidle": {
@@ -4271,7 +4388,7 @@
             "bestiaryTarget": "Dwarven Mines",
             "bestiaryTotal": 209,
             "currentHunt": "Dwarven Mines",
-            "durationSec": 21412,
+            "durationSec": 21551,
             "expPerHour": 14002,
             "gold": 0,
             "goldPerHour": 0,
@@ -4302,15 +4419,15 @@
             ],
             "status": "hunting",
             "targetHunt": "Dwarven Mines",
-            "updatedAt": 1792259141579,
+            "updatedAt": 1792259281534,
             "vocation": "KNIGHT",
             "xp": ""
           }
         ],
         "goroutines": 11,
-        "ramAllocMB": 1.4522628784179688,
+        "ramAllocMB": 1.271942138671875,
         "ramSysMB": 17.59986114501953,
-        "uptime": "64h43m36s"
+        "uptime": "64h45m37s"
       }
     },
     "twitchminer": {
@@ -4438,18 +4555,18 @@
     }
   },
   "summary": {
-    "activeBots": 9,
+    "activeBots": 10,
     "totalBots": 10
   },
-  "timestamp": "2026-10-17T17:46:05Z",
+  "timestamp": "2026-10-17T17:48:01Z",
   "vps": {
-    "load": "0.69 1.12 1.01",
-    "ramAvailableMb": 581,
+    "load": "0.20 0.82 0.91",
+    "ramAvailableMb": 587,
     "ramPercent": 38,
     "ramTotalMb": 951,
-    "ramUsedMb": 370,
+    "ramUsedMb": 364,
     "swapTotalMb": 1023,
-    "swapUsedMb": 399,
-    "uptime": "up 1 week, 4 days, 16 hours, 32 minutes"
+    "swapUsedMb": 397,
+    "uptime": "up 1 week, 4 days, 16 hours, 34 minutes"
   }
 }
