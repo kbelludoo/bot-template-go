@@ -668,7 +668,7 @@ func syncHub() {
 		"timestamp": time.Now().UTC().Format(time.RFC3339),
 		"vps":       vpsMetrics,
 		"summary": map[string]interface{}{
-			"totalBots":  9,
+			"totalBots":  len(botDefs),
 			"activeBots": activeBotsCount,
 		},
 		"bots": botsPayload,
