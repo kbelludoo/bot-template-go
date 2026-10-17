@@ -169,8 +169,9 @@ type AgentResponse struct {
 }
 
 var (
-	httpClient = &http.Client{Timeout: 45 * time.Second}
-	quickClient = &http.Client{Timeout: 3 * time.Second}
+	httpClient  = &http.Client{Timeout: 30 * time.Second}
+	agentClient = &http.Client{Timeout: 120 * time.Second}
+	quickClient = &http.Client{Timeout: 5 * time.Second}
 )
 
 func sendTelegramMessage(chatID int64, text string, parseMode string) error {
@@ -249,7 +250,7 @@ func getUpdates(offset int, timeoutSec int) ([]Update, error) {
 
 func askGoAgent(prompt string) string {
 	reqData, _ := json.Marshal(AgentRequest{Message: prompt})
-	resp, err := httpClient.Post(AgentURL, "application/json", bytes.NewReader(reqData))
+	resp, err := agentClient.Post(AgentURL, "application/json", bytes.NewReader(reqData))
 	if err != nil {
 		return fmt.Sprintf("[-] Erro ao chamar Agent Go (:8888): %v", err)
 	}
