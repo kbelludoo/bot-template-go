@@ -15,6 +15,7 @@ Você está construindo um bot autônomo nativo em **Go (Golang)** de altíssima
 4. **Isolamento de Portas Web:** Cada bot tem sua própria porta no dashboard embutido (ex: Huntera usa 3000, Tibidle usa 3001, Sigma usa 3002). Nunca crie conflito de portas.
 5. **Segurança Absoluta de Segredos (Zero Hardcoding):** NUNCA insira tokens de API (Telegram, Discord, Twitch OAuth), senhas, cookies, chaves SSH (`*.key`) ou IPs públicos da VPS diretamente em arquivos `.go`, `.json`, `.sh`, `.bat` ou scripts que serão commitados. TODAS as credenciais devem ser obrigatoriamente carregadas via variáveis de ambiente (`os.Getenv`) ou arquivos locais no `.gitignore` (`.secrets.json`, `.env`, `accounts.json`). Commitar tokens gera vazamento público imediato!
 6. **Modo Stealth & Anti-Ban (Zero Nicks Públicos):** NUNCA exponha o nome real do personagem/treinador/streamer nos dashboards web do GitHub Pages (`docs/index.html` ou `status.json`). Sempre exiba apenas a classe/vocação, índice anônimo (ex: `Conta #1`, `Treinador #1`, `Guerreiro`, `Arqueiro`) e estatísticas técnicas (Level, EXP/h, Kills, Gold, Mapa). Transmitir nicks reais gera denúncias e banimentos manuais imediatos!
+7. **Completude Total de Tarefas (Zero Ação Manual Restante):** Ao desenvolver um bot em Go para um jogo novo, a IA DEVE obrigatoriamente estudar e dissecar TODO o jogo (DevTools Network, pacotes de rede, JS bundle, wiki, sistemas de combate, craft, missões diárias, arenas, talentos, mercado e inventário). O bot DEVE ser capaz de executar 100% de todas as tarefas existentes do jogo de forma totalmente autônoma. A IA SÓ PODE declarar que o bot está "terminado" após implementar e validar TODAS as tarefas do jogo, sem deixar nenhuma ação manual pendente para o usuário.
 
 ---
 
@@ -182,6 +183,30 @@ Quando o jogo de navegador exigir resolução periódica de desafios Cloudflare 
   4. **Emissão Local pela VPS (Ticket 100% Válido):** O bot recebe o token pelo canal `b.turnstileChan` e a **própria VPS** executa o POST do `/auth/world-ticket`. Como o IP de origem e o cookie coincidem exatamente com a VPS, o ticket gerado passa liso na conexão WebSocket do jogo sem qualquer erro 4401.
   5. **Gatilho Autônomo 24/7:** Ao receber `captcha_required` ou ticket expirado, o bot na VPS dispara o workflow automaticamente via CLI nativa (`gh workflow run ticket-relay.yml -R <repo> -f mode=push -f push_url=<tunnel>`) usando os helpers do `pkg/auth/relay.go`.
   6. **Zero Carga na VPS e Zero PC Ligado:** A VPS de 1 vCPU / 1 GB RAM nunca precisa rodar navegadores pesados e o PC do usuário pode permanecer desligado permanentemente (aposentando ferramentas como `ticketd.exe`).
+
+### 12. Regra da Completude Absoluta de Gameplay (100% das Tarefas do Jogo Automatizadas)
+**A IA NUNCA PODE declarar que terminou um bot se houver qualquer tarefa existente no jogo que ainda precise de ação manual do usuário.**
+
+Antes de finalizar qualquer projeto de bot para um jogo novo, a IA deve passar por este checklist rigoroso:
+1. **Fase de Mapeamento Total (Engenharia Reversa Completa):**
+   - Ler exaustivamente o bundle JS/Wasm, inspecionar 100% das rotas de rede (WebSocket/HTTP/REST/tRPC) e consultar wikis, fóruns e guias de jogadores para mapear TODAS as mecânicas e sistemas existentes.
+2. **Ciclo de Caça & Farm Avançado:**
+   - Combate em tempo real com rotação da melhor hunt para EXP/h ou Gold/h.
+   - Farm inteligente de Bestiário, Pokédex, tarefas de abates e metas de conquistas (rotacionando alvos automaticamente até 100% de conclusão).
+3. **Manutenção e Progressão Autônoma do Personagem:**
+   - Auto-Heal e rotação ótima de magias de ataque em área (AoE) e cura.
+   - Distribuição automática de pontos de atributos (força, inteligência, destreza) e nós de árvores de talentos ao subir de nível.
+   - Auto-Equip de equipamentos superiores e venda automática de lixo (*Auto-Sell*).
+   - Recarga de poções, munições e recarga/gestão de stamina (entrando em modo treino/descanso quando necessário).
+4. **Tarefas Diárias, Recompensas e Eventos:**
+   - Coleta de recompensas diárias (*Daily Rewards*), bônus de login contínuo e baús gratuitos por tempo.
+   - Conclusão automática de missões diárias (*Daily Quests*), passaportes de batalha ou tarefas do mural.
+   - Entrada em filas diárias de Arena PvP, Bosses, Raids e Dungeons.
+5. **Economia e Finanças:**
+   - Auto-compra de melhorias essenciais (como expansão de inventário ou slots extras de party ao acumular ouro).
+   - Venda no marketplace interno / leilão (*Auto-Auction*) e resgate de lucros.
+6. **Definição Inegociável de "Concluído" (Definition of Done):**
+   - O status **CONCLUÍDO** só pode ser emitido quando o bot rodar 24/7 sem que o jogador humano precise abrir o jogo para executar nenhuma tarefa, botão ou missão pendente. Se sobrar qualquer ação manual, o bot NÃO está pronto.
 
 ---
 
