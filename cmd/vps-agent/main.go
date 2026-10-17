@@ -471,6 +471,7 @@ func syncHub() {
 		"twitchminer":   {"Twitch Channel Points Miner", "Twitch.tv", "Go Native (Zero-Video WS)", 3010, "https://kbelludoo.github.io/twitch-miner-go/", nil},
 		"baiak":         {"Baiak Idle Multi-Account", "Baiak Idle", "Go Native Engine", 8090, "https://kbelludoo.github.io/baiak-idle-bot/", nil},
 		"lolidle":       {"LoL Idle Multi-Bot", "LoL Idle", "Go Native Engine (Runeterra 4x Party)", 3011, "https://kbelludoo.github.io/lolidle-bot/", nil},
+		"pokelegacy":    {"PokeLegacy Online Multi-Bot", "PokeLegacy Online", "Go Native Engine (Party 5x)", 3005, "https://kbelludoo.github.io/pokelegacy-bot/", nil},
 	}
 
 	var wg sync.WaitGroup
@@ -643,6 +644,30 @@ func syncHub() {
 								am["id"] = fmt.Sprintf("acc-%d", i+1)
 								delete(am, "bindIp")
 								delete(am, "outboundIp")
+								if logs, ok := am["logs"].([]interface{}); ok {
+									safeLogs := make([]interface{}, len(logs))
+									for li, l := range logs {
+										if s, ok := l.(string); ok {
+											safeLogs[li] = emailParenRegex.ReplaceAllString(nickRegex.ReplaceAllString(s, label), "(Sessão Autenticada)")
+										} else {
+											safeLogs[li] = l
+										}
+									}
+									am["logs"] = safeLogs
+								}
+							}
+						}
+					}
+				case "pokelegacy":
+					if accs, ok := stMap["accounts"].([]interface{}); ok {
+						for i, a := range accs {
+							if am, ok := a.(map[string]interface{}); ok {
+								label := fmt.Sprintf("Treinador #%d", i+1)
+								am["name"] = label
+								am["id"] = fmt.Sprintf("acc-%d", i+1)
+								delete(am, "bindIp")
+								delete(am, "outboundIp")
+								delete(am, "extra")
 								if logs, ok := am["logs"].([]interface{}); ok {
 									safeLogs := make([]interface{}, len(logs))
 									for li, l := range logs {
