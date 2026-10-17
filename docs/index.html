@@ -2077,7 +2077,8 @@
         if (lolAccounts.length > 0) {
           let lolTotalGold = 0;
           let lolTotalKills = 0;
-          const vocIcons = { taric: '🛡️', lux: '✨', ezreal: '🏹', yasuo: '🌪️' };
+          let hasAuthError = false;
+          const vocIcons = { taric: '🛡️', lux: '✨', ezreal: '🏹', yasuo: '🌪️', darius: '🪓' };
           
           lolidleAccList.innerHTML = lolAccounts.map((acc, idx) => {
             lolTotalGold += (acc.gold || 0);
@@ -2085,29 +2086,53 @@
             const voc = (acc.vocation || '').toLowerCase();
             const icon = vocIcons[voc] || '⚔️';
             const name = acc.name || `Campeão #${idx + 1}`;
+            const isExpired = acc.status && (acc.status.includes('401') || acc.status.includes('expirada') || acc.status.includes('Token ausente'));
+            if (isExpired) hasAuthError = true;
+
+            const lvlDisplay = isExpired && (!acc.level || acc.level === 0) 
+              ? `<span class="acc-level" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.4); font-size: 0.68rem;">⚠️ SESSÃO EXPIRADA</span>`
+              : `<span class="acc-level" style="color: #c8aa6e; border-color: rgba(200, 170, 110, 0.4);">Nv. ${acc.level || 1}</span>`;
+
             checkLevelUp('LoL Idle', `${icon} ${name}`, acc.level, 'cardLolidle');
 
             return `
               <div class="acc-item">
                 <div class="acc-item-header">
-                  <span class="acc-name">${icon} ${name} (${voc.toUpperCase()})</span>
-                  <span class="acc-level" style="color: #c8aa6e; border-color: rgba(200, 170, 110, 0.4);">Nv. ${acc.level || 1}</span>
+                  <span class="acc-name">${icon} ${name} ${voc ? `(${voc.toUpperCase()})` : ''}</span>
+                  ${lvlDisplay}
                 </div>
-                <div class="stat-row">
-                  <span>💰 Ouro: ${(acc.gold || 0).toLocaleString('pt-BR')} gp</span>
-                  <span style="color: #4ade80;">⚔️ ${(acc.kills || 0).toLocaleString('pt-BR')} abates</span>
-                </div>
-                <div class="stat-row" style="margin-top: 2px;">
-                  <span style="color: #0ac8b9;">⚡ ${Math.round(acc.expPerHour || 0).toLocaleString('pt-BR')} EXP/h</span>
-                  <span style="color: #38bdf8;">🗺️ Runeterra (Party)</span>
-                </div>
+                ${isExpired ? `
+                  <div class="stat-row" style="color: #f87171; font-size: 0.72rem; margin-top: 3px;">
+                    <span>⚠️ Token expirou no servidor. Renove via F12.</span>
+                  </div>
+                ` : `
+                  <div class="stat-row">
+                    <span>💰 Ouro: ${(acc.gold || 0).toLocaleString('pt-BR')} gp</span>
+                    <span style="color: #4ade80;">⚔️ ${(acc.kills || 0).toLocaleString('pt-BR')} abates</span>
+                  </div>
+                  <div class="stat-row" style="margin-top: 2px;">
+                    <span style="color: #0ac8b9;">⚡ ${Math.round(acc.expPerHour || 0).toLocaleString('pt-BR')} EXP/h</span>
+                    <span style="color: #38bdf8;">🗺️ Runeterra (Party)</span>
+                  </div>
+                `}
               </div>
             `;
           }).join('');
 
           const ramLol = lolStatus.ramAllocMB ? Number(lolStatus.ramAllocMB).toFixed(1) + ' MB' : '~2.2 MB';
-          document.getElementById('lolidleSummary').textContent = `Party 4x • ${lolTotalKills.toLocaleString('pt-BR')} abates • RAM: ${ramLol}`;
-          document.getElementById('lolidleBadge').textContent = '⚔️ RUNETERRA (+45% EXP)';
+          if (hasAuthError) {
+            document.getElementById('lolidleBadge').textContent = '⚠️ SESSÃO EXPIRADA';
+            document.getElementById('lolidleBadge').style.background = 'rgba(239, 68, 68, 0.15)';
+            document.getElementById('lolidleBadge').style.color = '#ef4444';
+            document.getElementById('lolidleBadge').style.borderColor = '#ef4444';
+            document.getElementById('lolidleSummary').textContent = `Requer novo Bearer token • RAM: ${ramLol}`;
+          } else {
+            document.getElementById('lolidleBadge').textContent = '⚔️ RUNETERRA (+45% EXP)';
+            document.getElementById('lolidleBadge').style.background = 'rgba(10, 200, 185, 0.15)';
+            document.getElementById('lolidleBadge').style.color = '#0ac8b9';
+            document.getElementById('lolidleBadge').style.borderColor = '#0ac8b9';
+            document.getElementById('lolidleSummary').textContent = `Party 4x • ${lolTotalKills.toLocaleString('pt-BR')} abates • RAM: ${ramLol}`;
+          }
         } else {
           lolidleAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados da party...</div>`;
         }
