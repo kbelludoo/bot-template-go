@@ -493,7 +493,25 @@ func syncHub() {
 			mu.Lock()
 			d.status = st
 			botDefs[key] = d
-			if st != nil {
+			isActive := false
+			if stMap, ok := st.(map[string]interface{}); ok {
+				if errVal, hasErr := stMap["error"]; hasErr && errVal != nil {
+					isActive = false
+				} else if accs, ok := stMap["accounts"].([]interface{}); ok {
+					isActive = len(accs) > 0
+				} else if bots, ok := stMap["bots"].(map[string]interface{}); ok {
+					isActive = len(bots) > 0
+				} else if statuses, ok := stMap["statuses"].(map[string]interface{}); ok {
+					isActive = len(statuses) > 0
+				} else if streams, ok := stMap["totalStreams"].(float64); ok {
+					isActive = streams > 0
+				} else if online, ok := stMap["online"].(bool); ok {
+					isActive = online
+				} else {
+					isActive = true
+				}
+			}
+			if isActive {
 				activeBotsCount++
 			}
 			mu.Unlock()

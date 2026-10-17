@@ -1374,7 +1374,7 @@
               <h3 style="color: #c8aa6e;">⚔️ LoL Idle Multi-Bot</h3>
               <span class="bot-port" style="color: #0ac8b9; background: rgba(10, 200, 185, 0.12); border: 1px solid rgba(10, 200, 185, 0.25);">PORTA 3011 • RUNETERRA 4X PARTY</span>
             </div>
-            <span class="badge-status badge-online" id="lolidleBadge" style="background: rgba(10, 200, 185, 0.15); color: #0ac8b9; border-color: #0ac8b9;">ONLINE</span>
+            <span class="badge-status" id="lolidleBadge" style="background: rgba(148, 163, 184, 0.15); color: #94a3b8; border-color: #94a3b8;">—</span>
           </div>
 
           <div class="acc-list" id="lolidleAccList">
@@ -2206,7 +2206,25 @@
             document.getElementById('lolidleSummary').textContent = `Party 4x • ${lolTotalKills.toLocaleString('pt-BR')} abates • RAM: ${ramLol}`;
           }
         } else {
-          lolidleAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados da party...</div>`;
+          const isOffline = !lolidle.status || lolidle.status.online === false;
+          const badge = document.getElementById('lolidleBadge');
+          const summary = document.getElementById('lolidleSummary');
+          if (isOffline) {
+            badge.textContent = 'OFFLINE';
+            badge.style.background = 'rgba(239, 68, 68, 0.15)';
+            badge.style.color = '#ef4444';
+            badge.style.borderColor = '#ef4444';
+            lolidleAccList.innerHTML = `<div style="color: var(--text-muted); font-size: 0.8rem;">Serviço offline / desativado</div>`;
+            summary.textContent = 'Desativado na VPS';
+          } else {
+            badge.textContent = '⏸️ DESATIVADO';
+            badge.style.background = 'rgba(148, 163, 184, 0.15)';
+            badge.style.color = '#94a3b8';
+            badge.style.borderColor = '#94a3b8';
+            lolidleAccList.innerHTML = `<div style="color: var(--text-muted); font-size: 0.8rem;">⏸️ Bot pausado (enabled: false em accounts.json)</div>`;
+            const ramLol = lolStatus.ramAllocMB ? Number(lolStatus.ramAllocMB).toFixed(1) + ' MB' : '~0.2 MB';
+            summary.textContent = `Pausado pelo usuário • RAM: ${ramLol}`;
+          }
         }
       }
 
