@@ -27,7 +27,7 @@ func (m *BotManager) Register(b GameBot) {
 }
 
 func (m *BotManager) GetAllStatuses() []AccountStatus {
-	m.mu.RUnlock()
+	m.mu.RLock()
 	defer m.mu.RUnlock()
 	var list []AccountStatus
 	for _, b := range m.bots {
