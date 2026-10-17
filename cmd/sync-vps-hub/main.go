@@ -431,7 +431,7 @@ func main() {
 		"timestamp": time.Now().UTC().Format("2006-01-02T15:04:05.000Z"),
 		"vps":       vps,
 		"summary": map[string]any{
-			"totalBots":  9,
+			"totalBots":  len(results),
 			"activeBots": active,
 		},
 		"bots": sanitizeBotPayload(bots),
