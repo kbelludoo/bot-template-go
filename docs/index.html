@@ -1490,7 +1490,7 @@
         { g: 'Leveling Idle', n: 'Party Arqueiro', oldL: 54, newL: 55, card: 'cardLeveling' },
         { g: 'Tibidle Multi-Bot', n: 'Conta #1 (Knight)', oldL: 84, newL: 85, card: 'cardTibidle' },
         { g: 'Pokemon Sigma', n: 'Treinador Ash', oldL: 109, newL: 110, card: 'cardSigma' },
-        { g: 'Baiak Idle', n: 'Frota #1 (Master Sorcerer)', oldL: 149, newL: 150, card: 'cardBaiak' }
+        { g: 'Baiak Idle', n: 'Conta 1 (Master Sorcerer)', oldL: 149, newL: 150, card: 'cardBaiak' }
       ];
       const selected = tier ? demoList[tier - 1] : demoList[testTierIndex % demoList.length];
       testTierIndex++;
@@ -1739,7 +1739,8 @@
           const st = b.status || {};
           const t = st.telemetry || {};
           const level = st.level ?? t.level ?? b.level ?? '—';
-          const accName = b.label || b.name || `Conta #${idx + 1}`;
+          let accName = b.label || b.name || `Conta ${idx + 1}`;
+          accName = accName.replace(/Frota\s*#?/gi, 'Conta ').replace(/Conta\s*#/gi, 'Conta ');
           checkLevelUp('Baiak Idle', accName, level, 'cardBaiak');
         });
 
@@ -1757,7 +1758,10 @@
           const voc = st.vocation || b.vocation || '';
           const vocBadge = voc ? ` • ${voc.toUpperCase()}` : '';
           const stamina = st.extra?.stamina || t.stamina || '42h (100%)';
-          const accName = b.label || b.name || `Conta #${idx + 1}`;
+          let accName = b.label || b.name || `Conta ${idx + 1}`;
+          accName = accName.replace(/Frota\s*#?/gi, 'Conta ').replace(/Conta\s*#/gi, 'Conta ');
+
+          const inTreino = st.status === 'training' || st.treino === true || st.state?.inTreino === true || (typeof st.status === 'string' && st.status.toLowerCase().includes('train'));
 
           const goldDisplay = gold >= 1000000 
             ? (gold / 1000000).toFixed(1) + 'M' 
@@ -1769,7 +1773,30 @@
             ? (xpRate / 1000000).toFixed(1) + 'M' 
             : xpRate >= 1000 
               ? (xpRate / 1000).toFixed(0) + 'k' 
-              : (xpRate > 0 ? xpRate.toLocaleString('pt-BR') : 'Ativo');
+              : (xpRate > 0 ? xpRate.toLocaleString('pt-BR') : '0');
+
+          if (inTreino) {
+            return `
+              <div class="acc-item">
+                <div class="acc-item-header">
+                  <span class="acc-name">🏰 ${accName}<span style="font-size:0.75rem; color:#c084fc; font-weight:600;">${vocBadge}</span></span>
+                  <span class="acc-level" style="color: #c084fc; border-color: rgba(192, 132, 252, 0.4);">Lv ${level}</span>
+                </div>
+                <div class="stat-row" style="background: rgba(168, 85, 247, 0.2); border: 1px solid rgba(168, 85, 247, 0.5);">
+                  <span style="color: #e9d5ff; font-weight: 800;">🧘 Modo Atual:</span>
+                  <span style="color: #c084fc; font-weight: 900;">Treino Online (Recuperando Stamina)</span>
+                </div>
+                <div class="stat-row">
+                  <span style="color: #c084fc; font-weight: 800;">🧘 Treino: Ativo</span>
+                  <span style="color: #94a3b8; font-weight: 700;">⚡ 0 XP/h (Treino)</span>
+                </div>
+                <div class="stat-row" style="margin-top: 3px;">
+                  <span style="color: #facc15; font-weight: 800;">💰 ${goldDisplay} gp</span>
+                  <span style="color: #38bdf8; font-weight: 700;">⏱️ Stamina: ${stamina}</span>
+                </div>
+              </div>
+            `;
+          }
 
           return `
             <div class="acc-item">
@@ -1797,10 +1824,32 @@
         const realXp = Number(bFleet.totalXpPerHour || 0);
         const fleetGold = realGold >= 1000000 ? (realGold / 1000000).toFixed(1) + 'M' : realGold.toLocaleString('pt-BR');
         const fleetXp = realXp >= 1000000 ? (realXp / 1000000).toFixed(1) + 'M' : '0';
-        document.getElementById('baiakSummary').textContent = `💰 Total: ${fleetGold} gp • ⚡ ${fleetXp} XP/h • 📖 Bestiário Ativo`;
-        document.getElementById('baiakBadge').textContent = `📖 FARM BESTIÁRIO ATIVO`;
+
+        const anyTraining = botKeys.some(k => {
+          const s = bBots[k]?.status || {};
+          return s.status === 'training' || s.treino === true || s.state?.inTreino === true || (typeof s.status === 'string' && s.status.toLowerCase().includes('train'));
+        });
+
+        const baiakBadge = document.getElementById('baiakBadge');
+        if (anyTraining) {
+          document.getElementById('baiakSummary').textContent = `💰 Total: ${fleetGold} gp • 🧘 Recuperando Stamina (Treino Online)`;
+          baiakBadge.textContent = `🧘 TREINO ONLINE ATIVO`;
+          baiakBadge.style.background = 'rgba(168, 85, 247, 0.2)';
+          baiakBadge.style.borderColor = 'rgba(168, 85, 247, 0.5)';
+          baiakBadge.style.color = '#e9d5ff';
+        } else {
+          document.getElementById('baiakSummary').textContent = `💰 Total: ${fleetGold} gp • ⚡ ${fleetXp} XP/h • 📖 Bestiário Ativo`;
+          baiakBadge.textContent = `📖 FARM BESTIÁRIO ATIVO`;
+          baiakBadge.style.background = '';
+          baiakBadge.style.borderColor = '';
+          baiakBadge.style.color = '';
+        }
       } else {
-        document.getElementById('baiakBadge').textContent = 'AGUARDANDO DADOS';
+        const baiakBadge = document.getElementById('baiakBadge');
+        baiakBadge.textContent = 'AGUARDANDO DADOS';
+        baiakBadge.style.background = '';
+        baiakBadge.style.borderColor = '';
+        baiakBadge.style.color = '';
         baiakAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados do Bot Go...</div>`;
       }
 

@@ -12,6 +12,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -76,7 +77,7 @@ var allBots = []BotProbe{
 	{ID: "pokeidleworld", Name: "🌍 Poke Idle World", Port: 3007, URL: "http://127.0.0.1:3007/api/status", RestartCmd: "sudo systemctl restart pokeidleworld.service", Type: "systemd"},
 	{ID: "kickminer", Name: "🟢 Kick Miner Go", Port: 3009, URL: "http://127.0.0.1:3009/api/status", RestartCmd: "sudo systemctl restart kick-miner.service", Type: "systemd"},
 	{ID: "twitchminer", Name: "🟣 Twitch Miner Go", Port: 3010, URL: "http://127.0.0.1:3010/api/status", RestartCmd: "sudo systemctl restart twitch-miner.service", Type: "systemd"},
-	{ID: "baiak", Name: "🏰 Baiak Idle (Fleet)", Port: 8090, URL: "http://127.0.0.1:8090/api/fleet", RestartCmd: "sudo systemctl restart baiak-fleet.service", Type: "systemd"},
+	{ID: "baiak", Name: "🏰 Baiak Idle Go", Port: 8090, URL: "http://127.0.0.1:8090/api/fleet", RestartCmd: "sudo systemctl restart baiak-fleet.service", Type: "systemd"},
 }
 
 // -------------------------------------------------------------
@@ -466,7 +467,7 @@ func syncHub() {
 		"pokeidleworld": {"Poke Idle World Bot", "Poke Idle World", "Go Native Engine (Auto-Catch)", 3007, "https://kbelludoo.github.io/pokeidleworld-bot/", nil},
 		"kickminer":     {"Kick Channel Points Miner", "Kick.com", "Go Native (Zero-Video WS)", 3009, "https://kbelludoo.github.io/kick-miner-go/", nil},
 		"twitchminer":   {"Twitch Channel Points Miner", "Twitch.tv", "Go Native (Zero-Video WS)", 3010, "https://kbelludoo.github.io/twitch-miner-go/", nil},
-		"baiak":         {"Baiak Idle Multi-Account", "Baiak Idle", "Go Native Engine (Fleet)", 8090, "https://kbelludoo.github.io/baiak-idle-bot/", nil},
+		"baiak":         {"Baiak Idle Multi-Account", "Baiak Idle", "Go Native Engine", 8090, "https://kbelludoo.github.io/baiak-idle-bot/", nil},
 	}
 
 	var wg sync.WaitGroup
@@ -618,12 +619,15 @@ func syncHub() {
 					}
 				case "baiak":
 					if botsMap, ok := stMap["bots"].(map[string]interface{}); ok {
-						idx := 1
-						for _, bVal := range botsMap {
-							if bm, ok := bVal.(map[string]interface{}); ok {
-								bm["name"] = fmt.Sprintf("Frota #%d", idx)
-								bm["label"] = fmt.Sprintf("Conta #%d", idx)
-								idx++
+						keys := make([]string, 0, len(botsMap))
+						for k := range botsMap {
+							keys = append(keys, k)
+						}
+						sort.Strings(keys)
+						for idx, k := range keys {
+							if bm, ok := botsMap[k].(map[string]interface{}); ok {
+								bm["name"] = ""
+								bm["label"] = fmt.Sprintf("Conta %d", idx+1)
 							}
 						}
 					}

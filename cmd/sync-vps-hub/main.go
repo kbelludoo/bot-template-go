@@ -349,7 +349,7 @@ func buildBots(results map[string]map[string]any) map[string]any {
 		"baiak": map[string]any{
 			"name":         "Baiak Idle Multi-Account",
 			"game":         "Baiak Idle",
-			"engine":       "Go Native Engine (Fleet)",
+			"engine":       "Go Native Engine",
 			"port":         8090,
 			"dashboardUrl": "https://kbelludoo.github.io/baiak-idle-bot/",
 			"status":       results["baiak"],

@@ -113,7 +113,7 @@ var botsMap = map[string]BotInfo{
 		RestartCmd: []string{"sudo", "systemctl", "restart", "kick-miner.service"},
 	},
 	"baiak": {
-		Name:       "🏰 Baiak Idle Fleet",
+		Name:       "🏰 Baiak Idle Go",
 		Port:       8090,
 		Path:       "/api/fleet",
 		RestartCmd: []string{"sudo", "systemctl", "restart", "baiak-fleet.service"},
