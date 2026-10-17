@@ -300,6 +300,12 @@
       --theme-border: rgba(168, 85, 247, 0.45);
       --theme-glow: rgba(168, 85, 247, 0.25);
     }
+    #cardLolidle {
+      --theme: #c8aa6e;
+      --theme-bg: rgba(200, 170, 110, 0.12);
+      --theme-border: rgba(200, 170, 110, 0.45);
+      --theme-glow: rgba(10, 200, 185, 0.25);
+    }
 
     .bot-card {
       background: var(--card-bg);
@@ -1329,6 +1335,30 @@
           </a>
         </div>
       </div>
+
+      <!-- LoL Idle Multi-Bot Card -->
+      <div class="bot-card" id="cardLolidle">
+        <div>
+          <div class="bot-header">
+            <div class="bot-name-group">
+              <h3 style="color: #c8aa6e;">⚔️ LoL Idle Multi-Bot</h3>
+              <span class="bot-port" style="color: #0ac8b9; background: rgba(10, 200, 185, 0.12); border: 1px solid rgba(10, 200, 185, 0.25);">PORTA 3011 • RUNETERRA 4X PARTY</span>
+            </div>
+            <span class="badge-status badge-online" id="lolidleBadge" style="background: rgba(10, 200, 185, 0.15); color: #0ac8b9; border-color: #0ac8b9;">ONLINE</span>
+          </div>
+
+          <div class="acc-list" id="lolidleAccList">
+            <div style="color: var(--text-muted); font-size: 0.8rem;">Carregando party em Runeterra...</div>
+          </div>
+        </div>
+
+        <div class="bot-footer">
+          <span style="font-size: 0.72rem; color: var(--text-dim);" id="lolidleSummary">Party 4x • +45% EXP Bônus</span>
+          <a href="https://kbelludoo.github.io/lolidle-bot/" target="_blank" class="btn-link" style="color: #c8aa6e; border-color: rgba(200, 170, 110, 0.3); background: rgba(200, 170, 110, 0.08);">
+            Abrir Dashboard LoL Idle ↗
+          </a>
+        </div>
+      </div>
     </div>
 
     <!-- LIVE ACTIVITY TICKER (RODAPÉ DO MODO STREAM) -->
@@ -1336,8 +1366,8 @@
       <div class="ticker-badge">🔴 LIVE EVENTS</div>
       <div class="stream-ticker-track" id="streamTickerTrack">
         <span class="ticker-item" style="color: #fbbf24; font-weight: 800;">📖 ESTRATÉGIA ATIVA: FARM DE BESTIÁRIO & POKÉDEX 24/7 EM TODOS OS JOGOS</span>
-        <span class="ticker-item">⚡ VPS CLUSTER ONLINE • 9 BOTS NATIVOS EM GO • ZERO NODE.JS</span>
-        <span class="ticker-item">🎮 HUNTERA • TIBIDLE • SIGMA • LEVELING • BAIAK • POKEIDLE • KICK • TWITCH</span>
+        <span class="ticker-item">⚡ VPS CLUSTER ONLINE • 10 BOTS NATIVOS EM GO • ZERO NODE.JS</span>
+        <span class="ticker-item">🎮 HUNTERA • TIBIDLE • SIGMA • LEVELING • BAIAK • POKEIDLE • KICK • TWITCH • LOL IDLE</span>
         <span class="ticker-item" style="color: #fbbf24; font-weight: 800;">📖 ESTRATÉGIA ATIVA: FARM DE BESTIÁRIO & POKÉDEX 24/7 EM TODOS OS JOGOS</span>
         <span class="ticker-item">💎 AUTO HUNT INTELIGENTE • RECONEXÃO AUTOMÁTICA • HIGH PERFORMANCE</span>
       </div>
@@ -2033,6 +2063,52 @@
         const ramTw = tmStatus.ramMb == null && tmStatus.ramAllocMB == null ? '—' : Number(tmStatus.ramMb ?? tmStatus.ramAllocMB).toFixed(1) + ' MB';
         document.getElementById('twitchSummary').textContent = `⭐ ${totalPts.toLocaleString('pt-BR')} pts • RAM: ${ramTw}`;
         document.getElementById('twitchBadge').textContent = `⭐ MINERAÇÃO TWITCH (${livesActive} LIVES)`;
+      }
+
+      // 11. LoL Idle Multi-Bot (Runeterra 4x Party)
+      const lolidle = bots.lolidle || {};
+      const lolStatus = lolidle.status || {};
+      const lolAccounts = lolStatus.accounts || [];
+      const lolidleAccList = document.getElementById('lolidleAccList');
+
+      if (lolidleAccList) {
+        if (lolAccounts.length > 0) {
+          let lolTotalGold = 0;
+          let lolTotalKills = 0;
+          const vocIcons = { taric: '🛡️', lux: '✨', ezreal: '🏹', yasuo: '🌪️' };
+          
+          lolidleAccList.innerHTML = lolAccounts.map((acc, idx) => {
+            lolTotalGold += (acc.gold || 0);
+            lolTotalKills += (acc.kills || 0);
+            const voc = (acc.vocation || '').toLowerCase();
+            const icon = vocIcons[voc] || '⚔️';
+            const name = acc.name || `Campeão #${idx + 1}`;
+            checkLevelUp('LoL Idle', `${icon} ${name}`, acc.level, 'cardLolidle');
+
+            return `
+              <div class="acc-item">
+                <div class="acc-item-header">
+                  <span class="acc-name">${icon} ${name} (${voc.toUpperCase()})</span>
+                  <span class="acc-level" style="color: #c8aa6e; border-color: rgba(200, 170, 110, 0.4);">Nv. ${acc.level || 1}</span>
+                </div>
+                <div class="stat-row">
+                  <span>💰 Ouro: ${(acc.gold || 0).toLocaleString('pt-BR')} gp</span>
+                  <span style="color: #4ade80;">⚔️ ${(acc.kills || 0).toLocaleString('pt-BR')} abates</span>
+                </div>
+                <div class="stat-row" style="margin-top: 2px;">
+                  <span style="color: #0ac8b9;">⚡ ${Math.round(acc.expPerHour || 0).toLocaleString('pt-BR')} EXP/h</span>
+                  <span style="color: #38bdf8;">🗺️ Runeterra (Party)</span>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          const ramLol = lolStatus.ramAllocMB ? Number(lolStatus.ramAllocMB).toFixed(1) + ' MB' : '~2.2 MB';
+          document.getElementById('lolidleSummary').textContent = `Party 4x • ${lolTotalKills.toLocaleString('pt-BR')} abates • RAM: ${ramLol}`;
+          document.getElementById('lolidleBadge').textContent = '⚔️ RUNETERRA (+45% EXP)';
+        } else {
+          lolidleAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados da party...</div>`;
+        }
       }
 
       if (isInitialLoad) {
