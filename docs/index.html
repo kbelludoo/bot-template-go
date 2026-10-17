@@ -1556,9 +1556,9 @@
       document.getElementById('lastUpdatedSub').textContent = formatTimeAgo(data.timestamp);
       
       const bots = data.bots || {};
-      const botKeys = Object.keys(bots);
-      const activeBotsCount = data.summary?.activeBots ?? botKeys.filter(k => bots[k] && (bots[k].online || bots[k].status)).length;
-      const totalBotsCount = Math.max(data.summary?.totalBots || 0, botKeys.length, activeBotsCount);
+      const allBotKeys = Object.keys(bots);
+      const activeBotsCount = data.summary?.activeBots ?? allBotKeys.filter(k => bots[k] && (bots[k].online || bots[k].status)).length;
+      const totalBotsCount = Math.max(data.summary?.totalBots || 0, allBotKeys.length, activeBotsCount);
       document.getElementById('botsCountVal').textContent = `${activeBotsCount} / ${totalBotsCount}`;
 
 
