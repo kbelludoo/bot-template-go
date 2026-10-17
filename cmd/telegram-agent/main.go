@@ -112,6 +112,12 @@ var botsMap = map[string]BotInfo{
 		Path:       "/api/status",
 		RestartCmd: []string{"sudo", "systemctl", "restart", "kick-miner.service"},
 	},
+	"twitchminer": {
+		Name:       "🟣 Twitch Miner Go",
+		Port:       3010,
+		Path:       "/api/status",
+		RestartCmd: []string{"sudo", "systemctl", "restart", "twitch-miner.service"},
+	},
 	"baiak": {
 		Name:       "🏰 Baiak Idle Go",
 		Port:       8090,
@@ -250,27 +256,39 @@ func getUpdates(offset int, timeoutSec int) ([]Update, error) {
 
 func askGoAgent(prompt string) string {
 	reqData, _ := json.Marshal(AgentRequest{Message: prompt})
-	resp, err := agentClient.Post(AgentURL, "application/json", bytes.NewReader(reqData))
-	if err != nil {
-		return fmt.Sprintf("[-] Erro ao chamar Agent Go (:8888): %v", err)
-	}
-	defer resp.Body.Close()
 
-	bodyBytes, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return fmt.Sprintf("[-] Erro ao ler resposta: %v", err)
+	urls := []string{"http://127.0.0.1:8888/agent", "http://127.0.0.1:8080/agent"}
+	if envURL := os.Getenv("AGENT_URL"); envURL != "" {
+		urls = append([]string{envURL}, urls...)
 	}
 
-	var aResp AgentResponse
-	if err := json.Unmarshal(bodyBytes, &aResp); err == nil {
-		if aResp.Response != "" {
-			return aResp.Response
+	var lastErr error
+	for _, targetURL := range urls {
+		resp, err := agentClient.Post(targetURL, "application/json", bytes.NewReader(reqData))
+		if err != nil {
+			lastErr = err
+			continue
 		}
-		if aResp.Error != "" {
-			return fmt.Sprintf("[-] Erro da IA: %s", aResp.Error)
+
+		bodyBytes, err := io.ReadAll(resp.Body)
+		resp.Body.Close()
+		if err != nil {
+			return fmt.Sprintf("[-] Erro ao ler resposta: %v", err)
 		}
+
+		var aResp AgentResponse
+		if err := json.Unmarshal(bodyBytes, &aResp); err == nil {
+			if aResp.Response != "" {
+				return aResp.Response
+			}
+			if aResp.Error != "" {
+				return fmt.Sprintf("[-] Erro da IA: %s", aResp.Error)
+			}
+		}
+		return string(bodyBytes)
 	}
-	return string(bodyBytes)
+
+	return fmt.Sprintf("[-] Erro ao conectar ao Agent Go: %v", lastErr)
 }
 
 func probePort(port int, path string) bool {
@@ -310,9 +328,9 @@ func getMemInfo() string {
 
 func handleFastStatus() string {
 	var sb strings.Builder
-	sb.WriteString("📊 *STATUS DOS 8 BOTS NA VPS (GO NATIVE)*\n\n")
+	sb.WriteString("📊 *STATUS DOS 9 BOTS NA VPS (GO NATIVE)*\n\n")
 
-	keys := []string{"huntera", "tibidle", "sigma", "leveling", "pokeidle", "pokeidleworld", "kickminer", "baiak"}
+	keys := []string{"huntera", "tibidle", "sigma", "leveling", "pokeidle", "pokeidleworld", "kickminer", "twitchminer", "baiak"}
 	for _, k := range keys {
 		bot := botsMap[k]
 		online := probePort(bot.Port, bot.Path)
@@ -355,21 +373,23 @@ func handleMessage(msg *Message) {
 	switch {
 	case text == "/start":
 		welcome := "👋 *Olá, Comandante!*\n\n" +
-			"Estou conectado ao seu **Agent IA em Go Puro** (Ultra-Leve ~2MB RAM) monitorando a VPS.\n\n" +
+			"Estou conectado ao seu **Agent IA em Go Puro** monitorando a VPS e vigiando os 9 bots 24/7 com Auto-Cura!\n\n" +
 			"📌 *O que você pode fazer por aqui:*\n" +
 			"• *Conversar livremente:* Digite qualquer pergunta ou instrução que a IA responderá!\n" +
-			"• `/status` - Ver o status em tempo real dos 8 bots e memória da VPS\n" +
+			"• `/status` - Ver o status em tempo real dos 9 bots e memória da VPS\n" +
 			"• `/restart <bot>` - Reiniciar um bot específico (ex: `/restart sigma`)\n" +
+			"• `/logs <bot>` - Ver os logs e diagnóstico de erro de um bot com IA\n" +
 			"• `/help` - Ver lista de comandos e bots disponíveis\n\n" +
 			"_Operando 24/7 nativamente em Go!_ 🚀"
 		_ = sendTelegramMessage(msg.Chat.ID, welcome, "Markdown")
 
 	case text == "/help":
 		help := "📖 *COMANDOS DISPONÍVEIS:*\n\n" +
-			"• `/status` - Exibe a saúde dos 8 bots e RAM da VPS\n" +
+			"• `/status` - Exibe a saúde dos 9 bots e RAM da VPS\n" +
 			"• `/restart <bot>` - Reinicia um bot específico\n" +
-			"  _Bots:_ `huntera`, `tibidle`, `sigma`, `leveling`, `pokeidle`, `pokeidleworld`, `kickminer`, `baiak`\n" +
-			"• Ou envie *qualquer texto* para conversar com a IA (NVIDIA NIM / Kimi-k3 / Llama-3.3) com ferramentas de sistema!"
+			"• `/logs <bot>` - Analisa os últimos logs de um bot\n" +
+			"  _Bots:_ `huntera`, `tibidle`, `sigma`, `leveling`, `pokeidle`, `pokeidleworld`, `kickminer`, `twitchminer`, `baiak`\n" +
+			"• Ou envie *qualquer texto* para conversar com a IA com ferramentas completas de diagnóstico e auto-recuperação!"
 		_ = sendTelegramMessage(msg.Chat.ID, help, "Markdown")
 
 	case text == "/status":
@@ -377,11 +397,22 @@ func handleMessage(msg *Message) {
 		statusReport := handleFastStatus()
 		_ = sendTelegramMessage(msg.Chat.ID, statusReport, "Markdown")
 
+	case strings.HasPrefix(text, "/logs"):
+		target := strings.ToLower(strings.TrimSpace(strings.TrimPrefix(text, "/logs")))
+		if target == "" {
+			_ = sendTelegramMessage(msg.Chat.ID, "⚠️ Especifique o bot para ver logs. Exemplo: `/logs sigma`", "Markdown")
+			return
+		}
+		sendChatAction(msg.Chat.ID, "typing")
+		prompt := fmt.Sprintf("Mostre os últimos logs do bot %s e forneça uma análise rápida do estado dele.", target)
+		aiReply := askGoAgent(prompt)
+		_ = sendTelegramMessage(msg.Chat.ID, aiReply, "Markdown")
+
 	case strings.HasPrefix(text, "/restart"):
 		target := strings.ToLower(strings.TrimSpace(strings.TrimPrefix(text, "/restart")))
 		bot, ok := botsMap[target]
 		if !ok {
-			keys := []string{"huntera", "tibidle", "sigma", "leveling", "pokeidle", "pokeidleworld", "kickminer", "baiak"}
+			keys := []string{"huntera", "tibidle", "sigma", "leveling", "pokeidle", "pokeidleworld", "kickminer", "twitchminer", "baiak"}
 			_ = sendTelegramMessage(msg.Chat.ID, fmt.Sprintf("⚠️ Bot `%s` não reconhecido.\nUse um destes: `%s`", target, strings.Join(keys, "`, `")), "Markdown")
 			return
 		}
