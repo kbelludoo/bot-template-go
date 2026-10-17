@@ -276,6 +276,12 @@
       --theme-border: rgba(192, 132, 252, 0.45);
       --theme-glow: rgba(192, 132, 252, 0.25);
     }
+    #cardPokelegacy {
+      --theme: #06b6d4;
+      --theme-bg: rgba(6, 182, 212, 0.12);
+      --theme-border: rgba(6, 182, 212, 0.45);
+      --theme-glow: rgba(6, 182, 212, 0.25);
+    }
     #cardPokeidle {
       --theme: #38bdf8;
       --theme-bg: rgba(56, 189, 248, 0.12);
@@ -1240,6 +1246,30 @@
         </div>
       </div>
 
+      <!-- PokeLegacy Online Card -->
+      <div class="bot-card" id="cardPokelegacy">
+        <div>
+          <div class="bot-header">
+            <div class="bot-name-group">
+              <h3>⚔️ PokeLegacy Online</h3>
+              <span class="bot-port" style="color: #06b6d4; background: rgba(6, 182, 212, 0.12); border: 1px solid rgba(6, 182, 212, 0.25);">PORTA 3005 • GO NATIVE (SOCKET.IO)</span>
+            </div>
+            <span class="badge-status badge-online" id="pokelegacyBadge">—</span>
+          </div>
+
+          <div class="acc-list" id="pokelegacyAccList">
+            <div style="color: var(--text-muted); font-size: 0.8rem;">Carregando contas...</div>
+          </div>
+        </div>
+
+        <div class="bot-footer">
+          <span style="font-size: 0.72rem; color: var(--text-dim);" id="pokelegacySummary">Party Autônoma & Farm Pokédex</span>
+          <a href="http://localhost:3005" target="_blank" class="btn-link" style="color: #06b6d4; border-color: rgba(6, 182, 212, 0.3); background: rgba(6, 182, 212, 0.08);">
+            Abrir Painel Local ↗
+          </a>
+        </div>
+      </div>
+
       <!-- PokeIdle.io Card -->
       <div class="bot-card" id="cardPokeidle">
         <div>
@@ -1883,6 +1913,48 @@
         baiakBadge.style.borderColor = '';
         baiakBadge.style.color = '';
         baiakAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados do Bot Go...</div>`;
+      }
+
+      // PokeLegacy Online
+      const pokelegacy = bots.pokelegacy || {};
+      const plStatus = pokelegacy.status || {};
+      const plAccounts = plStatus.accounts || [];
+      const pokelegacyAccList = document.getElementById('pokelegacyAccList');
+
+      if (plAccounts.length > 0) {
+        plAccounts.forEach((acc, idx) => {
+          checkLevelUp('PokeLegacy Online', `Treinador #${idx + 1}`, acc.level, 'cardPokelegacy');
+        });
+        pokelegacyAccList.innerHTML = plAccounts.map((acc, idx) => {
+          const hpPct = acc.maxHp ? Math.round((acc.hp / acc.maxHp) * 100) : 100;
+          return `
+            <div class="acc-item">
+              <div class="acc-item-header">
+                <span class="acc-name">⚡ Treinador #${idx + 1}</span>
+                <span class="acc-level" style="color: #06b6d4; border-color: rgba(6, 182, 212, 0.35);">Lv ${acc.level ?? '—'}</span>
+              </div>
+              <div class="stat-row" style="background: rgba(6, 182, 212, 0.12); border-color: rgba(6, 182, 212, 0.35);">
+                <span style="color: #06b6d4; font-weight: 700;">🗺️ Área: <b>${acc.currentArea || 'Em caça'}</b></span>
+                <span style="color: #4ade80; font-weight: 800;">${acc.status || 'hunting'}</span>
+              </div>
+              <div class="stat-row">
+                <span>❤️ HP (${hpPct}%)</span>
+                <span style="color: #4ade80;">${acc.hp ?? '—'} / ${acc.maxHp ?? '—'}</span>
+              </div>
+              <div class="bar-slim"><div class="progress-fill fill-hp" style="width: ${hpPct}%"></div></div>
+              <div class="stat-row">
+                <span style="color: #facc15; font-weight: 800;">💰 ${(acc.gold ?? 0).toLocaleString('pt-BR')} gold</span>
+                <span style="color: #f87171; font-weight: 800;">⚔️ ${(acc.kills ?? 0).toLocaleString('pt-BR')} abates</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+        const goldSum = plAccounts.reduce((acc, a) => acc + (a.gold || 0), 0);
+        const ramPl = plStatus.ramAllocMB == null ? '' : ` • RAM: ${Number(plStatus.ramAllocMB).toFixed(1)} MB`;
+        document.getElementById('pokelegacySummary').textContent = `💰 ${goldSum.toLocaleString('pt-BR')} gold${ramPl} • Party Autônoma 5x`;
+        document.getElementById('pokelegacyBadge').textContent = `📖 FARM POKÉDEX`;
+      } else {
+        pokelegacyAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados...</div>`;
       }
 
       // 7. PokeIdle.io
