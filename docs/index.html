@@ -682,11 +682,11 @@
       display: none !important;
     }
 
-    /* 3x3 BOTS GRID (9 BOTS VISÍVEIS DE UMA VEZ COM ZERO ESPAÇO MORTO) */
+    /* STREAM MODE BOTS GRID (1080p OBS FULLSCREEN ZERO DEAD SPACE) */
     body.stream-mode .bots-grid, html.stream-mode body .bots-grid {
       display: grid !important;
-      grid-template-columns: repeat(3, 1fr) !important;
-      grid-template-rows: repeat(3, 1fr) !important;
+      grid-template-columns: repeat(5, 1fr) !important;
+      grid-template-rows: repeat(2, 1fr) !important;
       gap: 10px !important;
       flex: 1 !important;
       margin-bottom: 6px !important;
@@ -1554,11 +1554,13 @@
       }
 
       document.getElementById('lastUpdatedSub').textContent = formatTimeAgo(data.timestamp);
-      if (data.summary) {
-        document.getElementById('botsCountVal').textContent = `${data.summary.activeBots || 0} / ${data.summary.totalBots || 4}`;
-      }
-
+      
       const bots = data.bots || {};
+      const botKeys = Object.keys(bots);
+      const activeBotsCount = data.summary?.activeBots ?? botKeys.filter(k => bots[k] && (bots[k].online || bots[k].status)).length;
+      const totalBotsCount = Math.max(data.summary?.totalBots || 0, botKeys.length, activeBotsCount);
+      document.getElementById('botsCountVal').textContent = `${activeBotsCount} / ${totalBotsCount}`;
+
 
       // 2. Huntera
       const huntera = bots.huntera || {};
