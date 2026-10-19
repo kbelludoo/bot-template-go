@@ -79,7 +79,7 @@ var allBots = []BotProbe{
 	{ID: "twitchminer", Name: "🟣 Twitch Miner Go", Port: 3010, URL: "http://127.0.0.1:3010/api/status", RestartCmd: "sudo systemctl restart twitch-miner.service", Type: "systemd"},
 	{ID: "baiak", Name: "🏰 Baiak Idle Go", Port: 8090, URL: "http://127.0.0.1:8090/api/fleet", RestartCmd: "sudo systemctl restart baiak-fleet.service", Type: "systemd"},
 	{ID: "lolidle", Name: "⚔️ LoL Idle Multi-Bot", Port: 3011, URL: "http://127.0.0.1:3011/api/status", RestartCmd: "sudo systemctl restart lolidle.service", Type: "systemd"},
-	{ID: "farmricochet", Name: "🌾 Farm Ricochet", Port: 3013, URL: "http://127.0.0.1:3013/api/status", RestartCmd: "sudo systemctl restart farmbot.service", Type: "systemd"},
+	{ID: "poketrue", Name: "🔥 PokeTrue Multi-Bot", Port: 3014, URL: "http://127.0.0.1:3014/api/status", RestartCmd: "sudo systemctl restart poketrue.service", Type: "systemd"},
 }
 
 // -------------------------------------------------------------
@@ -355,7 +355,6 @@ func syncIndividual() {
 		{repo: "pokeidleworld-bot", port: 3007, label: "Treinador"},
 		{repo: "twitch-miner-go", port: 3010, label: "Minerador"},
 		{repo: "lolidle-bot", port: 3011, label: "Campeão"},
-		{repo: "farmricochet-bot", port: 3013, label: "Fazendeiro"},
 	}
 
 	for _, tgt := range targets {
@@ -474,7 +473,7 @@ func syncHub() {
 		"baiak":         {"Baiak Idle Multi-Account", "Baiak Idle", "Go Native Engine", 8090, "https://kbelludoo.github.io/baiak-idle-bot/", nil},
 		"lolidle":       {"LoL Idle Multi-Bot", "LoL Idle", "Go Native Engine (Runeterra 4x Party)", 3011, "https://kbelludoo.github.io/lolidle-bot/", nil},
 		"pokelegacy":    {"PokeLegacy Online Multi-Bot", "PokeLegacy Online", "Go Native Engine (Party 5x)", 3005, "https://kbelludoo.github.io/pokelegacy-bot/", nil},
-		"farmricochet":  {"Farm Ricochet Bot", "Farm Ricochet", "Go Native Engine (Circuit Breaker)", 3013, "https://kbelludoo.github.io/farmricochet-bot/", nil},
+		"poketrue":      {"PokeTrue Multi-Bot", "PokeTrue", "Go Native Engine (Weakness Solver)", 3014, "https://kbelludoo.github.io/bot-template-go/?v=force1", nil},
 	}
 
 	var wg sync.WaitGroup

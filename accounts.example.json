@@ -1,21 +1,25 @@
 [
   {
-    "id": "acc-1",
-    "name": "Conta Principal",
+    "id": "treinador-1",
+    "name": "Treinador Principal",
     "enabled": true,
     "credentials": {
       "email": "seu_email@exemplo.com",
-      "password": "sua_senha",
-      "sessionCookie": "session_token_aqui_se_necessario",
+      "password": "sua_senha_aqui",
       "token": ""
     },
     "settings": {
-      "huntTarget": "area_iniciante",
+      "huntTarget": "auto",
       "autoHunt": true,
       "autoSell": true,
       "autoHeal": true,
       "autoDaily": true,
-      "lure": 2
-    }
+      "autoEquip": true,
+      "autoTreino": true,
+      "autoCatch": true,
+      "ballType": "auto",
+      "healThreshold": 0.5
+    },
+    "bindIP": ""
   }
 ]

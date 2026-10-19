@@ -16,7 +16,6 @@ Você está construindo um bot autônomo nativo em **Go (Golang)** de altíssima
 5. **Segurança Absoluta de Segredos (Zero Hardcoding):** NUNCA insira tokens de API (Telegram, Discord, Twitch OAuth), senhas, cookies, chaves SSH (`*.key`) ou IPs públicos da VPS diretamente em arquivos `.go`, `.json`, `.sh`, `.bat` ou scripts que serão commitados. TODAS as credenciais devem ser obrigatoriamente carregadas via variáveis de ambiente (`os.Getenv`) ou arquivos locais no `.gitignore` (`.secrets.json`, `.env`, `accounts.json`). Commitar tokens gera vazamento público imediato!
 6. **Modo Stealth & Anti-Ban (Zero Nicks Públicos):** NUNCA exponha o nome real do personagem/treinador/streamer nos dashboards web do GitHub Pages (`docs/index.html` ou `status.json`). Sempre exiba apenas a classe/vocação, índice anônimo (ex: `Conta #1`, `Treinador #1`, `Guerreiro`, `Arqueiro`) e estatísticas técnicas (Level, EXP/h, Kills, Gold, Mapa). Transmitir nicks reais gera denúncias e banimentos manuais imediatos!
 7. **Proteção Anti-Ban Circuit Breaker Obrigatória:** Todo bot deve integrar `pkg/engine.CircuitBreaker`. Diante de qualquer recusa de save, rate-limit ou erro de anti-cheat (`experiência rápida demais`, `recusado: true`), o bot NUNCA deve insistir em novos saves. Deve desarmar o combate, recuar para zona segura e aguardar cooldown de 15 a 30 minutos. Insistir em saves rejeitados resulta em banimento de 7 dias por programa de terceiros!
-8. **Deploy Obrigatório na VPS via SSH (Chave na Pasta):** O desenvolvimento ou evolução de qualquer bot em Go **NUNCA** é considerado concluído enquanto estiver rodando apenas no Windows. A IA deve utilizar a chave SSH presente na pasta do projeto (`./ssh-key-2026-10-06.key`), enviar os binários e arquivos de configuração para `/home/ubuntu/<bot-folder>`, configurar o serviço systemd na VPS (`ubuntu@<VPS_IP>`) e registrar o bot no `vps-agent`. Nunca considere a tarefa finalizada sem o bot rodando 24/7 na VPS!
 
 ---
 
@@ -94,49 +93,13 @@ Mantenha `pkg/engine/`, `pkg/network/` e `pkg/server/` intactos. Concentre **100
    ```
 3. Garanta que o terminal exiba o monitor limpo a cada 4 segundos com memória RAM e goroutines.
 
-### Passo 4: Deploy Obrigatório para Linux / VPS (Chave SSH na Pasta)
-> **REGRA DE OURO:** NUNCA finalize o desenvolvimento deixando o bot rodando apenas no seu Windows. O bot DEVE ser implantado na VPS Oracle Linux (`ubuntu@<VPS_IP>`) e rodar 24/7 com systemd.
-
-1. **Cross-Compilar para Linux AMD64:**
+### Passo 4: Preparar Deploy para Linux / VPS
+1. O executável deve ser cross-compilado para Linux x86_64:
    ```cmd
-   cmd /c "set GOOS=linux&& set GOARCH=amd64&& go build -ldflags=\"-s -w\" -o <bot-name>-linux ."
+   cmd /c "set GOOS=linux&& set GOARCH=amd64&& go build -ldflags=\"-s -w\" -o bot-app-linux ."
    ```
-2. **Enviar para a VPS via SCP (Usando a chave SSH da pasta do projeto):**
-   A chave SSH privada está na pasta do projeto (`./ssh-key-2026-10-06.key` ou `c:\Users\kbell\Documents\huntera\ssh-key-2026-10-06.key`):
-   ```powershell
-   ssh -i "ssh-key-2026-10-06.key" -o StrictHostKeyChecking=no ubuntu@<VPS_IP> "mkdir -p /home/ubuntu/<bot-folder>"
-   scp -i "ssh-key-2026-10-06.key" -o StrictHostKeyChecking=no <bot-name>-linux accounts.json ubuntu@<VPS_IP>:/home/ubuntu/<bot-folder>/
-   ```
-3. **Instalar e Iniciar Serviço no Systemd (`/etc/systemd/system/<bot-name>.service`):**
-   ```bash
-   [Unit]
-   Description=<Nome do Bot> Native Go Bot Service
-   After=network.target
-
-   [Service]
-   Type=simple
-   User=ubuntu
-   WorkingDirectory=/home/ubuntu/<bot-folder>
-   ExecStart=/home/ubuntu/<bot-folder>/<bot-name>-linux
-   Restart=always
-   RestartSec=5
-   LimitNOFILE=65535
-   Environment=PORT=<porta_unica>
-
-   [Install]
-   WantedBy=multi-user.target
-   ```
-   Ativar na VPS:
-   ```bash
-   sudo systemctl daemon-reload && sudo systemctl enable --now <bot-name>.service
-   ```
-4. **Integrar ao Orquestrador da VPS (`cmd/vps-agent/main.go`):**
-   - Registrar no mapa `botDefs` a porta única HTTP e dashboardUrl.
-   - Adicionar regras de anonimização (Stealth) no `switch k`.
-   - Recompilar e implantar `/home/ubuntu/vps-agent` na VPS.
-   - Executar `/home/ubuntu/vps-agent --all` para atualizar a telemetria no GitHub Pages.
-5. **PROIBIDO rodar `sync-vps-hub --push` no Windows:**
-   - O envio de status para o GitHub Pages ocorre unicamente a partir da VPS via cron do `vps-agent`. Nunca configure auto-push a partir da máquina local Windows.
+2. Configure a porta web única no `main.go` ou via variável de ambiente `PORT` (ex: 3001, 3002).
+3. Entregue o arquivo `.service` para o systemd.
 
 ---
 

@@ -4,38 +4,85 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"math"
+	"strings"
 	"sync"
 	"time"
 
 	"bot-template-go/pkg/engine"
-	"bot-template-go/pkg/network"
 )
 
+// Bot implementa o bot autônomo completo para PokeTrue
 type Bot struct {
 	config  AccountConfig
 	mu      sync.RWMutex
 	status  engine.AccountStatus
-	socket  *network.SocketClient
-	httpCli *network.HTTPClient
+	api     *PokeTrueClient
+	cb      *engine.CircuitBreaker
 
-	// Controle interno da sessão do jogo
-	isHunting     bool
-	lastActionAt  time.Time
+	// Estado canônico do jogo
+	state        *PokeTrueState
+	currentHunt  Hunt
+	activePokeID int
+	serverCombat bool
+
+	// Controles temporais
+	startTime       time.Time
+	initialXp       int
+	lastSyncAt      time.Time
+	lastSellAt      time.Time
+	lastHeldAt      time.Time
+	lastTreinoAt    time.Time
+	lastJennyAt     time.Time
+	lastCandyAt     time.Time
+	lastHuntChangeAt time.Time
+
+	// Canais para supply externo de tickets/tokens
 	ticketChan    chan string
 	turnstileChan chan string
 }
 
+// NewBot inicializa uma nova instância do bot do PokeTrue
 func NewBot(cfg AccountConfig) *Bot {
+	InitCatalog()
+
+	cbCfg := engine.DefaultCircuitBreakerConfig()
+	cb := engine.NewCircuitBreaker(cfg.ID, cbCfg)
+
 	st := engine.NewStatus(cfg.ID, cfg.Name)
 	st.CurrentArea = cfg.Settings.HuntTarget
+	if st.CurrentArea == "" {
+		st.CurrentArea = "auto"
+	}
+	st.Status = "Iniciando"
 
-	return &Bot{
+	client := NewPokeTrueClient(cfg.Credentials.Token, cfg.BindIP, cb)
+
+	b := &Bot{
 		config:        cfg,
 		status:        st,
-		httpCli:       network.NewHTTPClient("https://game-api.example.com", 10*time.Second),
+		api:           client,
+		cb:            cb,
 		ticketChan:    make(chan string, 1),
 		turnstileChan: make(chan string, 1),
 	}
+
+	cbCfg.OnTrip = func(reason string) {
+		b.addLog(fmt.Sprintf("⚠️ Anti-Cheat disparado: %s. Pausando combate e recuando.", reason))
+		b.updateStatus(func(s *engine.AccountStatus) {
+			s.Status = "Proteção Anti-Cheat Ativa (Cooldown)"
+		})
+		_ = b.api.StopHunt(context.Background())
+	}
+
+	cbCfg.OnReset = func() {
+		b.addLog("✅ Cooldown concluído. Retomando caça normal.")
+		b.updateStatus(func(s *engine.AccountStatus) {
+			s.Status = "hunting"
+		})
+	}
+
+	return b
 }
 
 func (b *Bot) ID() string {
@@ -51,20 +98,49 @@ func (b *Bot) Init(ctx context.Context) error {
 		s.Status = "Autenticando..."
 	})
 
-	// 1. Exemplo de autenticação via HTTP API ou validação de cookies
-	log.Printf("[%s] Validando credenciais para %s ...", b.ID(), b.config.Credentials.Email)
-	time.Sleep(300 * time.Millisecond) // Simula handshake
+	// 1. Validar se já possui token JWT ou se precisa autenticar via login
+	if b.api.GetToken() == "" {
+		if b.config.Credentials.Email != "" && b.config.Credentials.Password != "" {
+			b.addLog("Autenticando com credenciais de login...")
+			resp, err := b.api.Login(ctx, b.config.Credentials.Email, b.config.Credentials.Password, "")
+			if err != nil {
+				b.addLog(fmt.Sprintf("Aviso: Falha no login direto (%v). Aguardando token...", err))
+			} else if resp.Token != "" {
+				b.api.SetToken(resp.Token)
+				b.addLog("Login realizado com sucesso!")
+			}
+		}
+	}
 
-	// 2. Prepara conexão de rede
-	b.updateStatus(func(s *engine.AccountStatus) {
-		s.Status = "Pronto para conectar"
-		s.Level = 1
-		s.HP = 100
-		s.MaxHP = 100
-		s.Mana = 50
-		s.MaxMana = 50
-	})
+	if b.api.GetToken() == "" {
+		b.updateStatus(func(s *engine.AccountStatus) {
+			s.Status = "Aguardando Token (insira no accounts.json)"
+		})
+		b.addLog("Atenção: Nenhum token de sessão configurado. Copie o token de localStorage['pokeidle.token'] para o accounts.json.")
+		return nil
+	}
 
+	// 2. Carregar perfil (me) e estado do jogo (state)
+	me, err := b.api.GetMe(ctx)
+	if err != nil {
+		b.addLog(fmt.Sprintf("Erro ao consultar /api/me: %v", err))
+	} else {
+		b.addLog(fmt.Sprintf("Treinador '%s' conectado com sucesso (Vip: %v, Diamantes: %d).", me.User, me.Vip, me.Diamonds))
+	}
+
+	st, err := b.api.GetState(ctx)
+	if err != nil {
+		return fmt.Errorf("falha ao carregar estado inicial do jogo: %w", err)
+	}
+
+	b.mu.Lock()
+	b.state = st
+	b.initialXp = st.NivelXp
+	b.startTime = time.Now()
+	b.mu.Unlock()
+
+	b.refreshStatusFromState(st)
+	b.addLog(fmt.Sprintf("Estado carregado: Treinador Nível %d | Ouro: %d | Time: %d Pokémon.", st.Nivel, st.Gold, len(st.Pokemon)))
 	return nil
 }
 
@@ -72,42 +148,546 @@ func (b *Bot) Run(ctx context.Context) error {
 	b.updateStatus(func(s *engine.AccountStatus) {
 		s.Status = "hunting"
 	})
-	b.addLog("Conexão com o jogo ativa. Iniciando rotinas de caça.")
+	b.addLog("⚡ Ciclo de caça autônomo iniciado.")
 
-	// Loop de simulação/ações periódicas do bot
-	ticker := time.NewTicker(2 * time.Second)
+	ticker := time.NewTicker(1500 * time.Millisecond)
 	defer ticker.Stop()
 
 	for {
 		select {
 		case <-ctx.Done():
+			b.addLog("Encerrando bot...")
+			_ = b.api.StopHunt(context.Background())
 			return ctx.Err()
+
+		case tk := <-b.ticketChan:
+			b.api.SetToken(tk)
+			b.addLog("Novo token de sessão aplicado.")
+			_ = b.Init(ctx)
+
 		case <-ticker.C:
-			b.performGameStep()
+			if !b.cb.AllowAction() {
+				continue
+			}
+
+			if err := b.performBotStep(ctx); err != nil {
+				b.addLog(fmt.Sprintf("Aviso no ciclo: %v", err))
+				time.Sleep(2 * time.Second)
+			}
 		}
 	}
 }
 
-func (b *Bot) performGameStep() {
+// performBotStep executa um ciclo completo de caça, fraquezas, cura, helds, treino e loot
+func (b *Bot) performBotStep(ctx context.Context) error {
+	now := time.Now()
+
+	// 1. Sincronização periódica do progresso da caçada
+	syncInterval := 20 * time.Second
+	if b.serverCombat {
+		syncInterval = 5 * time.Second
+	}
+
+	if now.Sub(b.lastSyncAt) > syncInterval {
+		b.lastSyncAt = now
+		activeHp := b.getActivePokemonHP()
+		syncResp, err := b.api.SyncHunt(ctx, activeHp, false)
+		if err == nil && syncResp != nil {
+			if syncResp.Delta != nil {
+				b.mu.Lock()
+				b.status.Kills += syncResp.Delta.Kills
+				b.status.Gold += syncResp.Delta.Gold
+				if syncResp.Delta.Treinador != nil {
+					b.status.Level = syncResp.Delta.Treinador.Nivel
+				}
+				b.mu.Unlock()
+
+				for _, cap := range syncResp.Delta.Capturas {
+					b.addLog(fmt.Sprintf("🎉 CAPTURA REALIZADA: %s (Lv %d)!", cap.Especie, cap.Nivel))
+				}
+			}
+			if syncResp.State != nil {
+				b.mu.Lock()
+				b.state = syncResp.State
+				b.mu.Unlock()
+				b.refreshStatusFromState(syncResp.State)
+			}
+		}
+	}
+
+	// 2. Resolver Rota Ótima (Fraquezas Elementais & Melhores Áreas)
+	if err := b.manageOptimalHunt(ctx); err != nil {
+		return err
+	}
+
+	// 3. Processar Fila de Combate (apenas se combate local ativo)
+	if !b.serverCombat {
+		if err := b.processCombatQueue(ctx); err != nil {
+			return err
+		}
+	}
+
+	// 4. Gestão de Vida e Auto-Heal (Stamina de HP)
+	if b.config.Settings.AutoHeal {
+		b.manageAutoHeal(ctx)
+	}
+
+	// 5. Gestão de Helds / Equips (Auto-Equip e Fusão de Tiers)
+	if b.config.Settings.AutoEquip && now.Sub(b.lastHeldAt) > 5*time.Minute {
+		b.lastHeldAt = now
+		go b.manageHelds(context.Background())
+	}
+
+	// 6. Gestão de Campo de Treino (Treino de EVs dos Pokémon de reserva)
+	if b.config.Settings.AutoTreino && now.Sub(b.lastTreinoAt) > 4*time.Minute {
+		b.lastTreinoAt = now
+		go b.manageTreino(context.Background())
+	}
+
+	// 7. Auto-Sell inteligente de Loot acumulado
+	if b.config.Settings.AutoSell && now.Sub(b.lastSellAt) > 3*time.Minute {
+		b.lastSellAt = now
+		go b.manageAutoSell(context.Background())
+	}
+
+	// 8. Missões da Oficial Jenny & Tarefas Diárias
+	if b.config.Settings.AutoDaily && now.Sub(b.lastJennyAt) > 8*time.Minute {
+		b.lastJennyAt = now
+		go b.manageJenny(context.Background())
+	}
+
+	// 9. Consumo automático de Rare Candies para acelerar evolução
+	if now.Sub(b.lastCandyAt) > 5*time.Minute {
+		b.lastCandyAt = now
+		go b.manageCandies(context.Background())
+	}
+
+	return nil
+}
+
+// manageOptimalHunt calcula a melhor área de EXP/h considerando tipos e fraquezas
+func (b *Bot) manageOptimalHunt(ctx context.Context) error {
+	b.mu.RLock()
+	st := b.state
+	targetArea := b.config.Settings.HuntTarget
+	b.mu.RUnlock()
+
+	if st == nil {
+		return nil
+	}
+
+	var desiredHunt Hunt
+	var reason string
+
+	if targetArea == "" || targetArea == "auto" {
+		bestHunt, why := FindBestHunt(st.Pokemon, st.Nivel)
+		desiredHunt = bestHunt
+		reason = why
+	} else {
+		h, exists := GetHunt(targetArea)
+		if exists {
+			desiredHunt = h
+			reason = "área configurada manualmente"
+		} else {
+			bestHunt, why := FindBestHunt(st.Pokemon, st.Nivel)
+			desiredHunt = bestHunt
+			reason = why
+		}
+	}
+
+	if desiredHunt.Slug == "" {
+		return nil
+	}
+
+	// Se a caça atual no servidor for diferente da desejada, transita para a nova área
+	if st.Hunt.Mapa != desiredHunt.Slug {
+		// Evitar trocas frequentes de rota (rate limit do servidor): no máximo 1 troca a cada 10 minutos
+		if st.Hunt.Mapa != "" && time.Since(b.lastHuntChangeAt) < 10*time.Minute && b.currentHunt.Slug != "" {
+			return nil
+		}
+		b.lastHuntChangeAt = time.Now()
+		b.addLog(fmt.Sprintf("🗺️ Transicionando para rota ótima: '%s' (%s)", desiredHunt.Nome, reason))
+		startResp, err := b.api.StartHunt(ctx, desiredHunt.Slug, map[string]any{}, false)
+		if err != nil {
+			return fmt.Errorf("erro iniciando hunt %s: %w", desiredHunt.Slug, err)
+		}
+		if startResp.State != nil {
+			b.mu.Lock()
+			b.state = startResp.State
+			b.currentHunt = desiredHunt
+			b.mu.Unlock()
+			b.refreshStatusFromState(startResp.State)
+		}
+	}
+
+	// Escolher o melhor Pokémon atacante do time para essa rota
+	bestPokeID := PickBestAttacker(st.Pokemon, desiredHunt.Pokes)
+	if bestPokeID > 0 && bestPokeID != st.Hunt.AtivoID {
+		b.addLog(fmt.Sprintf("🔄 Alternando atacante ativo para Pokémon #%d (maior vantagem elemental).", bestPokeID))
+		_ = b.api.SwitchActive(ctx, bestPokeID)
+	}
+
+	return nil
+}
+
+// processCombatQueue abate monstros na fila respeitando pacing anti-ban e captura
+func (b *Bot) processCombatQueue(ctx context.Context) error {
+	b.mu.RLock()
+	st := b.state
+	b.mu.RUnlock()
+
+	if st == nil || len(st.Hunt.Fila) == 0 {
+		return nil
+	}
+
+	for _, monster := range st.Hunt.Fila {
+		if monster.Morto {
+			continue
+		}
+
+		// 1. Avaliar auto-captura (prioriza shinies ou bichos configurados)
+		if b.config.Settings.AutoCatch || monster.Shiny {
+			b.attemptCatch(ctx, monster)
+		}
+
+		// 2. Realizar abate
+		activeHpRatio := 1.0
+		activeFicha := b.getActivePokemon()
+		if activeFicha != nil && activeFicha.HpMax > 0 {
+			activeHpRatio = math.Max(0.1, activeFicha.Hp/float64(activeFicha.HpMax))
+		}
+
+		killResp, err := b.api.KillMonster(ctx, monster.ID, activeHpRatio)
+		if err != nil {
+			if strings.Contains(err.Error(), "combate_no_servidor") {
+				b.serverCombat = true
+				b.addLog("⚡ Combate automático ativo no servidor (idle nativo). Sincronizando progresso...")
+				return nil
+			}
+			b.addLog(fmt.Sprintf("Erro ao abater monstro %s #%s: %v", monster.Especie, monster.ID, err))
+			return nil
+		}
+
+		b.mu.Lock()
+		b.status.Kills++
+		if killResp.Delta != nil {
+			b.status.Gold += killResp.Delta.Gold
+			if killResp.Delta.Treinador != nil {
+				b.status.Level = killResp.Delta.Treinador.Nivel
+			}
+		}
+		b.mu.Unlock()
+
+		if killResp.Capturado != nil {
+			b.addLog(fmt.Sprintf("🎉 CAPTURA REALIZADA: %s (Lv %d%s)!",
+				killResp.Capturado.Especie, killResp.Capturado.Nivel,
+				func() string {
+					if killResp.Capturado.Shiny {
+						return " SHINY ✨"
+					}
+					return ""
+				}()))
+		}
+
+		// Ritmo humano realista entre abates (300ms a 700ms)
+		time.Sleep(350 * time.Millisecond)
+		break // Processa um monstro por ciclo do loop
+	}
+
+	return nil
+}
+
+// attemptCatch tenta arremessar a pokébola adequada
+func (b *Bot) attemptCatch(ctx context.Context, m FilaMonster) {
+	b.mu.RLock()
+	stash := b.state.Itens
+	b.mu.RUnlock()
+
+	ball := "pokeball"
+	if m.Shiny {
+		for _, highBall := range []string{"ultraball", "solariball", "premierball", "superball", "greatball"} {
+			if stash[highBall] > 0 {
+				ball = highBall
+				break
+			}
+		}
+	} else if b.config.Settings.BallType != "" && b.config.Settings.BallType != "auto" {
+		ball = b.config.Settings.BallType
+	} else {
+		for _, bType := range []string{"pokeball", "greatball", "superball"} {
+			if stash[bType] > 0 {
+				ball = bType
+				break
+			}
+		}
+	}
+
+	if stash[ball] > 0 {
+		_, _ = b.api.ThrowBall(ctx, ball, m.ID)
+	}
+}
+
+// manageAutoHeal cuida da saúde e recuperação do Pokémon ativo
+func (b *Bot) manageAutoHeal(ctx context.Context) {
+	poke := b.getActivePokemon()
+	if poke == nil || poke.HpMax <= 0 {
+		return
+	}
+
+	threshold := b.config.Settings.HealThreshold
+	if threshold <= 0 {
+		threshold = 0.50
+	}
+
+	currentRatio := poke.Hp / float64(poke.HpMax)
+	if currentRatio >= threshold {
+		return
+	}
+
+	b.mu.RLock()
+	stash := b.state.Itens
+	b.mu.RUnlock()
+
+	missingHP := poke.HpMax - int(poke.Hp)
+	potion := GetBestPotion(missingHP, stash)
+
+	if potion != "" {
+		_ = b.api.ConsumeItem(ctx, potion, 1)
+		b.addLog(fmt.Sprintf("❤️ Auto-Heal: Monstro com %.0f%% HP. Usada poção '%s'.", currentRatio*100, potion))
+	} else if b.status.Gold > 1000 {
+		// Comprar lote emergencial de 10 poções
+		b.addLog("🛒 Estoque de poções esgotado. Comprando 10 poções na loja...")
+		_ = b.api.BuyItem(ctx, "potion", 10)
+	}
+}
+
+// manageHelds verifica equips ideais e funde duplicatas para tiers superiores
+func (b *Bot) manageHelds(ctx context.Context) {
+	helds, err := b.api.GetHelds(ctx)
+	if err != nil || helds == nil {
+		return
+	}
+
+	// 1. Auto-Equip: Verificar se algum Pokémon do time está sem held
+	b.mu.RLock()
+	team := b.state.Pokemon
+	b.mu.RUnlock()
+
+	for _, p := range team {
+		if p.Held == nil && len(helds.Mochila) > 0 {
+			// Achar o melhor held disponível na mochila
+			var bestHeld HeldDetail
+			var bestIdx = -1
+			for idx, h := range helds.Mochila {
+				if h.Tier > bestHeld.Tier {
+					bestHeld = h
+					bestIdx = idx
+				}
+			}
+			if bestIdx >= 0 {
+				b.addLog(fmt.Sprintf("🛡️ Auto-Equip: Equipando held '%s' Tier %d no Pokémon #%d.", bestHeld.Tipo, bestHeld.Tier, p.ID))
+				_ = b.api.EquipHeld(ctx, p.ID, bestHeld.ID)
+				helds.Mochila = append(helds.Mochila[:bestIdx], helds.Mochila[bestIdx+1:]...)
+			}
+		}
+	}
+
+	// 2. Auto-Fusão: Se houver 3 helds do mesmo tier e tipo na mochila, funde-os!
+	byTierAndType := make(map[string][]int)
+	for _, h := range helds.Mochila {
+		if h.Tier < 6 { // Evita fundir helds raros sem critério
+			key := fmt.Sprintf("%s_t%d", h.Tipo, h.Tier)
+			byTierAndType[key] = append(byTierAndType[key], h.ID)
+		}
+	}
+
+	for key, ids := range byTierAndType {
+		if len(ids) >= 3 {
+			triplet := ids[:3]
+			b.addLog(fmt.Sprintf("⚡ Auto-Fusão: Fundindo 3x helds de '%s' para criar Tier superior!", key))
+			_ = b.api.FuseHelds(ctx, triplet)
+			break
+		}
+	}
+}
+
+// manageTreino gerencia o campo de treino para aumentar os atributos (EVs) de reservas
+func (b *Bot) manageTreino(ctx context.Context) {
+	treino, err := b.api.GetTreino(ctx, "npc")
+	if err != nil || treino == nil {
+		return
+	}
+
+	b.mu.RLock()
+	team := b.state.Pokemon
+	gold := b.status.Gold
+	b.mu.RUnlock()
+
+	for _, slot := range treino.Slots {
+		// Se a vaga estiver vazia, colocar um Pokémon que não esteja em campo para treinar Atk/SpA
+		if slot.PokemonID == nil {
+			for _, p := range team {
+				if p.TeamSlot == nil || *p.TeamSlot != 0 {
+					stat := "atk"
+					pEntry, ok := GetPokemonEntry(p.Especie)
+					if ok && pEntry.Base.SpA > pEntry.Base.Atk {
+						stat = "spa"
+					}
+					b.addLog(fmt.Sprintf("🏋️ Campo de Treino: Colocando Pokémon #%d (%s) para treinar %s.", p.ID, p.Especie, stat))
+					_ = b.api.SetTreino(ctx, "npc", slot.Slot, p.ID, stat)
+					break
+				}
+			}
+		}
+
+		// Recarregar cargas de treino se estiverem abaixo de 50 e houver ouro suficiente
+		if slot.Cargas < 50 && gold > 10000 {
+			_ = b.api.RefillTreino(ctx, "npc", slot.Slot, "ouro")
+			b.addLog(fmt.Sprintf("🔋 Campo de Treino: Recarregadas cargas da vaga %d com ouro.", slot.Slot))
+		}
+	}
+}
+
+// manageAutoSell vende loot acumulado sem vender itens essenciais ou protegidos
+func (b *Bot) manageAutoSell(ctx context.Context) {
+	b.mu.RLock()
+	stash := b.state.Itens
+	b.mu.RUnlock()
+
+	itemsToSell := GetSellableLoot(stash)
+	if len(itemsToSell) == 0 {
+		return
+	}
+
+	totalItems := 0
+	for _, it := range itemsToSell {
+		totalItems += it.Qtd
+	}
+
+	b.addLog(fmt.Sprintf("💰 Auto-Sell: Vendendo %d itens de loot no NPC Mark...", totalItems))
+	err := b.api.SellLote(ctx, itemsToSell)
+	if err != nil {
+		b.addLog(fmt.Sprintf("Aviso no auto-sell: %v", err))
+	} else {
+		b.addLog("✅ Venda concluída com sucesso. Ouro atualizado!")
+	}
+}
+
+// manageJenny aceita e entrega missões diárias da Oficial Jenny
+func (b *Bot) manageJenny(ctx context.Context) {
+	jenny, err := b.api.GetJenny(ctx)
+	if err == nil && jenny != nil {
+		if !jenny.Escolhidas && len(jenny.Tarefas) > 0 {
+			var toPick []string
+			for i, t := range jenny.Tarefas {
+				if i < 3 {
+					toPick = append(toPick, t.Especie)
+				}
+			}
+			if len(toPick) > 0 {
+				_ = b.api.ChooseJenny(ctx, toPick)
+				b.addLog(fmt.Sprintf("👮 Oficial Jenny: Missões diárias aceitas (%s).", strings.Join(toPick, ", ")))
+			}
+		}
+	}
+
+	tarefas, err := b.api.GetTarefas(ctx)
+	if err == nil && tarefas != nil {
+		for _, t := range tarefas.Tarefas {
+			if t.Pronto && !t.Concluido {
+				_ = b.api.CompleteTarefa(ctx, t.ID)
+				b.addLog(fmt.Sprintf("🎁 Tarefa Concluída: '%s' resgatada!", t.Titulo))
+			}
+		}
+	}
+}
+
+// manageCandies usa doces raros em Pokémon com nível abaixo de 100
+func (b *Bot) manageCandies(ctx context.Context) {
+	b.mu.RLock()
+	stash := b.state.Itens
+	b.mu.RUnlock()
+
+	if stash["candy"] > 0 {
+		b.addLog("🍬 Consumindo Rare Candy no Pokémon ativo...")
+		_ = b.api.ConsumeItem(ctx, "candy", 1)
+	}
+}
+
+func findActivePokemon(st *PokeTrueState) *PokemonState {
+	if st == nil {
+		return nil
+	}
+	for i := range st.Pokemon {
+		if st.Pokemon[i].ID == st.Hunt.AtivoID {
+			return &st.Pokemon[i]
+		}
+	}
+	if len(st.Pokemon) > 0 {
+		return &st.Pokemon[0]
+	}
+	return nil
+}
+
+func (b *Bot) getActivePokemon() *PokemonState {
+	b.mu.RLock()
+	defer b.mu.RUnlock()
+	return findActivePokemon(b.state)
+}
+
+func (b *Bot) getActivePokemonHP() int {
+	poke := b.getActivePokemon()
+	if poke != nil {
+		return int(poke.Hp)
+	}
+	return 100
+}
+
+func (b *Bot) refreshStatusFromState(st *PokeTrueState) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
 
-	// Exemplo de atualização de status durante a caçada
-	b.status.Kills++
-	b.status.Gold += 15
-	b.status.ExpPerHour = 85000
-	b.status.DurationSec += 2
+	b.status.Level = st.Nivel
+	b.status.Gold = st.Gold
+	b.status.CurrentArea = st.Hunt.Mapa
 	b.status.UpdatedAt = time.Now().UnixMilli()
 
-	if b.status.Kills%20 == 0 {
-		b.status.Level++
-		b.status.MaxHP += 15
-		b.status.HP = b.status.MaxHP
-		b.status.Logs = append(b.status.Logs, fmt.Sprintf("Parabéns! Nível %d alcançado!", b.status.Level))
-		if len(b.status.Logs) > 10 {
-			b.status.Logs = b.status.Logs[1:]
+	active := findActivePokemon(st)
+	if active != nil {
+		b.status.Vocation = active.Especie
+		b.status.HP = int(active.Hp)
+		b.status.MaxHP = active.HpMax
+		if b.status.MaxHP <= 0 {
+			b.status.MaxHP = 100
 		}
 	}
+
+	// Calcular EXP/h dinâmico
+	elapsedHours := time.Since(b.startTime).Hours()
+	if elapsedHours > 0.005 {
+		xpGained := st.NivelXp - b.initialXp
+		if xpGained > 0 {
+			b.status.ExpPerHour = float64(xpGained) / elapsedHours
+		}
+	}
+	b.status.DurationSec = int(time.Since(b.startTime).Seconds())
+}
+
+func (b *Bot) addLog(msg string) {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	log.Printf("[%s] %s", b.config.ID, msg)
+	b.status.Logs = append(b.status.Logs, fmt.Sprintf("[%s] %s", time.Now().Format("15:04:05"), msg))
+	if len(b.status.Logs) > 15 {
+		b.status.Logs = b.status.Logs[1:]
+	}
+}
+
+func (b *Bot) updateStatus(fn func(*engine.AccountStatus)) {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	fn(&b.status)
+	b.status.UpdatedAt = time.Now().UnixMilli()
 }
 
 func (b *Bot) GetStatus() engine.AccountStatus {
@@ -117,32 +697,46 @@ func (b *Bot) GetStatus() engine.AccountStatus {
 }
 
 func (b *Bot) ExecuteAction(action string, payload map[string]any) (any, error) {
-	b.mu.Lock()
-	defer b.mu.Unlock()
-
 	switch action {
-	case "autoHunt":
-		b.config.Settings.AutoHunt = !b.config.Settings.AutoHunt
-		if b.config.Settings.AutoHunt {
-			b.status.Status = "hunting"
-			b.status.Logs = append(b.status.Logs, "Auto-hunt ativado.")
-		} else {
-			b.status.Status = "idle"
-			b.status.Logs = append(b.status.Logs, "Auto-hunt pausado.")
+	case "setHunt":
+		if target, ok := payload["target"].(string); ok {
+			b.mu.Lock()
+			b.config.Settings.HuntTarget = target
+			b.mu.Unlock()
+			b.addLog(fmt.Sprintf("Área alterada manualmente para: %s", target))
+			return "Área alterada com sucesso", nil
 		}
-		return map[string]any{"autoHunt": b.config.Settings.AutoHunt}, nil
+		return nil, fmt.Errorf("parâmetro 'target' ausente")
 
-	case "autoHeal":
-		b.status.HP = b.status.MaxHP
-		b.status.Mana = b.status.MaxMana
-		b.status.Logs = append(b.status.Logs, "Vida e mana restauradas com sucesso.")
-		return "Curado com sucesso!", nil
+	case "autoHunt":
+		b.mu.Lock()
+		b.config.Settings.AutoHunt = !b.config.Settings.AutoHunt
+		val := b.config.Settings.AutoHunt
+		b.mu.Unlock()
+		return map[string]any{"autoHunt": val}, nil
 
 	case "autoSell":
-		gained := int64(150)
-		b.status.Gold += gained
-		b.status.Logs = append(b.status.Logs, fmt.Sprintf("Loot vendido: +%d moedas.", gained))
-		return fmt.Sprintf("Vendido! +%d gold", gained), nil
+		go b.manageAutoSell(context.Background())
+		return "Auto-sell disparado", nil
+
+	case "autoEquip":
+		go b.manageHelds(context.Background())
+		return "Verificação de helds disparada", nil
+
+	case "autoHeal":
+		go b.manageAutoHeal(context.Background())
+		return "Auto-heal executado", nil
+
+	case "sync":
+		st, err := b.api.GetState(context.Background())
+		if err != nil {
+			return nil, err
+		}
+		b.mu.Lock()
+		b.state = st
+		b.mu.Unlock()
+		b.refreshStatusFromState(st)
+		return "Estado sincronizado com o servidor", nil
 
 	default:
 		return nil, fmt.Errorf("ação desconhecida: %s", action)
@@ -150,35 +744,15 @@ func (b *Bot) ExecuteAction(action string, payload map[string]any) (any, error) 
 }
 
 func (b *Bot) SupplyTicket(ticket, wsURL string) error {
-	log.Printf("[%s] Recebido ticket externo de jogo: %s", b.ID(), ticket)
-	select {
-	case b.ticketChan <- ticket:
-	default:
-	}
+	b.api.SetToken(ticket)
+	b.addLog("Token entregue via SupplyTicket.")
 	return nil
 }
 
 func (b *Bot) SupplyTurnstileToken(token string) error {
-	log.Printf("[%s] Recebido Turnstile Token roubado: %d chars", b.ID(), len(token))
 	select {
 	case b.turnstileChan <- token:
 	default:
 	}
 	return nil
-}
-
-func (b *Bot) updateStatus(fn func(s *engine.AccountStatus)) {
-	b.mu.Lock()
-	defer b.mu.Unlock()
-	fn(&b.status)
-	b.status.UpdatedAt = time.Now().UnixMilli()
-}
-
-func (b *Bot) addLog(msg string) {
-	b.mu.Lock()
-	defer b.mu.Unlock()
-	b.status.Logs = append(b.status.Logs, msg)
-	if len(b.status.Logs) > 10 {
-		b.status.Logs = b.status.Logs[1:]
-	}
 }

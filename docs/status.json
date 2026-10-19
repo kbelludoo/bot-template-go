@@ -1,5 +1,45 @@
 {
   "bots": {
+    "poketrue": {
+      "dashboardUrl": "https://kbelludoo.github.io/bot-template-go/?v=force1",
+      "engine": "Go Native Engine (Weakness Solver)",
+      "game": "PokeTrue",
+      "name": "PokeTrue Multi-Bot",
+      "port": 3014,
+      "status": {
+        "accounts": [
+          {
+            "currentArea": "praia_da_maresia",
+            "durationSec": 120,
+            "expPerHour": 24500,
+            "gold": 13233,
+            "hp": 156,
+            "id": "acc-1",
+            "kills": 17,
+            "level": 27,
+            "logs": [
+              "[11:00:03] Conexão com o PokeTrue estabelecida com sucesso.",
+              "[11:00:04] 🗺️ Transicionando para rota ótima: 'Praia da Maresia' (Lv 26-40)",
+              "[11:00:05] ⚡ Combate automático ativo no servidor (idle nativo).",
+              "[11:00:05] 💰 Auto-Sell: Vendendo itens de loot no NPC Mark...",
+              "[11:00:05] 🏋️ Campo de Treino: Colocando Pokémon para treinar.",
+              "[11:00:05] ✅ Venda concluída com sucesso. Ouro atualizado!"
+            ],
+            "maxHp": 100,
+            "maxMana": 0,
+            "name": "Treinador #1",
+            "status": "hunting",
+            "updatedAt": 1792407610736,
+            "vocation": "Mudkip"
+          }
+        ],
+        "goroutines": 9,
+        "online": true,
+        "ramAllocMB": 2.38,
+        "ramSysMB": 17.1,
+        "uptime": "15m"
+      }
+    },
     "baiak": {
       "dashboardUrl": "https://kbelludoo.github.io/baiak-idle-bot/",
       "engine": "Go Native Engine",

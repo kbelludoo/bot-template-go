@@ -282,12 +282,6 @@
       --theme-border: rgba(6, 182, 212, 0.45);
       --theme-glow: rgba(6, 182, 212, 0.25);
     }
-    #cardPokepixel {
-      --theme: #10b981;
-      --theme-bg: rgba(16, 185, 129, 0.12);
-      --theme-border: rgba(16, 185, 129, 0.45);
-      --theme-glow: rgba(16, 185, 129, 0.25);
-    }
     #cardPokeidle {
       --theme: #38bdf8;
       --theme-bg: rgba(56, 189, 248, 0.12);
@@ -323,12 +317,6 @@
       --theme-bg: rgba(245, 158, 11, 0.12);
       --theme-border: rgba(245, 158, 11, 0.45);
       --theme-glow: rgba(245, 158, 11, 0.25);
-    }
-    #cardFarmricochet {
-      --theme: #10b981;
-      --theme-bg: rgba(16, 185, 129, 0.12);
-      --theme-border: rgba(16, 185, 129, 0.45);
-      --theme-glow: rgba(16, 185, 129, 0.25);
     }
 
     .bot-card {
@@ -1288,30 +1276,6 @@
         </div>
       </div>
 
-      <!-- PokePixel Idle Card -->
-      <div class="bot-card" id="cardPokepixel">
-        <div>
-          <div class="bot-header">
-            <div class="bot-name-group">
-              <h3>⚡ PokePixel Idle</h3>
-              <span class="bot-port" style="color: #10b981; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.25);">PORTA 3015 • GO NATIVE (ROUTE SOLVER)</span>
-            </div>
-            <span class="badge-status badge-online" id="pokepixelBadge">—</span>
-          </div>
-
-          <div class="acc-list" id="pokepixelAccList">
-            <div style="color: var(--text-muted); font-size: 0.8rem;">Carregando contas...</div>
-          </div>
-        </div>
-
-        <div class="bot-footer">
-          <span style="font-size: 0.72rem; color: var(--text-dim);" id="pokepixelSummary">Dynamic Route Solver & Auto-Catch</span>
-          <a href="https://kbelludoo.github.io/pokepixel-bot/" target="_blank" class="btn-link" style="color: #10b981; border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.08);">
-            Abrir Dashboard PokePixel ↗
-          </a>
-        </div>
-      </div>
-
       <!-- PokeIdle.io Card -->
       <div class="bot-card" id="cardPokeidle">
         <div>
@@ -1455,27 +1419,26 @@
           </a>
         </div>
       </div>
-
-      <!-- Farm Ricochet Multi-Bot Card -->
-      <div class="bot-card" id="cardFarmricochet">
+      <!-- PokeTrue Multi-Bot Card -->
+      <div class="bot-card" id="cardPoketrue">
         <div>
           <div class="bot-header">
             <div class="bot-name-group">
-              <h3 style="color: #10b981;">🌾 Farm Ricochet</h3>
-              <span class="bot-port" style="color: #10b981; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.25);">PORTA 3013 • CIRCUIT BREAKER & FAST RECRUIT</span>
+              <h3 style="color: #ef4444;">🔥 PokeTrue Multi-Bot</h3>
+              <span class="bot-port" style="color: #ef4444; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.25);">PORTA 3014 • WEAKNESS SOLVER & IDLE HUNT</span>
             </div>
-            <span class="badge-status" id="farmricochetBadge" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: #10b981;">ONLINE</span>
+            <span class="badge-status" id="poketrueBadge" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: #10b981;">1/1 CAÇANDO</span>
           </div>
 
-          <div class="acc-list" id="farmricochetAccList">
-            <div style="color: var(--text-muted); font-size: 0.8rem;">Carregando fazenda...</div>
+          <div class="acc-list" id="poketrueAccList">
+            <div style="color: var(--text-muted); font-size: 0.8rem;">Carregando treinador em PokeTrue...</div>
           </div>
         </div>
 
         <div class="bot-footer">
-          <span style="font-size: 0.72rem; color: var(--text-dim);" id="farmricochetSummary">Campanha ativa • 1.25x speed</span>
-          <a href="https://kbelludoo.github.io/farmricochet-bot/" target="_blank" class="btn-link" style="color: #10b981; border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.08);">
-            Abrir Dashboard Farm Ricochet ↗
+          <span style="font-size: 0.72rem; color: var(--text-dim);" id="poketrueSummary">Usina Velha • Vantagem 2.5x</span>
+          <a href="https://kbelludoo.github.io/bot-template-go/?v=force1" target="_blank" class="btn-link" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.08);">
+            PokeTrue Online ↗
           </a>
         </div>
       </div>
@@ -1649,11 +1612,7 @@
 
     async function fetchStatus() {
       try {
-        const basePath = window.location.pathname.endsWith('/') 
-          ? window.location.pathname 
-          : window.location.pathname + '/';
-        const url = new URL('status.json?t=' + Date.now(), window.location.origin + basePath).href;
-        const res = await fetch(url, { cache: 'no-store' });
+        const res = await fetch('./status.json?t=' + Date.now(), { cache: 'no-store' });
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
         renderDashboard(data);
@@ -2051,49 +2010,6 @@
         pokelegacyAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados...</div>`;
       }
 
-      // PokePixel Idle
-      const pokepixel = bots.pokepixel || {};
-      const pxStatus = pokepixel.status || {};
-      const pxAccounts = pxStatus.accounts || [];
-      const pokepixelAccList = document.getElementById('pokepixelAccList');
-
-      if (pxAccounts.length > 0) {
-        pxAccounts.forEach((acc, idx) => {
-          checkLevelUp('PokePixel Idle', `Treinador #${idx + 1}`, acc.level, 'cardPokepixel');
-        });
-        pokepixelAccList.innerHTML = pxAccounts.map((acc, idx) => {
-          const hpPct = acc.maxHp ? Math.round((acc.hp / acc.maxHp) * 100) : 100;
-          return `
-            <div class="acc-item">
-              <div class="acc-item-header">
-                <span class="acc-name">⚡ Treinador #${idx + 1}</span>
-                <span class="acc-level" style="color: #10b981; border-color: rgba(16, 185, 129, 0.35);">Lv ${acc.level ?? '—'}</span>
-              </div>
-              <div class="stat-row" style="background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.35);">
-                <span style="color: #10b981; font-weight: 700;">🗺️ Área: <b>${acc.currentArea || 'Em caça'}</b></span>
-                <span style="color: #4ade80; font-weight: 800;">${acc.status || 'hunting'}</span>
-              </div>
-              <div class="stat-row">
-                <span>❤️ HP (${hpPct}%)</span>
-                <span style="color: #4ade80;">${acc.hp ?? '—'} / ${acc.maxHp ?? '—'}</span>
-              </div>
-              <div class="bar-slim"><div class="progress-fill fill-hp" style="width: ${hpPct}%"></div></div>
-              <div class="stat-row">
-                <span style="color: #facc15; font-weight: 800;">💰 ${(acc.gold ?? 0).toLocaleString('pt-BR')} gold</span>
-                <span style="color: #f87171; font-weight: 800;">⚔️ ${(acc.kills ?? 0).toLocaleString('pt-BR')} abates</span>
-              </div>
-            </div>
-          `;
-        }).join('');
-        const goldSum = pxAccounts.reduce((acc, a) => acc + (a.gold || 0), 0);
-        const killsSum = pxAccounts.reduce((acc, a) => acc + (a.kills || 0), 0);
-        const ramPx = pxStatus.ramAllocMB == null ? '' : ` • RAM: ${Number(pxStatus.ramAllocMB).toFixed(1)} MB`;
-        document.getElementById('pokepixelSummary').textContent = `💰 ${goldSum.toLocaleString('pt-BR')} gold${ramPx} • ⚔️ ${killsSum} kills`;
-        document.getElementById('pokepixelBadge').textContent = `⚡ ATIVO`;
-      } else {
-        pokepixelAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados...</div>`;
-      }
-
       // 7. PokeIdle.io
       const pokeidle = bots.pokeidle || {};
       const piStatus = pokeidle.status || {};
@@ -2300,7 +2216,7 @@
 
             const lvlDisplay = isExpired && (!acc.level || acc.level === 0) 
               ? `<span class="acc-level" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.4); font-size: 0.68rem;">⚠️ SESSÃO EXPIRADA</span>`
-              : `<span class="acc-level" style="color: #c8aa6e; border-color: rgba(200, 170, 110, 0.4);">Nv. ${acc.level != null && acc.level > 0 ? acc.level : '—'}</span>`;
+              : `<span class="acc-level" style="color: #c8aa6e; border-color: rgba(200, 170, 110, 0.4);">Nv. ${acc.level || 1}</span>`;
 
             checkLevelUp('LoL Idle', `${icon} ${name}`, acc.level, 'cardLolidle');
 
@@ -2399,7 +2315,7 @@
               <div class="acc-item">
                 <div class="acc-item-header">
                   <span class="acc-name">${icon} ${name}</span>
-                  <span class="acc-level" style="color: #f59e0b; border-color: rgba(245, 158, 11, 0.4);">Nv. ${acc.level != null && acc.level > 0 ? acc.level : '—'}</span>
+                  <span class="acc-level" style="color: #f59e0b; border-color: rgba(245, 158, 11, 0.4);">Nv. ${acc.level || 1}</span>
                 </div>
                 <div class="stat-row">
                   <span>❤️ HP (${hpPct}%)</span>
@@ -2434,63 +2350,63 @@
         }
       }
 
-      // 13. FARM RICOCHET
-      const farmStatus = bots.farmricochet?.status;
-      const farmAccList = document.getElementById('farmricochetAccList');
-      if (farmAccList) {
-        if (farmStatus && (farmStatus.accounts || farmStatus.online)) {
-          const accounts = farmStatus.accounts || [];
-          let farmTotalGold = 0;
-          farmAccList.innerHTML = accounts.map((acc, i) => {
-            farmTotalGold += (acc.gold || 0);
-            const hp = acc.hp || 444;
-            const maxHp = acc.maxHp || 444;
-            const hpPct = Math.min(100, Math.max(0, Math.round((hp / maxHp) * 100)));
-            const mana = acc.mana || 100;
-            const maxMana = acc.maxMana || 100;
-            const manaPct = Math.min(100, Math.max(0, Math.round((mana / maxMana) * 100)));
-            const area = acc.currentArea || 'Fase Ativa';
-            const extra = acc.extra || {};
-            const wheat = extra.wheat ? Number(extra.wheat).toLocaleString('pt-BR') : '0';
+      // 13. PokeTrue Multi-Bot (Weakness Solver & Idle Combat)
+      const poketrue = bots.poketrue || {};
+      const ptStatus = poketrue.status || {};
+      const ptAccounts = ptStatus.accounts || [];
+      const ptAccList = document.getElementById('poketrueAccList');
 
-            checkLevelUp('Farm Ricochet', `Conta #${i+1}`, acc.level, 'cardFarmricochet');
+      if (ptAccList) {
+        if (ptAccounts.length > 0) {
+          let ptTotalGold = 0;
+          let ptTotalKills = 0;
+
+          ptAccList.innerHTML = ptAccounts.map((acc, idx) => {
+            ptTotalGold += (acc.gold || 0);
+            ptTotalKills += (acc.kills || 0);
+            const poke = acc.vocation || 'Diglett';
+            const name = `Treinador #${idx + 1}`;
+            const hpPct = acc.maxHp ? Math.min(100, Math.round((acc.hp / acc.maxHp) * 100)) : 100;
+            const area = acc.currentArea || 'Usina Velha';
+            const expH = acc.expPerHour ? `${Math.round(acc.expPerHour).toLocaleString('pt-BR')} exp/h` : 'Calculando...';
+
+            checkLevelUp('PokeTrue', `🔥 ${poke} (${name})`, acc.level, 'cardPoketrue');
 
             return `
               <div class="acc-item">
                 <div class="acc-item-header">
-                  <span class="acc-name">🌾 Conta #${i+1} (${acc.vocation || 'Herói'})</span>
-                  <span class="acc-level" style="color: #10b981; border-color: rgba(16, 185, 129, 0.4);">Nv. ${acc.level != null && acc.level > 0 ? acc.level : '—'}</span>
+                  <span class="acc-name">🔥 ${poke} (${name})</span>
+                  <span class="acc-level" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.4);">Nv. ${acc.level || 1}</span>
                 </div>
                 <div class="stat-row">
                   <span>❤️ HP (${hpPct}%)</span>
-                  <span style="color: #4ade80;">${hp} / ${maxHp}</span>
+                  <span style="color: #4ade80;">${(acc.hp || 0).toLocaleString('pt-BR')} / ${(acc.maxHp || 0).toLocaleString('pt-BR')}</span>
                 </div>
                 <div class="bar-slim"><div class="progress-fill fill-hp" style="width: ${hpPct}%"></div></div>
                 <div class="stat-row">
-                  <span>💧 Mana (${manaPct}%)</span>
-                  <span style="color: #38bdf8;">${mana} / ${maxMana}</span>
+                  <span>💰 ${(acc.gold || 0).toLocaleString('pt-BR')} gold</span>
+                  <span style="color: #f59e0b;">⚡ ${expH}</span>
                 </div>
-                <div class="bar-slim"><div class="progress-fill" style="width: ${manaPct}%; background: linear-gradient(90deg, #0284c7, #38bdf8);"></div></div>
-                <div class="stat-row">
-                  <span>💰 ${(acc.gold || 0).toLocaleString('pt-BR')} Gold • 🌾 ${wheat}</span>
-                  <span style="color: #10b981;">🗺️ ${area}</span>
+                <div class="stat-row" style="margin-top: 4px;">
+                  <span style="color: var(--text-dim); font-size: 0.72rem;">🗺️ Área: ${area} (Vantagem 2.5x)</span>
+                  <span style="color: #10b981; font-size: 0.72rem;">Status: ${acc.status || 'hunting'}</span>
                 </div>
               </div>
             `;
           }).join('');
 
-          const ramFarm = farmStatus.ramAllocMB ? Number(farmStatus.ramAllocMB).toFixed(1) + ' MB' : '~1.2 MB';
-          if (document.getElementById('farmricochetSummary')) {
-            document.getElementById('farmricochetSummary').textContent = `Fase Ativa • 💰 ${farmTotalGold.toLocaleString('pt-BR')} Gold • RAM: ${ramFarm}`;
+          const ramPt = ptStatus.ramAllocMB ? Number(ptStatus.ramAllocMB).toFixed(1) + ' MB' : '~1.5 MB';
+          if (document.getElementById('poketrueSummary')) {
+            document.getElementById('poketrueSummary').textContent = `💰 ${ptTotalGold.toLocaleString('pt-BR')} gold • RAM: ${ramPt}`;
           }
-          if (document.getElementById('farmricochetBadge')) {
-            document.getElementById('farmricochetBadge').textContent = 'ONLINE (FASE ATIVA)';
-            document.getElementById('farmricochetBadge').style.background = 'rgba(16, 185, 129, 0.15)';
-            document.getElementById('farmricochetBadge').style.color = '#10b981';
-            document.getElementById('farmricochetBadge').style.borderColor = '#10b981';
+          if (document.getElementById('poketrueBadge')) {
+            document.getElementById('poketrueBadge').textContent = '⚔️ 1/1 CAÇANDO';
+            document.getElementById('poketrueBadge').style.background = 'rgba(16, 185, 129, 0.15)';
+            document.getElementById('poketrueBadge').style.color = '#10b981';
+            document.getElementById('poketrueBadge').style.borderColor = '#10b981';
           }
         } else {
-          farmAccList.innerHTML = `<div style="color: var(--text-muted); font-size: 0.8rem;">Conectando fazenda...</div>`;
+          ptAccList.innerHTML = `<div style="color: var(--text-muted); font-size: 0.8rem;">Carregando estado...</div>`;
         }
       }
 

@@ -71,6 +71,7 @@ func fetchAll() map[string]map[string]any {
 		"baiak":         "http://127.0.0.1:8090/api/fleet",
 		"twitchminer":   "http://127.0.0.1:3010/api/status",
 		"lolidle":       "http://127.0.0.1:3011/api/status",
+		"poketrue":      "http://127.0.0.1:3014/api/status",
 	}
 	results := make(map[string]map[string]any, len(urls))
 	var mu sync.Mutex
@@ -215,6 +216,16 @@ func sanitizeBotPayload(bots map[string]any) any {
 	})
 	eachAccount(bots, "lolidle", func(i int, acc map[string]any) {
 		label := fmt.Sprintf("Campeão #%d", i+1)
+		acc["name"] = label
+		if _, ok := acc["id"].(string); ok {
+			acc["id"] = fmt.Sprintf("acc-%d", i+1)
+		}
+		delete(acc, "bindIp")
+		delete(acc, "outboundIp")
+		replaceLogNick(acc, "logs", label)
+	})
+	eachAccount(bots, "poketrue", func(i int, acc map[string]any) {
+		label := fmt.Sprintf("Treinador #%d", i+1)
 		acc["name"] = label
 		if _, ok := acc["id"].(string); ok {
 			acc["id"] = fmt.Sprintf("acc-%d", i+1)
@@ -372,6 +383,14 @@ func buildBots(results map[string]map[string]any) map[string]any {
 			"port":         3011,
 			"dashboardUrl": "https://kbelludoo.github.io/lolidle-bot/",
 			"status":       results["lolidle"],
+		},
+		"poketrue": map[string]any{
+			"name":         "PokeTrue Multi-Bot",
+			"game":         "PokeTrue",
+			"engine":       "Go Native Engine (Weakness Solver)",
+			"port":         3014,
+			"dashboardUrl": "https://kbelludoo.github.io/bot-template-go/?v=force1",
+			"status":       results["poketrue"],
 		},
 	}
 }
