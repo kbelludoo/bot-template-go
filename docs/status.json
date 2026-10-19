@@ -1,5 +1,47 @@
 {
   "bots": {
+    "farmricochet": {
+      "dashboardUrl": "https://kbelludoo.github.io/farmricochet-bot/",
+      "engine": "Go Native Engine (Circuit Breaker)",
+      "game": "Farm Ricochet",
+      "name": "Farm Ricochet Bot",
+      "port": 3013,
+      "status": {
+        "accounts": [
+          {
+            "currentArea": "Fase 2: Ato 1 — Invasão · Fazenda 2/5",
+            "extra": {
+              "gems": 0,
+              "onlinePlayers": 552,
+              "speedMultiplier": 1.25,
+              "teamSlots": "1/3",
+              "wheat": 10740,
+              "wood": 473
+            },
+            "gold": 384,
+            "hp": 444,
+            "id": "farm-1",
+            "kills": 0,
+            "level": 2,
+            "mana": 100,
+            "maxHp": 444,
+            "maxMana": 100,
+            "name": "Fazendeiro #1",
+            "recentLogs": [
+              "▶ Fase 2 iniciada (Meta: 350 Trigo | Taxa: 4.20/s | Est: 66s)",
+              "🌱 Talento verificado: wheat_harvest",
+              "⚡ Bot Go operando em modo stealth na VPS (1.16 MB RAM)"
+            ],
+            "status": "Jogando Fase 2",
+            "vocation": "knight"
+          }
+        ],
+        "goroutines": 9,
+        "online": true,
+        "ramAllocMB": 1.16,
+        "uptime": "Ativo 24/7"
+      }
+    },
     "baiak": {
       "dashboardUrl": "https://kbelludoo.github.io/baiak-idle-bot/",
       "engine": "Go Native Engine",

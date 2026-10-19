@@ -324,6 +324,12 @@
       --theme-border: rgba(245, 158, 11, 0.45);
       --theme-glow: rgba(245, 158, 11, 0.25);
     }
+    #cardFarmricochet {
+      --theme: #10b981;
+      --theme-bg: rgba(16, 185, 129, 0.12);
+      --theme-border: rgba(16, 185, 129, 0.45);
+      --theme-glow: rgba(16, 185, 129, 0.25);
+    }
 
     .bot-card {
       background: var(--card-bg);
@@ -1449,6 +1455,30 @@
           </a>
         </div>
       </div>
+
+      <!-- Farm Ricochet Multi-Bot Card -->
+      <div class="bot-card" id="cardFarmricochet">
+        <div>
+          <div class="bot-header">
+            <div class="bot-name-group">
+              <h3 style="color: #10b981;">🌾 Farm Ricochet</h3>
+              <span class="bot-port" style="color: #10b981; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.25);">PORTA 3013 • CIRCUIT BREAKER & FAST RECRUIT</span>
+            </div>
+            <span class="badge-status" id="farmricochetBadge" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: #10b981;">ONLINE</span>
+          </div>
+
+          <div class="acc-list" id="farmricochetAccList">
+            <div style="color: var(--text-muted); font-size: 0.8rem;">Carregando fazenda...</div>
+          </div>
+        </div>
+
+        <div class="bot-footer">
+          <span style="font-size: 0.72rem; color: var(--text-dim);" id="farmricochetSummary">Campanha ativa • 1.25x speed</span>
+          <a href="https://kbelludoo.github.io/farmricochet-bot/" target="_blank" class="btn-link" style="color: #10b981; border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.08);">
+            Abrir Dashboard Farm Ricochet ↗
+          </a>
+        </div>
+      </div>
     </div>
 
     <!-- LIVE ACTIVITY TICKER (RODAPÉ DO MODO STREAM) -->
@@ -2401,6 +2431,66 @@
           }
         } else {
           luxAccList.innerHTML = `<div style="color: var(--text-muted); font-size: 0.8rem;">Conectando frota...</div>`;
+        }
+      }
+
+      // 13. FARM RICOCHET
+      const farmStatus = bots.farmricochet?.status;
+      const farmAccList = document.getElementById('farmricochetAccList');
+      if (farmAccList) {
+        if (farmStatus && (farmStatus.accounts || farmStatus.online)) {
+          const accounts = farmStatus.accounts || [];
+          let farmTotalGold = 0;
+          farmAccList.innerHTML = accounts.map((acc, i) => {
+            farmTotalGold += (acc.gold || 0);
+            const hp = acc.hp || 444;
+            const maxHp = acc.maxHp || 444;
+            const hpPct = Math.min(100, Math.max(0, Math.round((hp / maxHp) * 100)));
+            const mana = acc.mana || 100;
+            const maxMana = acc.maxMana || 100;
+            const manaPct = Math.min(100, Math.max(0, Math.round((mana / maxMana) * 100)));
+            const area = acc.currentArea || 'Fase Ativa';
+            const extra = acc.extra || {};
+            const wheat = extra.wheat ? Number(extra.wheat).toLocaleString('pt-BR') : '0';
+
+            checkLevelUp('Farm Ricochet', `Conta #${i+1}`, acc.level, 'cardFarmricochet');
+
+            return `
+              <div class="acc-item">
+                <div class="acc-item-header">
+                  <span class="acc-name">🌾 Conta #${i+1} (${acc.vocation || 'Herói'})</span>
+                  <span class="acc-level" style="color: #10b981; border-color: rgba(16, 185, 129, 0.4);">Nv. ${acc.level != null && acc.level > 0 ? acc.level : '—'}</span>
+                </div>
+                <div class="stat-row">
+                  <span>❤️ HP (${hpPct}%)</span>
+                  <span style="color: #4ade80;">${hp} / ${maxHp}</span>
+                </div>
+                <div class="bar-slim"><div class="progress-fill fill-hp" style="width: ${hpPct}%"></div></div>
+                <div class="stat-row">
+                  <span>💧 Mana (${manaPct}%)</span>
+                  <span style="color: #38bdf8;">${mana} / ${maxMana}</span>
+                </div>
+                <div class="bar-slim"><div class="progress-fill" style="width: ${manaPct}%; background: linear-gradient(90deg, #0284c7, #38bdf8);"></div></div>
+                <div class="stat-row">
+                  <span>💰 ${(acc.gold || 0).toLocaleString('pt-BR')} Gold • 🌾 ${wheat}</span>
+                  <span style="color: #10b981;">🗺️ ${area}</span>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          const ramFarm = farmStatus.ramAllocMB ? Number(farmStatus.ramAllocMB).toFixed(1) + ' MB' : '~1.2 MB';
+          if (document.getElementById('farmricochetSummary')) {
+            document.getElementById('farmricochetSummary').textContent = `Fase Ativa • 💰 ${farmTotalGold.toLocaleString('pt-BR')} Gold • RAM: ${ramFarm}`;
+          }
+          if (document.getElementById('farmricochetBadge')) {
+            document.getElementById('farmricochetBadge').textContent = 'ONLINE (FASE ATIVA)';
+            document.getElementById('farmricochetBadge').style.background = 'rgba(16, 185, 129, 0.15)';
+            document.getElementById('farmricochetBadge').style.color = '#10b981';
+            document.getElementById('farmricochetBadge').style.borderColor = '#10b981';
+          }
+        } else {
+          farmAccList.innerHTML = `<div style="color: var(--text-muted); font-size: 0.8rem;">Conectando fazenda...</div>`;
         }
       }
 
