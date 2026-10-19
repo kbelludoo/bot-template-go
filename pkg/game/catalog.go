@@ -18,6 +18,22 @@ var pokedexJSON []byte
 //go:embed data/loot.json
 var lootJSON []byte
 
+//go:embed data/evolucoes.json
+var evolucoesJSON []byte
+
+type EvolucaoData map[string]EvolucaoEntry
+
+type EvolucaoEntry struct {
+	Estagio int             `json:"estagio"`
+	Nivel   int             `json:"nivel"`
+	Opcoes  []EvolucaoOpcao `json:"opcoes"`
+}
+
+type EvolucaoOpcao struct {
+	Para   string         `json:"para"`
+	Pedras map[string]int `json:"pedras"`
+}
+
 // Hunt representa uma área de caça do jogo
 type Hunt struct {
 	Slug         string   `json:"slug"`
@@ -85,7 +101,14 @@ var (
 	huntsMap    map[string]Hunt
 	pokedex     PokedexData
 	lootPrices  map[string]int
+	evolucoesMap EvolucaoData
 )
+
+func GetEvolucao(especie string) (EvolucaoEntry, bool) {
+	InitCatalog()
+	e, ok := evolucoesMap[especie]
+	return e, ok
+}
 
 // Itens protegidos que NUNCA devem ser vendidos no auto-sell
 var ProtectedItems = map[string]bool{
@@ -164,6 +187,13 @@ func InitCatalog() {
 				}
 			}
 			log.Printf("[Catálogo] %d preços de loot e itens registrados.", len(lootPrices))
+		}
+
+		evolucoesMap = make(EvolucaoData)
+		if err := json.Unmarshal(evolucoesJSON, &evolucoesMap); err != nil {
+			log.Printf("[Catálogo] Erro ao carregar evolucoes.json: %v", err)
+		} else {
+			log.Printf("[Catálogo] %d árvores de evolução carregadas.", len(evolucoesMap))
 		}
 	})
 }

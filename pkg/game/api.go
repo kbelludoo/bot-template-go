@@ -495,3 +495,76 @@ func (c *PokeTrueClient) ResgatarPokeLog(ctx context.Context, tudo bool, especie
 	return &resp, nil
 }
 
+// GetRunas consulta as runas, pontos e slots do treinador
+func (c *PokeTrueClient) GetRunas(ctx context.Context) (*RunasResponse, error) {
+	var resp RunasResponse
+	err := c.DoRequest(ctx, http.MethodGet, "runas", nil, &resp)
+	return &resp, err
+}
+
+// ComprarRuna adquire uma runa na loja de runas com pontos de PokéLog
+func (c *PokeTrueClient) ComprarRuna(ctx context.Context, runa string) error {
+	payload := map[string]any{"runa": runa}
+	return c.DoRequest(ctx, http.MethodPost, "runas/comprar", payload, nil)
+}
+
+// EncaixarRuna equipa uma runa num slot ativo associando a um elemento
+func (c *PokeTrueClient) EncaixarRuna(ctx context.Context, slot int, runa, elemento string) error {
+	payload := map[string]any{
+		"slot":     slot,
+		"runa":     runa,
+		"elemento": elemento,
+	}
+	return c.DoRequest(ctx, http.MethodPost, "runas/encaixar", payload, nil)
+}
+
+// EvolvePokemon realiza a evolução de um Pokémon
+func (c *PokeTrueClient) EvolvePokemon(ctx context.Context, pokemonID, indice int) (*EvolveResponse, error) {
+	payload := map[string]any{
+		"pokemonId": pokemonID,
+		"indice":    indice,
+	}
+	var resp EvolveResponse
+	err := c.DoRequest(ctx, http.MethodPost, "pokemon/evolve", payload, &resp)
+	return &resp, err
+}
+
+// GetGinasios consulta os ginásios disponíveis e status das insígnias
+func (c *PokeTrueClient) GetGinasios(ctx context.Context) (*GinasiosResponse, error) {
+	var resp GinasiosResponse
+	err := c.DoRequest(ctx, http.MethodGet, "ginasio", nil, &resp)
+	return &resp, err
+}
+
+// DesafiarGinasio desafia o líder de um ginásio
+func (c *PokeTrueClient) DesafiarGinasio(ctx context.Context, tipo string) (*DesafiarGinasioResponse, error) {
+	payload := map[string]any{
+		"tipo":   tipo,
+		"contra": "lider",
+	}
+	var resp DesafiarGinasioResponse
+	err := c.DoRequest(ctx, http.MethodPost, "ginasio/desafiar", payload, &resp)
+	return &resp, err
+}
+
+// GetBossInfo consulta o status de um World Boss diário
+func (c *PokeTrueClient) GetBossInfo(ctx context.Context, chefe string) (*BossInfoResponse, error) {
+	var resp BossInfoResponse
+	err := c.DoRequest(ctx, http.MethodGet, "boss/info?chefe="+chefe, nil, &resp)
+	return &resp, err
+}
+
+// LutarBoss desafia um World Boss diário usando a tentativa grátis
+func (c *PokeTrueClient) LutarBoss(ctx context.Context, chefe string, pokemonID int) (*BossLutaResponse, error) {
+	payload := map[string]any{
+		"chefe":       chefe,
+		"dificuldade": "facil",
+		"pokemonId":   pokemonID,
+		"pagar":       false,
+		"leite":       false,
+	}
+	var resp BossLutaResponse
+	err := c.DoRequest(ctx, http.MethodPost, "boss/lutar", payload, &resp)
+	return &resp, err
+}
+

@@ -37,6 +37,10 @@ type Bot struct {
 	lastCandyAt     time.Time
 	lastHuntChangeAt time.Time
 	lastPokeLogAt   time.Time
+	lastRunasAt     time.Time
+	lastEvoAt       time.Time
+	lastGinasioAt   time.Time
+	lastBossAt      time.Time
 	lastSwitchedPokeID int
 
 	// Canais para supply externo de tickets/tokens
@@ -279,6 +283,30 @@ func (b *Bot) performBotStep(ctx context.Context) error {
 	if now.Sub(b.lastPokeLogAt) > 2*time.Minute {
 		b.lastPokeLogAt = now
 		go b.managePokeLog(context.Background())
+	}
+
+	// 11. Gestão de Runas do PokéLog (Compra e ativação de bônus passivos de EXP e Loot)
+	if now.Sub(b.lastRunasAt) > 6*time.Minute {
+		b.lastRunasAt = now
+		go b.manageRunas(context.Background())
+	}
+
+	// 12. Gestão de Evolução de Pokémon (Nível e pedras elementais)
+	if now.Sub(b.lastEvoAt) > 5*time.Minute {
+		b.lastEvoAt = now
+		go b.manageEvolucao(context.Background())
+	}
+
+	// 13. Gestão de Ginásios & Insígnias (Bônus permanente de dano)
+	if now.Sub(b.lastGinasioAt) > 10*time.Minute {
+		b.lastGinasioAt = now
+		go b.manageGinasios(context.Background())
+	}
+
+	// 14. Gestão de World Boss diário (Entrada grátis diária)
+	if now.Sub(b.lastBossAt) > 15*time.Minute {
+		b.lastBossAt = now
+		go b.manageBoss(context.Background())
 	}
 
 	return nil
@@ -665,6 +693,199 @@ func (b *Bot) managePokeLog(ctx context.Context) {
 		b.mu.Unlock()
 		if resp.State != nil {
 			b.refreshStatusFromState(resp.State)
+		}
+	}
+}
+
+// manageRunas adquire e equipa runas passivas de XP e Loot usando os pontos de PokéLog
+func (b *Bot) manageRunas(ctx context.Context) {
+	runasInfo, err := b.api.GetRunas(ctx)
+	if err != nil || runasInfo == nil {
+		return
+	}
+
+	pontos := runasInfo.Pontos
+	runaDefs := []struct {
+		id    string
+		custo int
+	}{
+		{"powerful", 550},
+		{"sacred", 650},
+		{"heroic", 750},
+		{"victory", 850},
+	}
+
+	compradas := make(map[string]bool)
+	for _, r := range runasInfo.Compradas {
+		compradas[r] = true
+	}
+	for _, s := range runasInfo.Slots {
+		if s.Runa != "" {
+			compradas[s.Runa] = true
+		}
+	}
+
+	livreSlot := -1
+	for i, s := range runasInfo.Slots {
+		if s.Runa == "" {
+			livreSlot = i
+			break
+		}
+	}
+
+	// Se tiver runa comprada e slot livre, equipa
+	if livreSlot >= 0 && len(runasInfo.Compradas) > 0 {
+		r := runasInfo.Compradas[0]
+		elem := "normal"
+		b.mu.RLock()
+		if b.currentHunt.Slug != "" && len(b.currentHunt.Pokes) > 0 {
+			if pe, ok := GetPokemonEntry(b.currentHunt.Pokes[0]); ok && len(pe.Tipos) > 0 {
+				elem = pe.Tipos[0]
+			}
+		}
+		b.mu.RUnlock()
+
+		_ = b.api.EncaixarRuna(ctx, livreSlot, r, elem)
+		b.addLog(fmt.Sprintf("✨ Runa '%s' ativada no Slot %d contra elemento %s!", r, livreSlot+1, elem))
+		return
+	}
+
+	// Se tiver pontos suficientes para comprar uma nova runa
+	for _, rd := range runaDefs {
+		if !compradas[rd.id] && pontos >= rd.custo {
+			b.addLog(fmt.Sprintf("🛒 Comprando Runa '%s' por %d Pontos de PokéLog...", rd.id, rd.custo))
+			if err := b.api.ComprarRuna(ctx, rd.id); err == nil {
+				if livreSlot >= 0 {
+					elem := "normal"
+					_ = b.api.EncaixarRuna(ctx, livreSlot, rd.id, elem)
+					b.addLog(fmt.Sprintf("✨ Runa '%s' ativada no Slot %d!", rd.id, livreSlot+1))
+				}
+				return
+			}
+		}
+	}
+}
+
+// manageEvolucao evolui Pokémon que atingiram o nível e possuem pedras necessárias
+func (b *Bot) manageEvolucao(ctx context.Context) {
+	b.mu.RLock()
+	st := b.state
+	b.mu.RUnlock()
+	if st == nil {
+		return
+	}
+
+	for _, p := range st.Pokemon {
+		evo, hasEvo := GetEvolucao(p.Especie)
+		if !hasEvo || len(evo.Opcoes) == 0 {
+			continue
+		}
+
+		if p.Nivel < evo.Nivel {
+			continue
+		}
+
+		primeiraOpcao := evo.Opcoes[0]
+		if nextEntry, ok := GetPokemonEntry(primeiraOpcao.Para); ok {
+			if nextEntry.NivelReq > st.Nivel {
+				continue
+			}
+		}
+
+		podeEvoluir := true
+		for pedra, qtd := range primeiraOpcao.Pedras {
+			if st.Itens[pedra] < qtd {
+				podeEvoluir = false
+				break
+			}
+		}
+
+		if podeEvoluir {
+			b.addLog(fmt.Sprintf("🧬 Evoluindo Pokémon #%d (%s -> %s)...", p.ID, p.Especie, primeiraOpcao.Para))
+			resp, err := b.api.EvolvePokemon(ctx, p.ID, 0)
+			if err == nil {
+				b.addLog(fmt.Sprintf("🎉 EVOLUÇÃO CONCLUÍDA: %s agora é %s!", p.Especie, primeiraOpcao.Para))
+				if resp != nil && resp.State != nil {
+					b.mu.Lock()
+					b.state = resp.State
+					b.mu.Unlock()
+					b.refreshStatusFromState(resp.State)
+				}
+				return
+			}
+		}
+	}
+}
+
+// manageGinasios desafia ginásios para conquistar insígnias e bônus passivos de tipo
+func (b *Bot) manageGinasios(ctx context.Context) {
+	b.mu.RLock()
+	st := b.state
+	b.mu.RUnlock()
+	if st == nil {
+		return
+	}
+
+	ginResp, err := b.api.GetGinasios(ctx)
+	if err != nil || ginResp == nil {
+		return
+	}
+
+	for _, g := range ginResp.Lista {
+		if g.TemInsignia {
+			continue
+		}
+
+		if ginResp.MeuNivel >= g.NivelMin && g.Tentativas.GratisRestam > 0 {
+			b.addLog(fmt.Sprintf("🏛️ Desafiando Ginásio %s (%s)...", g.Nome, g.Tipo))
+			resp, err := b.api.DesafiarGinasio(ctx, g.Tipo)
+			if err == nil && resp != nil {
+				if resp.Venceu {
+					b.addLog(fmt.Sprintf("🏆 VITÓRIA NO GINÁSIO: Insígnia do tipo %s conquistada!", g.Tipo))
+					if resp.State != nil {
+						b.mu.Lock()
+						b.state = resp.State
+						b.mu.Unlock()
+						b.refreshStatusFromState(resp.State)
+					}
+				} else {
+					b.addLog(fmt.Sprintf("⚔️ Batalha no Ginásio %s finalizada.", g.Nome))
+				}
+				return
+			}
+		}
+	}
+}
+
+// manageBoss participa dos desafios diários de World Boss
+func (b *Bot) manageBoss(ctx context.Context) {
+	b.mu.RLock()
+	st := b.state
+	b.mu.RUnlock()
+	if st == nil {
+		return
+	}
+
+	chefe := "magcargo"
+	info, err := b.api.GetBossInfo(ctx, chefe)
+	if err != nil || info == nil {
+		return
+	}
+
+	if info.Entradas.GratisRestam > 0 {
+		activePoke := b.getActivePokemon()
+		pokeID := 0
+		if activePoke != nil {
+			pokeID = activePoke.ID
+		}
+		b.addLog(fmt.Sprintf("👹 Participando do World Boss: %s (Entrada Grátis)...", chefe))
+		resp, err := b.api.LutarBoss(ctx, chefe, pokeID)
+		if err == nil && resp != nil {
+			if resp.Venceu {
+				b.addLog(fmt.Sprintf("🎉 CHEFE DERROTADO: +%d XP, +%d Ouro!", resp.Xp, resp.Gold))
+			} else {
+				b.addLog("⚔️ Luta contra World Boss finalizada.")
+			}
 		}
 	}
 }

@@ -280,3 +280,65 @@ type PokeLogFeito struct {
 	Pontos  int    `json:"pontos"`
 }
 
+// RunasResponse retornado por /api/runas
+type RunasResponse struct {
+	Pontos    int        `json:"pontos"`
+	Compradas []string   `json:"compradas"`
+	Slots     []RunaSlot `json:"slots"`
+	Erro      string     `json:"erro,omitempty"`
+}
+
+type RunaSlot struct {
+	Runa     string `json:"runa"`
+	Elemento string `json:"elemento"`
+}
+
+// EvolveResponse retornado por /api/pokemon/evolve
+type EvolveResponse struct {
+	State *PokeTrueState `json:"state,omitempty"`
+	Erro  string         `json:"erro,omitempty"`
+}
+
+// GinasiosResponse retornado por /api/ginasio
+type GinasiosResponse struct {
+	MeuNivel int           `json:"meuNivel"`
+	NivelMin int           `json:"nivelMin"`
+	Lista    []GinasioItem `json:"lista"`
+	Erro     string        `json:"erro,omitempty"`
+}
+
+type GinasioItem struct {
+	Tipo        string `json:"tipo"`
+	Nome        string `json:"nome"`
+	NivelMin    int    `json:"nivelMin"`
+	TemInsignia bool   `json:"temInsignia"`
+	Tentativas  struct {
+		GratisRestam int `json:"gratisRestam"`
+		TotalRestam  int `json:"totalRestam"`
+	} `json:"tentativas"`
+}
+
+// DesafiarGinasioResponse retornado por /api/ginasio/desafiar
+type DesafiarGinasioResponse struct {
+	Venceu bool           `json:"venceu"`
+	State  *PokeTrueState `json:"state,omitempty"`
+	Erro   string         `json:"erro,omitempty"`
+}
+
+// BossInfoResponse retornado por /api/boss/info
+type BossInfoResponse struct {
+	Entradas struct {
+		GratisRestam int `json:"gratisRestam"`
+	} `json:"entradas"`
+	Erro string `json:"erro,omitempty"`
+}
+
+// BossLutaResponse retornado por /api/boss/lutar
+type BossLutaResponse struct {
+	Venceu bool           `json:"venceu"`
+	Loot   map[string]int `json:"loot"`
+	Xp     int            `json:"xp"`
+	Gold   int64          `json:"gold"`
+	Erro   string         `json:"erro,omitempty"`
+}
+
