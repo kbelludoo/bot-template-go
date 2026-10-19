@@ -312,6 +312,12 @@
       --theme-border: rgba(200, 170, 110, 0.45);
       --theme-glow: rgba(10, 200, 185, 0.25);
     }
+    #cardLuxidle {
+      --theme: #f59e0b;
+      --theme-bg: rgba(245, 158, 11, 0.12);
+      --theme-border: rgba(245, 158, 11, 0.45);
+      --theme-glow: rgba(245, 158, 11, 0.25);
+    }
 
     .bot-card {
       background: var(--card-bg);
@@ -1389,6 +1395,30 @@
           </a>
         </div>
       </div>
+
+      <!-- Lux Idle Multi-Bot Card -->
+      <div class="bot-card" id="cardLuxidle">
+        <div>
+          <div class="bot-header">
+            <div class="bot-name-group">
+              <h3 style="color: #f59e0b;">⚔️ Lux Idle Multi-Bot</h3>
+              <span class="bot-port" style="color: #f59e0b; background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.25);">PORTA 3012 • 5X PARTY SYNERGY (+125% EXP)</span>
+            </div>
+            <span class="badge-status" id="luxidleBadge" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: #10b981;">5/5 CAÇANDO</span>
+          </div>
+
+          <div class="acc-list" id="luxidleAccList">
+            <div style="color: var(--text-muted); font-size: 0.8rem;">Carregando frota em Lux Idle...</div>
+          </div>
+        </div>
+
+        <div class="bot-footer">
+          <span style="font-size: 0.72rem; color: var(--text-dim);" id="luxidleSummary">5 vocações conectadas • +125% bônus de exp</span>
+          <a href="https://kbelludoo.github.io/luxidle-bot/" target="_blank" class="btn-link" style="color: #f59e0b; border-color: rgba(245, 158, 11, 0.3); background: rgba(245, 158, 11, 0.08);">
+            Abrir Dashboard Lux Idle ↗
+          </a>
+        </div>
+      </div>
     </div>
 
     <!-- LIVE ACTIVITY TICKER (RODAPÉ DO MODO STREAM) -->
@@ -1396,9 +1426,9 @@
       <div class="ticker-badge">🔴 LIVE EVENTS</div>
       <div class="stream-ticker-track" id="streamTickerTrack">
         <span class="ticker-item" style="color: #fbbf24; font-weight: 800;">📖 ESTRATÉGIA ATIVA: FARM DE BESTIÁRIO & POKÉDEX 24/7 EM TODOS OS JOGOS</span>
-        <span class="ticker-item">⚡ VPS CLUSTER ONLINE • 10 BOTS NATIVOS EM GO • ZERO NODE.JS</span>
-        <span class="ticker-item">🎮 HUNTERA • TIBIDLE • SIGMA • LEVELING • BAIAK • POKEIDLE • KICK • TWITCH • LOL IDLE</span>
-        <span class="ticker-item" style="color: #fbbf24; font-weight: 800;">📖 ESTRATÉGIA ATIVA: FARM DE BESTIÁRIO & POKÉDEX 24/7 EM TODOS OS JOGOS</span>
+        <span class="ticker-item">⚡ VPS CLUSTER ONLINE • 11 BOTS NATIVOS EM GO • ZERO NODE.JS</span>
+        <span class="ticker-item">🎮 HUNTERA • TIBIDLE • SIGMA • LEVELING • BAIAK • POKEIDLE • KICK • TWITCH • LOL IDLE • LUX IDLE</span>
+        <span class="ticker-item" style="color: #fbbf24; font-weight: 800;">⚔️ LUX IDLE: 5 VOCAÇÕES EM PARTY (+125% BÔNUS EXP)</span>
         <span class="ticker-item">💎 AUTO HUNT INTELIGENTE • RECONEXÃO AUTOMÁTICA • HIGH PERFORMANCE</span>
       </div>
     </div>
@@ -2225,6 +2255,75 @@
             const ramLol = lolStatus.ramAllocMB ? Number(lolStatus.ramAllocMB).toFixed(1) + ' MB' : '~0.2 MB';
             summary.textContent = `Pausado pelo usuário • RAM: ${ramLol}`;
           }
+        }
+      }
+
+      // 12. Lux Idle Multi-Bot (5x Party Synergy)
+      const luxidle = bots.luxidle || {};
+      const luxStatus = luxidle.status || {};
+      const luxAccounts = luxStatus.accounts || [];
+      const luxAccList = document.getElementById('luxidleAccList');
+
+      if (luxAccList) {
+        if (luxAccounts.length > 0) {
+          let luxTotalGold = 0;
+          let luxTotalKills = 0;
+          const VOC_ICONS = {
+            knight: '🛡️',
+            druid: '🌿',
+            sorcerer: '🔥',
+            paladin: '🏹',
+            monk: '🥊'
+          };
+
+          luxAccList.innerHTML = luxAccounts.map((acc, idx) => {
+            luxTotalGold += (acc.gold || 0);
+            luxTotalKills += (acc.kills || 0);
+            const voc = (acc.vocation || '').toLowerCase();
+            const icon = VOC_ICONS[voc] || '⚔️';
+            const name = acc.name || `Conta #${idx + 1}`;
+            const hpPct = acc.maxHp ? Math.round((acc.hp / acc.maxHp) * 100) : 100;
+            const manaPct = acc.maxMana ? Math.round((acc.mana / acc.maxMana) * 100) : 100;
+            const area = acc.currentArea || 'Caçada Ativa';
+
+            checkLevelUp('Lux Idle', `${icon} ${name}`, acc.level, 'cardLuxidle');
+
+            return `
+              <div class="acc-item">
+                <div class="acc-item-header">
+                  <span class="acc-name">${icon} ${name}</span>
+                  <span class="acc-level" style="color: #f59e0b; border-color: rgba(245, 158, 11, 0.4);">Nv. ${acc.level || 1}</span>
+                </div>
+                <div class="stat-row">
+                  <span>❤️ HP (${hpPct}%)</span>
+                  <span style="color: #4ade80;">${(acc.hp || 0).toLocaleString('pt-BR')} / ${(acc.maxHp || 0).toLocaleString('pt-BR')}</span>
+                </div>
+                <div class="bar-slim"><div class="progress-fill fill-hp" style="width: ${hpPct}%"></div></div>
+                <div class="stat-row">
+                  <span>💧 Mana (${manaPct}%)</span>
+                  <span style="color: #38bdf8;">${(acc.mana || 0).toLocaleString('pt-BR')} / ${(acc.maxMana || 0).toLocaleString('pt-BR')}</span>
+                </div>
+                <div class="bar-slim"><div class="progress-fill" style="width: ${manaPct}%; background: linear-gradient(90deg, #0284c7, #38bdf8);"></div></div>
+                <div class="stat-row">
+                  <span>💰 ${(acc.gold || 0).toLocaleString('pt-BR')} gp</span>
+                  <span style="color: #10b981;">⚔️ ${(acc.kills || 0).toLocaleString('pt-BR')} kills • 🗺️ ${area}</span>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          const ramLux = luxStatus.ramAllocMB ? Number(luxStatus.ramAllocMB).toFixed(1) + ' MB' : '~2.2 MB';
+          if (document.getElementById('luxidleSummary')) {
+            document.getElementById('luxidleSummary').textContent = `5 vocações • 💰 ${luxTotalGold.toLocaleString('pt-BR')} gp • RAM: ${ramLux}`;
+          }
+          if (document.getElementById('luxidleBadge')) {
+            document.getElementById('luxidleBadge').textContent = '⚔️ 5X PARTY (+125% EXP)';
+            document.getElementById('luxidleBadge').style.background = 'rgba(245, 158, 11, 0.15)';
+            document.getElementById('luxidleBadge').style.color = '#f59e0b';
+            document.getElementById('luxidleBadge').style.borderColor = '#f59e0b';
+          }
+        } else {
+          luxAccList.innerHTML = `<div style="color: var(--text-muted); font-size: 0.8rem;">Conectando frota...</div>`;
         }
       }
 
