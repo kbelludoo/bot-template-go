@@ -126,6 +126,10 @@ func (b *Bot) Init(ctx context.Context) error {
 		b.addLog(fmt.Sprintf("Erro ao consultar /api/me: %v", err))
 	} else {
 		b.addLog(fmt.Sprintf("Treinador '%s' conectado com sucesso (Vip: %v, Diamantes: %d).", me.User, me.Vip, me.Diamonds))
+		if len(me.Personagens) > 0 {
+			b.addLog(fmt.Sprintf("Entrando com personagem '%s' (#%d)...", me.Personagens[0].Nome, me.Personagens[0].ID))
+			_, _ = b.api.EscolherPersonagem(ctx, me.Personagens[0].ID)
+		}
 	}
 
 	st, err := b.api.GetState(ctx)

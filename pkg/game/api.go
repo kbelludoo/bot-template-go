@@ -190,6 +190,28 @@ type MeResponse struct {
 	Vip           bool   `json:"vip"`
 	Nivel         int    `json:"nivel"`
 	Erro          string `json:"erro,omitempty"`
+	Personagens   []struct {
+		ID   int    `json:"id"`
+		Nome string `json:"nome"`
+	} `json:"personagens"`
+}
+
+type EscolherPersonagemResponse struct {
+	Token string `json:"token"`
+}
+
+// EscolherPersonagem seleciona o personagem e retorna o token de sessão do personagem
+func (c *PokeTrueClient) EscolherPersonagem(ctx context.Context, pjID int) (*EscolherPersonagemResponse, error) {
+	payload := map[string]any{"personagem": pjID}
+	var resp EscolherPersonagemResponse
+	err := c.DoRequest(ctx, http.MethodPost, "personagens/escolher", payload, &resp)
+	if err != nil {
+		return nil, err
+	}
+	if resp.Token != "" {
+		c.token = resp.Token
+	}
+	return &resp, nil
 }
 
 // GetMe obtém os dados do perfil logado
