@@ -1589,7 +1589,11 @@
 
     async function fetchStatus() {
       try {
-        const res = await fetch('./status.json?t=' + Date.now(), { cache: 'no-store' });
+        const basePath = window.location.pathname.endsWith('/') 
+          ? window.location.pathname 
+          : window.location.pathname + '/';
+        const url = new URL('status.json?t=' + Date.now(), window.location.origin + basePath).href;
+        const res = await fetch(url, { cache: 'no-store' });
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
         renderDashboard(data);
@@ -2193,7 +2197,7 @@
 
             const lvlDisplay = isExpired && (!acc.level || acc.level === 0) 
               ? `<span class="acc-level" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.4); font-size: 0.68rem;">⚠️ SESSÃO EXPIRADA</span>`
-              : `<span class="acc-level" style="color: #c8aa6e; border-color: rgba(200, 170, 110, 0.4);">Nv. ${acc.level || 1}</span>`;
+              : `<span class="acc-level" style="color: #c8aa6e; border-color: rgba(200, 170, 110, 0.4);">Nv. ${acc.level != null && acc.level > 0 ? acc.level : '—'}</span>`;
 
             checkLevelUp('LoL Idle', `${icon} ${name}`, acc.level, 'cardLolidle');
 
@@ -2292,7 +2296,7 @@
               <div class="acc-item">
                 <div class="acc-item-header">
                   <span class="acc-name">${icon} ${name}</span>
-                  <span class="acc-level" style="color: #f59e0b; border-color: rgba(245, 158, 11, 0.4);">Nv. ${acc.level || 1}</span>
+                  <span class="acc-level" style="color: #f59e0b; border-color: rgba(245, 158, 11, 0.4);">Nv. ${acc.level != null && acc.level > 0 ? acc.level : '—'}</span>
                 </div>
                 <div class="stat-row">
                   <span>❤️ HP (${hpPct}%)</span>
