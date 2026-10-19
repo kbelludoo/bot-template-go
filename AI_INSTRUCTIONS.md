@@ -1,4 +1,4 @@
-# 🤖 AI_INSTRUCTIONS.md — MANUAL DE ENGENHARIA PARA IAs
+﻿# 🤖 AI_INSTRUCTIONS.md — MANUAL DE ENGENHARIA PARA IAs
 
 > **DESTINATÁRIO:** Qualquer modelo ou agente de IA (Antigravity, Claude, ChatGPT, etc.) encarregado de criar ou modificar um bot de jogo em Go para o **dj**.
 > **LEIA ESTE ARQUIVO ANTES DE TOCAR EM QUALQUER LINHA DE CÓDIGO.**
@@ -69,6 +69,10 @@ Sempre que o **dj** pedir para criar um bot para um jogo novo, siga esta esteira
    - Pacote de dados do personagem (HP, Mana, Level, Ouro, Inventário).
    - Pacote de ação de caça/combate/movimento (ex: `start_hunt`, `attack`, `travel`).
    - Pacote de finalização de caça ou recompensas (`ended`, `loot`).
+3. **Auditoria Obrigatória de Stamina / Fadiga (CRÍTICO):**
+   - Inspecione se o jogo limita a caça por tempo, cansaço ou vigor:
+     - Chaves comuns: `stamina`, `stamina_hours`, `fatigue_milli`, `FatigueState`, `online_kpm`, `window_farm_ms`, `farm_available_ms`, `energy`, `vigor`.
+   - Verifique se a EXP/drop cai drasticamente após determinado tempo de caça contínua (ex: penalidade de 50% ou 0% de EXP). Caçar com fadiga alta desperdiça a VPS e aciona anti-cheat!
 
 ### Passo 2: Implementar a Pasta `pkg/game/`
 Mantenha `pkg/engine/`, `pkg/network/` e `pkg/server/` intactos. Concentre **100% do código específico** dentro de `pkg/game/`:
@@ -142,11 +146,24 @@ Sempre que construir um novo bot usando este template, a IA deve projetar e codi
 - Se o jogo oferecer bônus de EXP/Ouro (+15% a +25%) por assistir streamers ou canais parceiros (como no PokeIdle.io):
   - A IA deve implementar um módulo concorrente em Goroutine que autentica na API da plataforma de streaming (Twitch/Kick) e mantém a presença ativa em background, garantindo o bônus máximo 24/7 sem abrir navegadores pesados.
 
-### 8. Gestão Inteligente de Stamina / Vigor & Modos de Descanso
-- Em jogos onde o farm depende de Stamina (ex: Huntera, Tibidle, Baiak):
-  - O bot deve calcular o tempo restante de stamina e o custo do refil.
-  - Se o farm de ouro cobrir o custo de compra de refil (`staminaRefillCost`), efetuar a recarga automaticamente.
-  - Se a stamina esgotar e não houver refis, o bot deve mover o personagem para modo *Treino Online* ou *Descanso* para regeneração acelerada, evitando desperdício de tempo e EXP zerada.
+### 8. Gestão Inteligente de Stamina / Vigor & Modos de Descanso (Fatigue & Vigor Protocol)
+Antes de colocar o bot para caçar indefinidamente, a IA DEVE auditar e implementar os **3 Mandamentos da Gestão de Stamina**:
+
+1. **Diagnóstico do Tipo de Limitador:**
+   - **Stamina Decrescente (ex: Tibidle, Huntera, Baiak):** O personagem começa com 42h e vai gastando conforme caça.
+   - **Fadiga Crescente (ex: Leveling Idle, Protobuf `FatigueState`):** O contador de fadiga sobe de 0 a 1000 milli (`fatigue_milli` 0% a 100%), reduzindo o KPM (`online_kpm`) e esgotando o farm disponível (`farm_available_ms`).
+   - **Energia / Vigor Fixo:** Pontos de ação diários que se esgotam por combate.
+
+2. **Limiar de Operação Segura (Até quando o bot deve ir):**
+   - **Fadiga Crescente:** Entrar em modo descanso ao atingir $\ge 80\%$ de fadiga (`fatigue_milli >= 800`) OU quando restar menos de 2 minutos de farm disponível (`farm_available_ms < 120000`).
+   - **Stamina Decrescente:** Interromper a caçada ao atingir a stamina laranja crítica ($\le 14\text{h}$), evitando queimar tempo em zonas onde o ganho de EXP despenca para a metade ou zera.
+   - **Histerese Anti-Thrashing:** NUNCA alternar entre caçar e descansar a cada minuto. O bot só deve retomar a caçada após atingir nível seguro ($< 30\%$ de fadiga ou $> 10$ minutos de farm disponível) E cumprir um **tempo mínimo de descanso de 5 a 15 minutos**.
+
+3. **Mecanismos de Recuperação de Stamina / Fadiga:**
+   - **LeaveHunt & Safe Zone:** Enviar pacote de saída da caçada (`LeaveHunt` / desmarcar `AutoHunt`) e recuar para a Cidade, Templo, Fonte ou Pátio seguro com status `"resting"`.
+   - **Treino Ativo (Dummies):** Em jogos com Target Dummies (ex: Lux Idle, Tibidle), treinar habilidades enquanto a stamina/fadiga regenera, garantindo evolução ininterrupta.
+   - **Compra Automática de Refil com Ouro:** Se o jogo oferecer refil ou poções de stamina por ouro e o farm acumulado cobrir os custos com lucro (`staminaRefillCost`), efetuar a recarga automaticamente.
+   - **Telemetria Mandatória (`status.Extra`):** Reportar `fatiguePercent`, `farmAvailableMin`, `onlineKpm`, `staminaHours` e `isResting` no endpoint `/api/status` para monitoramento no Dashboard Central.
 
 ### 9. Cooperação em Grupo (Party & Sinergia de Classes)
 - Se o jogo tiver mecânicas de grupo/party (como o Leveling Idle 2D):

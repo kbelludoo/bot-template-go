@@ -65,3 +65,38 @@ Quando o bot operar em party/grupo cooperativo com compartilhamento de abates e 
 2. **Nomes Anônimos no Dashboard Público:** NUNCA publique o nome real do personagem no GitHub Pages ou status público. Exiba sempre vocação/classe, índice da conta (`Conta #1`) e métricas técnicas.
 3. **Consumo Leve na VPS:** Processo em Go puro, sem Chromium/Puppeteer na VPS, mantendo RAM abaixo de 15 MB por bot.
 4. **Resiliência Total:** Toda conta deve rodar dentro de `engine.RunWithSupervisor` com `recover()`.
+
+---
+
+## 6. 💤 AUDITORIA OBRIGATÓRIA DE STAMINA / FADIGA (FATIGUE & VIGOR PROTOCOL)
+
+> **REGRA CRÍTICA PARA TODA IA:** Antes de criar ou autorizar o loop de caça contínua de qualquer bot, a IA DEVE auditar obrigatoriamente se o jogo possui limitadores de tempo de caça: **Stamina, Vigor, Energia ou Fadiga (Fatigue)**.
+> Caçar com stamina esgotada ou fadiga alta reduz o ganho de EXP para 50%, 20% ou 0%, além de desperdiçar recursos da VPS e elevar o score de suspeita do anti-cheat por comportamento anti-humano.
+
+### A. Os 3 Mandamentos Obrigatórios da Auditoria de Fadiga
+Toda IA deve mapear e responder a estas 3 perguntas antes de liberar a caça:
+1. **O jogo possui Stamina ou Fadiga?**
+   - Inspecione pacotes (REST, WebSocket, Protobuf), estado do personagem ou código-fonte client-side.
+   - Busque identificadores como: `stamina`, `stamina_hours`, `fatigue_milli`, `FatigueState`, `online_kpm`, `window_farm_ms`, `farm_available_ms`, `energy`, `vigor`, `cansaco`.
+   - Identifique se o contador é **decrescente** (ex: 42h $\to$ 0h) ou **crescente** (ex: 0 $\to$ 1000 milli = 0% $\to$ 100% de fadiga).
+2. **Até quando o bot deve ir? (Limiar de Operação Segura):**
+   - O bot NUNCA deve continuar caçando quando a EXP/drop estiver penalizada.
+   - **Fadiga Crescente (ex: `fatigue_milli` 0-1000):** Parar a caçada ao atingir $\ge 80\%$ de fadiga (`fatigue_milli >= 800`) OU quando o farm disponível for $< 2$ minutos (`farm_available_ms < 120000`).
+   - **Stamina Decrescente (ex: 42h):** Parar a caçada ao atingir o limiar de penalidade severa (geralmente $\le 14\text{h}$ de stamina, onde o ganho de EXP cai pela metade ou zera).
+   - **Histerese Anti-Thrashing (Obrigatória):** NUNCA alternar em ciclo rápido. Para retomar a caçada, o personagem deve estar abaixo de $30\%$ de fadiga (`fatigue_milli < 300`) E farm disponível $> 10$ minutos, respeitando um descanso mínimo de 5 a 15 minutos.
+3. **Como o bot recupera a Stamina / Fadiga?**
+   - **Recuo para Zona Segura / Desarmar Combate:** Sair da caçada (`LeaveHunt` / desativar `AutoHunt`), mover para Templo, Fonte, Cidade ou Depot e definir status `"resting"`.
+   - **Treino em Dummies / Regeneração Ativa:** Se o jogo permitir regenerar stamina enquanto treina (como no Lux Idle / Tibidle), mover para os *Target Dummies* para treinar skills enquanto a stamina recarrega.
+   - **Refil Automático por Ouro / Poções:** Se houver compra de refil de stamina in-game por ouro (`staminaRefillCost`) e o lucro da caçada cobrir o custo com folga, comprar e usar a recarga automaticamente.
+
+### B. Contrato de Telemetria no Dashboard Central (`status.Extra`)
+Todo bot deve reportar os indicadores de fadiga no mapa `status.Extra` para que o painel web e o Watchdog alertem se a conta estiver com ganho de EXP comprometido:
+```json
+"extra": {
+  "fatiguePercent": 14.8,
+  "farmAvailableMin": 42.5,
+  "onlineKpm": 31.0,
+  "isResting": false,
+  "staminaHours": 41.5
+}
+```
