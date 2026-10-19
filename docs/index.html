@@ -282,6 +282,12 @@
       --theme-border: rgba(6, 182, 212, 0.45);
       --theme-glow: rgba(6, 182, 212, 0.25);
     }
+    #cardPokepixel {
+      --theme: #10b981;
+      --theme-bg: rgba(16, 185, 129, 0.12);
+      --theme-border: rgba(16, 185, 129, 0.45);
+      --theme-glow: rgba(16, 185, 129, 0.25);
+    }
     #cardPokeidle {
       --theme: #38bdf8;
       --theme-bg: rgba(56, 189, 248, 0.12);
@@ -1276,6 +1282,30 @@
         </div>
       </div>
 
+      <!-- PokePixel Idle Card -->
+      <div class="bot-card" id="cardPokepixel">
+        <div>
+          <div class="bot-header">
+            <div class="bot-name-group">
+              <h3>⚡ PokePixel Idle</h3>
+              <span class="bot-port" style="color: #10b981; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.25);">PORTA 3015 • GO NATIVE (ROUTE SOLVER)</span>
+            </div>
+            <span class="badge-status badge-online" id="pokepixelBadge">—</span>
+          </div>
+
+          <div class="acc-list" id="pokepixelAccList">
+            <div style="color: var(--text-muted); font-size: 0.8rem;">Carregando contas...</div>
+          </div>
+        </div>
+
+        <div class="bot-footer">
+          <span style="font-size: 0.72rem; color: var(--text-dim);" id="pokepixelSummary">Dynamic Route Solver & Auto-Catch</span>
+          <a href="https://kbelludoo.github.io/pokepixel-bot/" target="_blank" class="btn-link" style="color: #10b981; border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.08);">
+            Abrir Dashboard PokePixel ↗
+          </a>
+        </div>
+      </div>
+
       <!-- PokeIdle.io Card -->
       <div class="bot-card" id="cardPokeidle">
         <div>
@@ -1989,6 +2019,49 @@
         document.getElementById('pokelegacyBadge').textContent = `📖 FARM POKÉDEX`;
       } else {
         pokelegacyAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados...</div>`;
+      }
+
+      // PokePixel Idle
+      const pokepixel = bots.pokepixel || {};
+      const pxStatus = pokepixel.status || {};
+      const pxAccounts = pxStatus.accounts || [];
+      const pokepixelAccList = document.getElementById('pokepixelAccList');
+
+      if (pxAccounts.length > 0) {
+        pxAccounts.forEach((acc, idx) => {
+          checkLevelUp('PokePixel Idle', `Treinador #${idx + 1}`, acc.level, 'cardPokepixel');
+        });
+        pokepixelAccList.innerHTML = pxAccounts.map((acc, idx) => {
+          const hpPct = acc.maxHp ? Math.round((acc.hp / acc.maxHp) * 100) : 100;
+          return `
+            <div class="acc-item">
+              <div class="acc-item-header">
+                <span class="acc-name">⚡ Treinador #${idx + 1}</span>
+                <span class="acc-level" style="color: #10b981; border-color: rgba(16, 185, 129, 0.35);">Lv ${acc.level ?? '—'}</span>
+              </div>
+              <div class="stat-row" style="background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.35);">
+                <span style="color: #10b981; font-weight: 700;">🗺️ Área: <b>${acc.currentArea || 'Em caça'}</b></span>
+                <span style="color: #4ade80; font-weight: 800;">${acc.status || 'hunting'}</span>
+              </div>
+              <div class="stat-row">
+                <span>❤️ HP (${hpPct}%)</span>
+                <span style="color: #4ade80;">${acc.hp ?? '—'} / ${acc.maxHp ?? '—'}</span>
+              </div>
+              <div class="bar-slim"><div class="progress-fill fill-hp" style="width: ${hpPct}%"></div></div>
+              <div class="stat-row">
+                <span style="color: #facc15; font-weight: 800;">💰 ${(acc.gold ?? 0).toLocaleString('pt-BR')} gold</span>
+                <span style="color: #f87171; font-weight: 800;">⚔️ ${(acc.kills ?? 0).toLocaleString('pt-BR')} abates</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+        const goldSum = pxAccounts.reduce((acc, a) => acc + (a.gold || 0), 0);
+        const killsSum = pxAccounts.reduce((acc, a) => acc + (a.kills || 0), 0);
+        const ramPx = pxStatus.ramAllocMB == null ? '' : ` • RAM: ${Number(pxStatus.ramAllocMB).toFixed(1)} MB`;
+        document.getElementById('pokepixelSummary').textContent = `💰 ${goldSum.toLocaleString('pt-BR')} gold${ramPx} • ⚔️ ${killsSum} kills`;
+        document.getElementById('pokepixelBadge').textContent = `⚡ ATIVO`;
+      } else {
+        pokepixelAccList.innerHTML = `<div style="color: var(--yellow); font-size: 0.8rem;">Aguardando dados...</div>`;
       }
 
       // 7. PokeIdle.io
