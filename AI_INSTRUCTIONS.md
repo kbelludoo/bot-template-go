@@ -16,6 +16,7 @@ Você está construindo um bot autônomo nativo em **Go (Golang)** de altíssima
 5. **Segurança Absoluta de Segredos (Zero Hardcoding):** NUNCA insira tokens de API (Telegram, Discord, Twitch OAuth), senhas, cookies, chaves SSH (`*.key`) ou IPs públicos da VPS diretamente em arquivos `.go`, `.json`, `.sh`, `.bat` ou scripts que serão commitados. TODAS as credenciais devem ser obrigatoriamente carregadas via variáveis de ambiente (`os.Getenv`) ou arquivos locais no `.gitignore` (`.secrets.json`, `.env`, `accounts.json`). Commitar tokens gera vazamento público imediato!
 6. **Modo Stealth & Anti-Ban (Zero Nicks Públicos):** NUNCA exponha o nome real do personagem/treinador/streamer nos dashboards web do GitHub Pages (`docs/index.html` ou `status.json`). Sempre exiba apenas a classe/vocação, índice anônimo (ex: `Conta #1`, `Treinador #1`, `Guerreiro`, `Arqueiro`) e estatísticas técnicas (Level, EXP/h, Kills, Gold, Mapa). Transmitir nicks reais gera denúncias e banimentos manuais imediatos!
 7. **Proteção Anti-Ban Circuit Breaker Obrigatória:** Todo bot deve integrar `pkg/engine.CircuitBreaker`. Diante de qualquer recusa de save, rate-limit ou erro de anti-cheat (`experiência rápida demais`, `recusado: true`), o bot NUNCA deve insistir em novos saves. Deve desarmar o combate, recuar para zona segura e aguardar cooldown de 15 a 30 minutos. Insistir em saves rejeitados resulta em banimento de 7 dias por programa de terceiros!
+8. **Proibição Absoluta de Bots "Barebones" / Superficiais (Completude Máxima Obrigatória):** É expressamente proibido construir bots simplistas que apenas batem em monstros e coletam ouro básico. A IA DEVE ler e minerar TODO o código client-side do jogo (scripts JS, bundles Vite/Webpack, HTML e Wasm). O bot DEVE implementar 100% dos subsistemas do jogo: Presas (Preys), Recompensas Diárias (Dailies), Missões/Tasks, Bênçãos (Blessings), Chefes (World Bosses), Forja/Gemas, Promoção de Vocação, Dummies de Treino e Gestão de Inventário. O bot deve operar como um jogador humano experiente de elite.
 
 ---
 
@@ -73,6 +74,10 @@ Sempre que o **dj** pedir para criar um bot para um jogo novo, siga esta esteira
    - Inspecione se o jogo limita a caça por tempo, cansaço ou vigor:
      - Chaves comuns: `stamina`, `stamina_hours`, `fatigue_milli`, `FatigueState`, `online_kpm`, `window_farm_ms`, `farm_available_ms`, `energy`, `vigor`.
    - Verifique se a EXP/drop cai drasticamente após determinado tempo de caça contínua (ex: penalidade de 50% ou 0% de EXP). Caçar com fadiga alta desperdiça a VPS e aciona anti-cheat!
+4. **Mineração Exaustiva do Código JavaScript (Ler Tudo do Jogo):**
+   - Baixe ou inspecione o arquivo JS principal do client (`main.js`, `bundle.js`, `app.js`).
+   - Procure por rotas de API, comandos de WebSocket, dicionários de monstros, tabelas de missões, bosses e mecânicas secundárias.
+   - O bot NUNCA deve ser desenvolvido no escuro ou por suposição. Toda automação deve espelhar exatamente as funções encontradas no client JS oficial.
 
 ### Passo 2: Implementar a Pasta `pkg/game/`
 Mantenha `pkg/engine/`, `pkg/network/` e `pkg/server/` intactos. Concentre **100% do código específico** dentro de `pkg/game/`:
@@ -248,6 +253,41 @@ Em jogos onde o mundo aberto possui modo cooperativo (party/grupo):
   Em grupos onde cada abate compartilha EXP (+45% de bônus via frames de WebSocket), a soma das mortes de todos os integrantes canaliza XP em massa para cada membro. A taxa individual deve ser rigorosamente balanceada para que a soma nunca ultrapasse a produtividade de um jogador solo:
   $$\text{KillRate}_{\text{individual}} \le \frac{\text{KillRate}_{\text{solo\_seguro}}}{N_{\text{membros}} \times (1 + \text{BônusGrupo})}$$
   Exemplo: se o teto humano solo for 40 monstros/minuto, em um grupo de 4 com bônus de 45%, cada bot deve matar no máximo $40 / (4 \times 1.45) \approx 7\text{ monstros/minuto}$. Taxas superiores acumulam XP mais rápido do que o relógio físico permite salvar.
+
+---
+
+### 13. O Bot Super Completo: Automação Total de Todos os Subsistemas do Jogo (Pilar 13)
+
+Um bot de alta performance NUNCA é apenas um loop de combate ("bater e esperar"). Para ser considerado completo pela engenharia do projeto, a IA DEVE conferir e implementar todos os seguintes subsistemas:
+
+1. **Gestão de Presas (Preys / Bounties):**
+   - Rastrear slots de presas ativas.
+   - Selecionar automaticamente monstros da área de caça com bônus de EXP (+40%) ou Dano (+25%).
+   - Usar rerolls gratuitos diários ou cartas de presa acumuladas.
+2. **Coleta de Recompensas Diárias (Daily Rewards / Login Streak):**
+   - Resgatar baús diários, recompensas por dias consecutivos de login e bônus de passe no instante em que o bot conecta ou no reset diário.
+3. **Missões e Tarefas (Quests / Tasks / Battle Pass):**
+   - Consultar tarefas ativas (ex: matar 200 Cyclops, coletar 50 itens).
+   - Entregar tarefas completas automaticamente para resgatar EXP e tokens de quest.
+4. **Promoção de Vocação e Ascensão (Class Promotion / Rank Up):**
+   - Checar se o personagem atingiu o nível necessário (ex: Nível 20 para Elite Knight, Master Sorcerer, Elder Druid, Royal Paladin).
+   - Se possuir o ouro ou requisito, executar a compra/promoção imediatamente para obter os multiplicadores de dano e regeneração.
+5. **Proteção contra Morte (Bênçãos / Blessings):**
+   - Comprar bênçãos ativas (Bless 1 a 5) para reduzir penalidade de morte a zero.
+6. **Chefes Mundiais e Dungeons (World Bosses & Raids):**
+   - Ingressar em chefes diários ou eventos temporários quando o servidor anunciar ou nos horários programados.
+7. **Forja, Gemas e Aprimoramento de Equipamentos:**
+   - Equipar gemas correspondentes ao tipo de dano da vocação.
+   - Refinar ou aprimorar armas e armaduras principais quando houver materiais disponíveis.
+8. **Target Dummies (Treino Ativo e Regeneração de Stamina):**
+   - Durante períodos de fadiga/descanso ou quando não houver recursos para caçar, transitar para treino nos dummies para subir skills de ataque/defesa.
+9. **Poções, Elixires e Consumíveis de EXP:**
+   - Monitorar estoque de poções (HP/Mana) e comprar lotes automaticamente na loja antes de zerar.
+   - Utilizar elixires de bônus de EXP (+20% ou +50%) quando disponíveis no inventário durante a caçada.
+10. **Auto-Sell e Gestão de Mochila (Inventory Flow):**
+    - Vender itens comuns automaticamente nos NPCs mercadores.
+    - Guardar itens lendários/raros no baú/depot.
+    - Nunca permitir que a caça trave por falta de slots na mochila.
 
 ---
 

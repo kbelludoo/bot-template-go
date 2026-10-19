@@ -1,7 +1,7 @@
 # 🛡️ REGRAS GLOBAIS DE ENGENHARIA E ANTI-BAN PARA BOTS EM GO
 
-> **ESCOPO:** Esta regra se aplica a TODOS os bots de jogos desenvolvidos a partir deste template em Go (Golang) (PokeIdle, PokeIdleWorld, LoL Idle, Baiak, Tibia Idle, Sigma, Leveling Idle, etc.).
-> **IMPORTÂNCIA:** CRÍTICA / INVIOLÁVEL. Prevenção de suspensões e integridade de contas.
+> **ESCOPO:** Esta regra se aplica a TODOS os bots de jogos desenvolvidos a partir deste template em Go (Golang) (PokeIdle, PokeIdleWorld, LoL Idle, Baiak, Tibia Idle, Sigma, Leveling Idle, Lux Idle, PokeLegacy, Farm Ricochet, etc.).
+> **IMPORTÂNCIA:** CRÍTICA / INVIOLÁVEL. Prevenção de suspensões, integridade de contas e completude máxima de gameplay.
 
 ---
 
@@ -100,3 +100,39 @@ Todo bot deve reportar os indicadores de fadiga no mapa `status.Extra` para que 
   "staminaHours": 41.5
 }
 ```
+
+---
+
+## 7. 🔬 ENGENHARIA REVERSA PROFUNDA E EXAUSTIVA: O BOT DEVE SER 100% COMPLETO (PROIBIDO BOTS SUPERFICIAIS)
+
+> **REGRA DE OURO INVIOLÁVEL:** É ESTRITAMENTE PROIBIDO criar ou entregar bots superficiais ("barebones") que apenas batem em monstros e coletam ouro básico.
+> Jogos modernos de navegador (idle/RPG) possuem dezenas de subsistemas interligados que multiplicam em até 5x a 10x o ganho de EXP, ouro e sobrevivência. Um bot que ignora essas mecânicas torna o personagem fraco, estagnado e desperdiça o potencial da conta e da VPS.
+
+### A. O Mandamento da Leitura Integral do Jogo
+A IA encarregada de desenvolver ou atualizar qualquer bot DEVE:
+1. **Despejar e Ler os Scripts JavaScript do Jogo:** Baixar o bundle client-side (`main.js`, `bundle.js`, `app.js`, arquivos `.ts` ou `.wasm`) e inspecionar todas as funções, enums, chamadas de API, endpoints REST e eventos de WebSocket.
+2. **Mapear Todos os Handlers do Protocolo:** Mapear cada mensagem recebida do servidor e garantir que o bot processe e responda adequadamente a cada evento do jogo.
+3. **Persistir Catálogos de Dados (`pkg/game/`):** Extrair do client do jogo os catálogos completos (monstros, itens, equipamentos, fraquezas elementais, áreas, custos de treino e buffs) embutindo-os em arquivos JSON/Go para alimentar os algoritmos de decisão inteligente.
+
+### B. Checklist Obrigatório de Subsistemas do Jogo
+Todo bot DEVE auditar e automatizar obrigatoriamente os seguintes sistemas quando presentes no jogo:
+
+| Subsistema | Ação Obrigatória do Bot Go |
+| :--- | :--- |
+| 🎯 **Presas / Preys / Bounties** | Selecionar automaticamente alvos com bônus máximo de EXP/Dano; roletar slots gratuitos ou usar cartas/ouro com lucro. |
+| 🎁 **Recompensas Diárias / Login Streak** | Resgatar bônus diários automaticamente no login ou a cada virada de dia do servidor. |
+| 📜 **Missões / Tasks / Quests / Battle Pass** | Aceitar, acompanhar e resgatar recompensas de tarefas diárias, missões de caça e passes de temporada. |
+| 👑 **Promoção de Vocação / Rank Up / Ascensão** | Detectar requisitos de nível (ex: Nv. 20, 50, 100) e comprar/ativar a promoção de classe imediatamente para desbloquear multiplicadores. |
+| 🛡️ **Bênçãos / Blessings / Proteção contra Morte** | Comprar e manter ativas as proteções contra perda de EXP/itens (Bless 1 a 5). |
+| 👹 **Chefes / World Bosses / Raids / Portais** | Monitorar horários de surgimento e ingressar automaticamente em eventos de chefes para drops lendários. |
+| 🔮 **Forja / Refino / Upgrades / Gemas / Runas** | Equipar gemas com sinergia com a classe e aprimorar equipamentos principais quando os recursos permitirem. |
+| 🏋️ **Dummies de Treino / Sistema de Treino** | Transitar automaticamente para os *Target Dummies* durante descansos de stamina ou quando o farm estiver em cooldown. |
+| 🧪 **Poções / Consumíveis / Elixires / Buffs** | Monitorar estoque de poções (HP/Mana) e consumíveis de bônus de EXP; reabastecer e usar conforme necessidade. |
+| 📖 **Bestiário / Codex / Charms** | Registrar abates para completar o bestiário do jogo e desbloquear runas/charms passivos. |
+| 👥 **Party & Sinergia de Frota (Multi-Bot)** | Criar sala/party automaticamente, convidar outras contas da frota, aceitar convites e compartilhar bônus cooperativos. |
+| 🎒 **Auto-Sell, Auto-Loot & Gestão de Mochila** | Vender lixo automaticamente, guardar itens raros no Depot/Baú e nunca travar a caçada por inventário cheio. |
+
+### C. Auditoria Pré-Entrega (System Audit)
+Antes de considerar o desenvolvimento de um bot finalizado, a IA deve realizar um **System Audit** comparando:
+$$\text{Mecânicas Descobertas no Client JS} \quad \text{vs} \quad \text{Mecânicas Implementadas no Bot Go}$$
+Se houver qualquer subsistema do jogo sem tratamento correspondente no bot, **a implementação é considerada incompleta e deve ser complementada imediatamente.**
