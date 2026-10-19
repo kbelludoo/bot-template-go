@@ -43,7 +43,7 @@ func TestOptimalHuntSolver(t *testing.T) {
 		},
 	}
 
-	bestHunt, reason := FindBestHunt(team, 15)
+	bestHunt, reason := FindBestHunt(team, 15, nil)
 	if bestHunt.Slug == "" {
 		t.Fatalf("Nenhuma hunt encontrada pelo solver!")
 	}

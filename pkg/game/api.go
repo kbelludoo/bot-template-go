@@ -476,3 +476,22 @@ func (c *PokeTrueClient) StopGrupo(ctx context.Context) error {
 	return c.DoRequest(ctx, http.MethodPost, "grupo/parar", map[string]any{}, nil)
 }
 
+// ResgatarPokeLog recolhe recompensas de PokéLog (Bestiário) concluídas
+func (c *PokeTrueClient) ResgatarPokeLog(ctx context.Context, tudo bool, especie string) (*PokeLogResgatarResponse, error) {
+	payload := map[string]any{}
+	if tudo {
+		payload["tudo"] = true
+	} else if especie != "" {
+		payload["especie"] = especie
+	}
+	var resp PokeLogResgatarResponse
+	err := c.DoRequest(ctx, http.MethodPost, "pokelog/resgatar", payload, &resp)
+	if err != nil {
+		if strings.Contains(err.Error(), "nada_a_resgatar") {
+			return &resp, nil
+		}
+		return nil, err
+	}
+	return &resp, nil
+}
+

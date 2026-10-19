@@ -36,6 +36,8 @@ type Bot struct {
 	lastJennyAt     time.Time
 	lastCandyAt     time.Time
 	lastHuntChangeAt time.Time
+	lastPokeLogAt   time.Time
+	lastSwitchedPokeID int
 
 	// Canais para supply externo de tickets/tokens
 	ticketChan    chan string
@@ -273,10 +275,16 @@ func (b *Bot) performBotStep(ctx context.Context) error {
 		go b.manageCandies(context.Background())
 	}
 
+	// 10. Gestão de PokéLog / Bestiário (Resgate automático de marcos de abates alcançados)
+	if now.Sub(b.lastPokeLogAt) > 2*time.Minute {
+		b.lastPokeLogAt = now
+		go b.managePokeLog(context.Background())
+	}
+
 	return nil
 }
 
-// manageOptimalHunt calcula a melhor área de EXP/h considerando tipos e fraquezas
+// manageOptimalHunt calcula a melhor área considerando fraquezas elementais e metas do Bestiário
 func (b *Bot) manageOptimalHunt(ctx context.Context) error {
 	b.mu.RLock()
 	st := b.state
@@ -291,7 +299,7 @@ func (b *Bot) manageOptimalHunt(ctx context.Context) error {
 	var reason string
 
 	if targetArea == "" || targetArea == "auto" {
-		bestHunt, why := FindBestHunt(st.Pokemon, st.Nivel)
+		bestHunt, why := FindBestHunt(st.Pokemon, st.Nivel, st.Dex)
 		desiredHunt = bestHunt
 		reason = why
 	} else {
@@ -300,7 +308,7 @@ func (b *Bot) manageOptimalHunt(ctx context.Context) error {
 			desiredHunt = h
 			reason = "área configurada manualmente"
 		} else {
-			bestHunt, why := FindBestHunt(st.Pokemon, st.Nivel)
+			bestHunt, why := FindBestHunt(st.Pokemon, st.Nivel, st.Dex)
 			desiredHunt = bestHunt
 			reason = why
 		}
@@ -331,11 +339,12 @@ func (b *Bot) manageOptimalHunt(ctx context.Context) error {
 		}
 	}
 
-	// Escolher o melhor Pokémon atacante do time para essa rota
-	bestPokeID := PickBestAttacker(st.Pokemon, desiredHunt.Pokes)
-	if bestPokeID > 0 && bestPokeID != st.Hunt.AtivoID {
+	// Escolher o melhor Pokémon atacante do time para essa rota respeitando obediência
+	bestPokeID := PickBestAttacker(st.Pokemon, desiredHunt.Pokes, st.Nivel)
+	if bestPokeID > 0 && bestPokeID != st.Hunt.AtivoID && bestPokeID != b.lastSwitchedPokeID {
 		b.addLog(fmt.Sprintf("🔄 Alternando atacante ativo para Pokémon #%d (maior vantagem elemental).", bestPokeID))
 		_ = b.api.SwitchActive(ctx, bestPokeID)
+		b.lastSwitchedPokeID = bestPokeID
 	}
 
 	return nil
@@ -638,6 +647,25 @@ func (b *Bot) manageCandies(ctx context.Context) {
 	if stash["candy"] > 0 {
 		b.addLog("🍬 Consumindo Rare Candy no Pokémon ativo...")
 		_ = b.api.ConsumeItem(ctx, "candy", 1)
+	}
+}
+
+// managePokeLog recolhe periodicamente as metas concluídas de abates no Bestiário (PokéLog)
+func (b *Bot) managePokeLog(ctx context.Context) {
+	resp, err := b.api.ResgatarPokeLog(ctx, true, "")
+	if err != nil {
+		return
+	}
+	if resp != nil && len(resp.Feitos) > 0 {
+		b.addLog(fmt.Sprintf("📖 POKÉLOG RESGATADO: %d marco(s) concluído(s)! (+%d XP Treinador, +%d Pontos de Runas)", len(resp.Feitos), resp.Xp, resp.Pontos))
+		b.mu.Lock()
+		if resp.State != nil {
+			b.state = resp.State
+		}
+		b.mu.Unlock()
+		if resp.State != nil {
+			b.refreshStatusFromState(resp.State)
+		}
 	}
 }
 

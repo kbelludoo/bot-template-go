@@ -44,7 +44,8 @@ type PokeTrueState struct {
 	Cla           *ClanState       `json:"cla,omitempty"`
 	LiderGin      *LiderState      `json:"liderGin,omitempty"`
 	InsigniasGin  *InsigniasState  `json:"insigniasGin,omitempty"`
-	PokelogPontos int              `json:"pokelogPontos"`
+	PokelogPontos int                 `json:"pokelogPontos"`
+	Dex           map[string]DexEntry `json:"dex,omitempty"`
 	Erro          string           `json:"erro,omitempty"`
 }
 
@@ -253,5 +254,29 @@ type GroupRules struct {
 	NivelMin int      `json:"nivelMin"`
 	Especies []string `json:"especies"`
 	VidaX    float64  `json:"vidaX"`
+}
+
+// DexEntry representa os dados de registro e abates de uma espécie no estado
+type DexEntry struct {
+	Visto     any `json:"v"`
+	Capturado any `json:"c"`
+	Abates    int `json:"a"`
+	Coletado  int `json:"k"`
+}
+
+// PokeLogResgatarResponse retornado por /api/pokelog/resgatar
+type PokeLogResgatarResponse struct {
+	Feitos []PokeLogFeito `json:"feitos"`
+	Xp     int            `json:"xp"`
+	Pontos int            `json:"pontos"`
+	State  *PokeTrueState `json:"state,omitempty"`
+	Erro   string         `json:"erro,omitempty"`
+}
+
+type PokeLogFeito struct {
+	Especie string `json:"especie"`
+	Estagio int    `json:"estagio"`
+	Xp      int    `json:"xp"`
+	Pontos  int    `json:"pontos"`
 }
 

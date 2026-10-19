@@ -204,8 +204,8 @@ func GetAllHunts() []Hunt {
 	return huntsList
 }
 
-// FindBestHunt calcula a rota ótima de caça considerando o nível do treinador e as fraquezas dos monstros
-func FindBestHunt(team []PokemonState, trainerLevel int) (Hunt, string) {
+// FindBestHunt calcula a rota ótima de caça considerando o nível do treinador, progresso do PokéLog e fraquezas elementais
+func FindBestHunt(team []PokemonState, trainerLevel int, dex map[string]DexEntry) (Hunt, string) {
 	InitCatalog()
 	if len(huntsList) == 0 {
 		return Hunt{}, "nenhuma área carregada"
@@ -254,18 +254,19 @@ func FindBestHunt(team []PokemonState, trainerLevel int) (Hunt, string) {
 			continue
 		}
 
-		// Penalidade para áreas muito abaixo do nível (rendem menos XP)
+		// Penalidade para áreas muito abaixo do nível quando for farm comum
 		levelDiff := trainerLevel - maxNivel
 		levelFactor := 1.0
-		if levelDiff > 20 {
-			levelFactor = 0.5
-		} else if levelDiff > 10 {
+		if levelDiff > 25 {
+			levelFactor = 0.6
+		} else if levelDiff > 15 {
 			levelFactor = 0.8
 		}
 
 		// Calcular vantagem elemental contra os monstros da rota
 		var totalEffectiveness float64 = 0
 		var monsterCount float64 = 0
+		var incompletePokelog float64 = 0
 
 		for _, monsterName := range h.Pokes {
 			mEntry, exists := GetPokemonEntry(monsterName)
@@ -283,6 +284,22 @@ func FindBestHunt(team []PokemonState, trainerLevel int) (Hunt, string) {
 			}
 			totalEffectiveness += maxEff
 			monsterCount++
+
+			// Checagem de Bestiário (PokéLog):
+			// Se o jogador ainda não coletou os 3 estágios dessa espécie, o monstro é prioritário
+			if dex != nil {
+				dEntry, inDex := dex[monsterName]
+				if !inDex || dEntry.Coletado < 3 {
+					estagiosFaltando := 3
+					if inDex {
+						estagiosFaltando = 3 - dEntry.Coletado
+						if estagiosFaltando < 1 {
+							estagiosFaltando = 1
+						}
+					}
+					incompletePokelog += float64(estagiosFaltando)
+				}
+			}
 		}
 
 		avgEffectiveness := 1.0
@@ -290,14 +307,29 @@ func FindBestHunt(team []PokemonState, trainerLevel int) (Hunt, string) {
 			avgEffectiveness = totalEffectiveness / monsterCount
 		}
 
-		// Score = KillsPorHora base * Vantagem de Fraqueza (dano) * Fator de Nível * Nível médio da área
+		// Bônus de Bestiário (PokéLog): rotas com espécies incompletas ganham até 3.5x de bônus!
+		bestiaryFactor := 1.0
+		if monsterCount > 0 && incompletePokelog > 0 {
+			bestiaryFactor = 1.0 + (incompletePokelog / monsterCount) * 1.5
+		}
+
+		// Se a rota tem PokéLog incompleto, reduz a penalidade de nível baixo pois o abate rápido compensa
+		if incompletePokelog > 0 && levelFactor < 1.0 {
+			levelFactor = (levelFactor + 1.0) / 2.0
+		}
+
 		avgLevel := float64(minNivel+maxNivel) / 2.0
-		score := float64(h.KillsPorHora) * avgEffectiveness * levelFactor * (1.0 + (avgLevel * 0.05))
+		// Score = Kills/h * Vantagem Elemental * Bestiário * Nível
+		score := float64(h.KillsPorHora) * avgEffectiveness * bestiaryFactor * levelFactor * (1.0 + (avgLevel * 0.03))
 
 		if score > bestScore {
 			bestScore = score
 			bestHunt = h
-			reason = fmt.Sprintf("Lv %d-%d | Eficácia Elemental: %.1fx | Score: %.0f", minNivel, maxNivel, avgEffectiveness, score)
+			pokelogMsg := ""
+			if incompletePokelog > 0 {
+				pokelogMsg = fmt.Sprintf(" | 📖 Bestiário Pendente (%.0f metas)", incompletePokelog)
+			}
+			reason = fmt.Sprintf("Lv %d-%d | Eficácia Elemental: %.1fx%s | Score: %.0f", minNivel, maxNivel, avgEffectiveness, pokelogMsg, score)
 		}
 	}
 
@@ -308,14 +340,11 @@ func FindBestHunt(team []PokemonState, trainerLevel int) (Hunt, string) {
 	return bestHunt, reason
 }
 
-// PickBestAttacker escolhe qual pokémon do time tem a melhor vantagem de tipo contra uma lista de espécies
-func PickBestAttacker(team []PokemonState, huntMonsters []string) int {
+// PickBestAttacker escolhe qual pokémon do time tem a melhor vantagem de tipo contra uma lista de espécies respeitando obediência
+func PickBestAttacker(team []PokemonState, huntMonsters []string, trainerLevel int) int {
 	InitCatalog()
 	if len(team) == 0 {
 		return 0
-	}
-	if len(team) == 1 {
-		return team[0].ID
 	}
 
 	var bestID = team[0].ID
@@ -324,6 +353,12 @@ func PickBestAttacker(team []PokemonState, huntMonsters []string) int {
 	for _, p := range team {
 		pEntry, ok := GetPokemonEntry(p.Especie)
 		if !ok {
+			continue
+		}
+
+		// Validação crítica de obediência do PokeTrue:
+		// Se o nível de treinador for menor que o requisito da espécie, o Pokémon não obedece e fica travado!
+		if trainerLevel > 0 && pEntry.NivelReq > trainerLevel {
 			continue
 		}
 
