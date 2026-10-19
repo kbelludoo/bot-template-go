@@ -114,10 +114,10 @@ func (b *Bot) Init(ctx context.Context) error {
 
 	if b.api.GetToken() == "" {
 		b.updateStatus(func(s *engine.AccountStatus) {
-			s.Status = "Aguardando Token (insira no accounts.json)"
+			s.Status = "Aguardando Token"
 		})
-		b.addLog("Atenção: Nenhum token de sessão configurado. Copie o token de localStorage['pokeidle.token'] para o accounts.json.")
-		return nil
+		b.addLog("Atenção: Nenhum token de sessão configurado. Copie o token de localStorage['pokeidle.token'] ou rode token-grabber.")
+		return fmt.Errorf("token de sessão ausente")
 	}
 
 	// 2. Carregar perfil (me) e estado do jogo (state)
@@ -180,6 +180,13 @@ func (b *Bot) Run(ctx context.Context) error {
 
 // performBotStep executa um ciclo completo de caça, fraquezas, cura, helds, treino e loot
 func (b *Bot) performBotStep(ctx context.Context) error {
+	b.mu.RLock()
+	st := b.state
+	b.mu.RUnlock()
+	if st == nil || b.api.GetToken() == "" {
+		return nil
+	}
+
 	now := time.Now()
 
 	// 1. Sincronização periódica do progresso da caçada
@@ -445,6 +452,10 @@ func (b *Bot) manageAutoHeal(ctx context.Context) {
 	}
 
 	b.mu.RLock()
+	if b.state == nil {
+		b.mu.RUnlock()
+		return
+	}
 	stash := b.state.Itens
 	b.mu.RUnlock()
 
@@ -470,6 +481,10 @@ func (b *Bot) manageHelds(ctx context.Context) {
 
 	// 1. Auto-Equip: Verificar se algum Pokémon do time está sem held
 	b.mu.RLock()
+	if b.state == nil {
+		b.mu.RUnlock()
+		return
+	}
 	team := b.state.Pokemon
 	b.mu.RUnlock()
 
@@ -519,6 +534,10 @@ func (b *Bot) manageTreino(ctx context.Context) {
 	}
 
 	b.mu.RLock()
+	if b.state == nil {
+		b.mu.RUnlock()
+		return
+	}
 	team := b.state.Pokemon
 	gold := b.status.Gold
 	b.mu.RUnlock()
@@ -605,6 +624,10 @@ func (b *Bot) manageJenny(ctx context.Context) {
 // manageCandies usa doces raros em Pokémon com nível abaixo de 100
 func (b *Bot) manageCandies(ctx context.Context) {
 	b.mu.RLock()
+	if b.state == nil {
+		b.mu.RUnlock()
+		return
+	}
 	stash := b.state.Itens
 	b.mu.RUnlock()
 

@@ -2,12 +2,15 @@ package main
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"regexp"
+	"strings"
 	"syscall"
 	"time"
 	"unsafe"
@@ -57,25 +60,40 @@ type PROCESSENTRY32W struct {
 	ExeFile         [260]uint16
 }
 
-func main() {
-	userFilter := flag.String("user", os.Getenv("BOT_USER"), "Nome do usuário para filtrar token")
-	vpsSync := flag.Bool("sync", false, "Sincronizar token com a VPS após captura")
-	vpsHost := flag.String("host", os.Getenv("VPS_HOST"), "IP da VPS")
-	vpsKey := flag.String("key", os.Getenv("VPS_KEY"), "Caminho da chave SSH")
-	flag.Parse()
-	_ = userFilter
+type JWTPayload struct {
+	ID     int    `json:"id"`
+	User   string `json:"user"`
+	PJ     int    `json:"pj"`
+	PJNome string `json:"pjNome"`
+	Exp    int64  `json:"exp"`
+}
 
-	fmt.Println("==================================================")
-	fmt.Println("  🔍 PokeTrue Token Grabber - Memória do Navegador")
-	fmt.Println("==================================================")
+func parseJWT(token string) *JWTPayload {
+	parts := strings.Split(token, ".")
+	if len(parts) < 2 {
+		return nil
+	}
+	payloadBytes, err := base64.RawURLEncoding.DecodeString(parts[1])
+	if err != nil {
+		payloadBytes, err = base64.StdEncoding.DecodeString(parts[1])
+		if err != nil {
+			return nil
+		}
+	}
+	var p JWTPayload
+	if err := json.Unmarshal(payloadBytes, &p); err != nil {
+		return nil
+	}
+	return &p
+}
 
+func scanBrowserMemory() []string {
 	targetPattern := []byte("eyJpZCI")
 	jwtRegex := regexp.MustCompile(`eyJpZCI[A-Za-z0-9_\-]{15,}\.[A-Za-z0-9_\-]{15,}\.[A-Za-z0-9_\-]+`)
 
 	snap, _, _ := procCreateToolhelp.Call(uintptr(TH32CS_SNAPPROCESS), 0)
 	if snap == 0 || snap == uintptr(syscall.InvalidHandle) {
-		fmt.Println("❌ Falha ao criar snapshot do sistema operacional")
-		os.Exit(1)
+		return nil
 	}
 	defer procCloseHandle.Call(snap)
 
@@ -86,17 +104,15 @@ func main() {
 	var browserPids []uint32
 
 	for ret != 0 {
-		name := syscall.UTF16ToString(entry.ExeFile[:])
-		if name == "brave.exe" || name == "msedge.exe" || name == "chrome.exe" || name == "opera.exe" {
+		name := strings.ToLower(syscall.UTF16ToString(entry.ExeFile[:]))
+		if strings.Contains(name, "brave") || strings.Contains(name, "msedge") || strings.Contains(name, "chrome") || strings.Contains(name, "opera") {
 			browserPids = append(browserPids, entry.ProcessID)
 		}
 		ret, _, _ = procProcess32Next.Call(snap, uintptr(unsafe.Pointer(&entry)))
 	}
 
-	fmt.Printf("🔎 Escaneando %d processos de navegadores...\n", len(browserPids))
-
-	var latestToken string
-	found := make(map[string]bool)
+	foundMap := make(map[string]bool)
+	var tokens []string
 
 	for _, pid := range browserPids {
 		hProc, _, _ := procOpenProcess.Call(PROCESS_QUERY_INFORMATION|PROCESS_VM_READ, 0, uintptr(pid))
@@ -130,10 +146,12 @@ func main() {
 							matches := jwtRegex.FindAll(buf, -1)
 							for _, m := range matches {
 								tok := string(m)
-								if !found[tok] {
-									found[tok] = true
-									latestToken = tok
-									fmt.Printf("✅ Token capturado [PID %d]: %s...%s\n", pid, tok[:20], tok[len(tok)-15:])
+								if !foundMap[tok] {
+									p := parseJWT(tok)
+									if p != nil && p.User != "" {
+										foundMap[tok] = true
+										tokens = append(tokens, tok)
+									}
 								}
 							}
 						}
@@ -150,39 +168,118 @@ func main() {
 		procCloseHandle.Call(hProc)
 	}
 
-	if latestToken == "" {
-		fmt.Println("❌ Nenhum token encontrado na memória dos navegadores.")
-		fmt.Println("💡 Dica: Verifique se o jogo PokeTrue está aberto e logado em uma aba do navegador.")
+	return tokens
+}
+
+func main() {
+	defaultKey := filepath.Join(os.Getenv("USERPROFILE"), ".ssh", "ssh-key-2026-10-06.key")
+	accFlag := flag.Int("acc", 2, "Número da conta a atualizar (1 ou 2)")
+	watchFlag := flag.Bool("watch", false, "Modo contínuo: monitora a memória até o login acontecer")
+	syncFlag := flag.Bool("sync", true, "Sincronizar com VPS após captura")
+	vpsHost := flag.String("host", "129.153.157.17", "IP da VPS")
+	vpsKey := flag.String("key", defaultKey, "Caminho da chave SSH")
+	manualToken := flag.String("token", "", "Token manual se já copiado pelo usuário")
+	flag.Parse()
+
+	fmt.Println("==================================================")
+	fmt.Println("  🔍 PokeTrue Token Grabber & Multi-Account Sync  ")
+	fmt.Println("==================================================")
+
+	var targetToken string
+
+	if *manualToken != "" {
+		targetToken = strings.TrimSpace(*manualToken)
+		p := parseJWT(targetToken)
+		if p != nil {
+			fmt.Printf("✅ Token manual fornecido para usuário: %s (PJ: %s | ID: %d)\n", p.User, p.PJNome, p.ID)
+		}
+	} else {
+		for {
+			fmt.Println("🔎 Escaneando memória dos navegadores (Brave / Chrome / Edge)...")
+			tokens := scanBrowserMemory()
+
+			if len(tokens) > 0 {
+				fmt.Printf("🎯 %d token(s) válidos encontrados na RAM:\n", len(tokens))
+				for i, t := range tokens {
+					p := parseJWT(t)
+					user := "desconhecido"
+					if p != nil {
+						user = p.User
+					}
+					fmt.Printf("  [%d] Usuário: %-15s | Token: %s...%s\n", i+1, user, t[:15], t[len(t)-10:])
+					if *accFlag == 2 && user != "kbelludoo" {
+						targetToken = t
+					} else if *accFlag == 1 && user == "kbelludoo" {
+						targetToken = t
+					}
+				}
+
+				if targetToken == "" && len(tokens) > 0 {
+					targetToken = tokens[len(tokens)-1]
+				}
+
+				if targetToken != "" {
+					break
+				}
+			}
+
+			if !*watchFlag {
+				break
+			}
+			fmt.Println("⏳ Aguardando login no navegador... (tentando novamente em 3 segundos)")
+			time.Sleep(3 * time.Second)
+		}
+	}
+
+	if targetToken == "" {
+		fmt.Println("❌ Nenhum novo token encontrado na memória dos navegadores.")
+		fmt.Println("💡 Dica: Abra https://poketrue.net/play no navegador, faça login na Conta 2 e rode novamente.")
 		os.Exit(1)
 	}
 
 	// Atualizar accounts.json local
 	accountsPath := "accounts.json"
 	raw, err := os.ReadFile(accountsPath)
-	if err == nil {
-		var accounts []map[string]any
-		if err := json.Unmarshal(raw, &accounts); err == nil && len(accounts) > 0 {
-			if creds, ok := accounts[0]["credentials"].(map[string]any); ok {
-				creds["token"] = latestToken
-				updated, _ := json.MarshalIndent(accounts, "", "  ")
-				_ = os.WriteFile(accountsPath, updated, 0644)
-				fmt.Println("💾 accounts.json local atualizado com sucesso!")
-			}
-		}
+	if err != nil {
+		fmt.Printf("❌ Erro ao ler accounts.json: %v\n", err)
+		os.Exit(1)
 	}
 
-	// Sincronizar com VPS se solicitado
-	if *vpsSync {
-		fmt.Printf("🚀 Enviando para VPS (%s)...\n", *vpsHost)
+	var accounts []map[string]any
+	if err := json.Unmarshal(raw, &accounts); err != nil {
+		fmt.Printf("❌ Erro ao interpretar accounts.json: %v\n", err)
+		os.Exit(1)
+	}
+
+	accIdx := *accFlag - 1
+	if accIdx < 0 || accIdx >= len(accounts) {
+		accIdx = len(accounts) - 1
+	}
+
+	if creds, ok := accounts[accIdx]["credentials"].(map[string]any); ok {
+		creds["token"] = targetToken
+		updated, _ := json.MarshalIndent(accounts, "", "  ")
+		_ = os.WriteFile(accountsPath, updated, 0644)
+		p := parseJWT(targetToken)
+		userName := "desconhecido"
+		if p != nil {
+			userName = p.User
+		}
+		fmt.Printf("💾 accounts.json local atualizado para Conta #%d (%s)!\n", accIdx+1, userName)
+	}
+
+	// Sincronizar com VPS
+	if *syncFlag {
+		fmt.Printf("🚀 Enviando accounts.json atualizado para a VPS (%s)...\n", *vpsHost)
 		scpCmd := exec.Command("scp", "-i", *vpsKey, "-o", "StrictHostKeyChecking=no", accountsPath, fmt.Sprintf("ubuntu@%s:/home/ubuntu/poketrue-bot/accounts.json", *vpsHost))
 		if out, err := scpCmd.CombinedOutput(); err != nil {
 			fmt.Printf("⚠️ Erro no SCP: %v (%s)\n", err, string(out))
 		} else {
-			fmt.Println("📡 Reiniciando serviço na VPS...")
+			fmt.Println("📡 Reiniciando serviço poketrue.service na VPS...")
 			sshCmd := exec.Command("ssh", "-i", *vpsKey, "-o", "StrictHostKeyChecking=no", fmt.Sprintf("ubuntu@%s", *vpsHost), "sudo systemctl restart poketrue.service")
 			_ = sshCmd.Run()
 			time.Sleep(1 * time.Second)
-			fmt.Println("🎉 Bot na VPS atualizado e rodando com o novo token!")
+			fmt.Println("🎉 poketrue.service reiniciado na VPS com Sucesso!")
 		}
 	}
 }
