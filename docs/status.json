@@ -1,5 +1,27 @@
-{
+﻿{
   "bots": {
+    "restream": {
+      "dashboardUrl": "https://kbelludoo.github.io/restream-go/",
+      "engine": "Go Native Engine (FFmpeg Direct Pipe)",
+      "game": "Restream Go",
+      "name": "Restream Go 24/7 HUD",
+      "port": 3008,
+      "online": true,
+      "status": {
+        "online": true,
+        "fps": 10,
+        "resolution": "1280x720",
+        "bitrate": "1200k",
+        "audio": "Nightwave Plaza Lo-Fi",
+        "destinations": [
+          { "platform": "Kick", "status": "online", "url": "https://kick.com/kbelludoo" },
+          { "platform": "Twitch", "status": "online", "url": "https://twitch.tv/kbelludoo" },
+          { "platform": "YouTube", "status": "online" }
+        ],
+        "ramMB": 18.5,
+        "uptime": "Ativo 24/7"
+      }
+    },
     "baiak": {
       "dashboardUrl": "https://kbelludoo.github.io/baiak-idle-bot/",
       "engine": "Go Native Engine",
@@ -8,6 +30,28 @@
       "port": 8090,
       "status": {
         "bots": {
+    "restream": {
+      "dashboardUrl": "https://kbelludoo.github.io/restream-go/",
+      "engine": "Go Native Engine (FFmpeg Direct Pipe)",
+      "game": "Restream Go",
+      "name": "Restream Go 24/7 HUD",
+      "port": 3008,
+      "online": true,
+      "status": {
+        "online": true,
+        "fps": 10,
+        "resolution": "1280x720",
+        "bitrate": "1200k",
+        "audio": "Nightwave Plaza Lo-Fi",
+        "destinations": [
+          { "platform": "Kick", "status": "online", "url": "https://kick.com/kbelludoo" },
+          { "platform": "Twitch", "status": "online", "url": "https://twitch.tv/kbelludoo" },
+          { "platform": "YouTube", "status": "online" }
+        ],
+        "ramMB": 18.5,
+        "uptime": "Ativo 24/7"
+      }
+    },
           "acc-1": {
             "label": "Conta 1",
             "name": "",
