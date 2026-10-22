@@ -63,6 +63,10 @@ bot-template-go/
 
 ## 🚀 Como Criar um Bot para um Novo Jogo
 
+Antes de executar contas reais, consulte [DEVELOPMENT.md](DEVELOPMENT.md) para
+os comandos de validação, o contrato de recuperação e as pendências de auditoria
+de gameplay. A configuração de exemplo começa com a conta e a caça desativadas.
+
 1. **Copie esta pasta:** Duplique a pasta `bot-template-go` e renomeie para o nome do jogo (ex: `meu-novo-bot`).
 2. **Abra com a IA:** Peça para a IA ler o arquivo `AI_INSTRUCTIONS.md`. Ela já saberá exatamente a estrutura, os métodos e como codificar a pasta `pkg/game/`.
 3. **Configure suas contas:** Copie `accounts.example.json` para `accounts.json` e adicione seus logins.

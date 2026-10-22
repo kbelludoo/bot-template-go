@@ -2,6 +2,7 @@ package engine
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 )
@@ -9,49 +10,42 @@ import (
 // RunWithSupervisor roda um bot continuamente, reiniciando com backoff se houver queda ou panic
 func RunWithSupervisor(ctx context.Context, b GameBot) {
 	backoff := 3 * time.Second
-	maxBackoff := 30 * time.Second
+	const maxBackoff = 30 * time.Second
 
-	for {
+	for ctx.Err() == nil {
+		started := time.Now()
+		err := runBotSession(ctx, b)
+		if ctx.Err() != nil {
+			return
+		}
+		// Uma conexão curta não deve zerar o backoff e gerar um loop de reconexão.
+		if time.Since(started) >= time.Minute {
+			backoff = 3 * time.Second
+		}
+		log.Printf("[%s] Sessão encerrada: %v. Reiniciando em %v...", b.ID(), err, backoff)
+		timer := time.NewTimer(backoff)
 		select {
 		case <-ctx.Done():
-			log.Printf("[%s] Supervisor encerrando bot...", b.ID())
+			timer.Stop()
 			return
-		default:
+		case <-timer.C:
 		}
-
-		func() {
-			defer func() {
-				if r := recover(); r != nil {
-					log.Printf("[%s] ⚠️ CRASH PREVENIDO (Panic recuperado): %v. Reiniciando em %v...", b.ID(), r, backoff)
-					time.Sleep(backoff)
-					backoff = min(backoff*2, maxBackoff)
-				}
-			}()
-
-			log.Printf("[%s] Inicializando bot...", b.ID())
-			if err := b.Init(ctx); err != nil {
-				log.Printf("[%s] Falha no Init: %v. Tentando novamente em %v...", b.ID(), err, backoff)
-				time.Sleep(backoff)
-				backoff = min(backoff*2, maxBackoff)
-				return
-			}
-
-			// Se o Init foi bem sucedido, resetamos o backoff
-			backoff = 3 * time.Second
-
-			log.Printf("[%s] Conexão estabelecida! Entrando no loop principal...", b.ID())
-			if err := b.Run(ctx); err != nil {
-				log.Printf("[%s] Conexão encerrada: %v. Reconectando em %v...", b.ID(), err, backoff)
-				time.Sleep(backoff)
-				backoff = min(backoff*2, maxBackoff)
-			}
-		}()
+		backoff = min(backoff*2, maxBackoff)
 	}
 }
 
-func min(a, b time.Duration) time.Duration {
-	if a < b {
-		return a
+func runBotSession(ctx context.Context, b GameBot) (err error) {
+	defer func() {
+		if recovered := recover(); recovered != nil {
+			err = fmt.Errorf("panic recuperado: %v", recovered)
+		}
+	}()
+	log.Printf("[%s] Inicializando bot...", b.ID())
+	if err := b.Init(ctx); err != nil {
+		return fmt.Errorf("Init: %w", err)
 	}
-	return b
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	return b.Run(ctx)
 }

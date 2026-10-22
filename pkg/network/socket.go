@@ -1,8 +1,10 @@
 package network
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"sync"
 	"time"
@@ -13,94 +15,127 @@ import (
 type MessageHandler func(data []byte)
 type DisconnectHandler func(err error)
 
-// SocketClient gerencia conexão WebSocket com escrita thread-safe e keepalive
+// SocketClient mantém cada leitor associado à sua própria conexão.
 type SocketClient struct {
-	url           string
-	headers       http.Header
-	conn          *websocket.Conn
-	writeMu       sync.Mutex
-	mu            sync.RWMutex
-	isConnected   bool
-	onMessage     MessageHandler
-	onDisconnect  DisconnectHandler
-	closeChan     chan struct{}
+	url          string
+	headers      http.Header
+	conn         *websocket.Conn
+	writeMu      sync.Mutex
+	dialMu       sync.Mutex
+	mu           sync.RWMutex
+	generation   uint64
+	onMessage    MessageHandler
+	onDisconnect DisconnectHandler
 }
 
 func NewSocketClient(url string, headers http.Header, onMsg MessageHandler, onDisc DisconnectHandler) *SocketClient {
+	headers = headers.Clone()
 	if headers == nil {
 		headers = make(http.Header)
 	}
-	// Headers padrão de navegador moderno
 	if headers.Get("User-Agent") == "" {
 		headers.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36")
 	}
-
-	return &SocketClient{
-		url:          url,
-		headers:      headers,
-		onMessage:    onMsg,
-		onDisconnect: onDisc,
-		closeChan:    make(chan struct{}),
-	}
+	return &SocketClient{url: url, headers: headers, onMessage: onMsg, onDisconnect: onDisc}
 }
 
 func (s *SocketClient) Connect() error {
-	dialer := websocket.Dialer{
-		HandshakeTimeout: 15 * time.Second,
-	}
+	return s.ConnectContext(context.Background())
+}
 
-	conn, _, err := dialer.Dial(s.url, s.headers)
+func (s *SocketClient) ConnectContext(ctx context.Context) error {
+	s.dialMu.Lock()
+	defer s.dialMu.Unlock()
+	s.mu.RLock()
+	connected := s.conn != nil
+	generation := s.generation
+	s.mu.RUnlock()
+	if connected {
+		return fmt.Errorf("socket já conectado")
+	}
+	dialer := websocket.Dialer{HandshakeTimeout: 15 * time.Second}
+	conn, resp, err := dialer.DialContext(ctx, s.url, s.headers)
 	if err != nil {
+		if resp != nil && resp.Body != nil {
+			_ = resp.Body.Close()
+		}
 		return fmt.Errorf("websocket dial failed: %w", err)
 	}
-
+	conn.SetReadLimit(10 * 1024 * 1024)
+	_ = conn.SetReadDeadline(time.Now().Add(60 * time.Second))
+	conn.SetPongHandler(func(string) error {
+		return conn.SetReadDeadline(time.Now().Add(60 * time.Second))
+	})
 	s.mu.Lock()
+	if s.generation != generation {
+		s.mu.Unlock()
+		_ = conn.Close()
+		return fmt.Errorf("conexão cancelada por Close")
+	}
 	s.conn = conn
-	s.isConnected = true
-	s.closeChan = make(chan struct{})
 	s.mu.Unlock()
-
-	// Iniciar loop de leitura
-	go s.readLoop()
-
+	done := make(chan struct{})
+	go s.readLoop(conn, done)
+	go s.keepAlive(conn, done)
 	return nil
 }
 
-func (s *SocketClient) readLoop() {
+func (s *SocketClient) readLoop(conn *websocket.Conn, done chan struct{}) {
+	defer close(done)
 	defer func() {
-		s.Close()
+		if recovered := recover(); recovered != nil {
+			s.disconnect(conn, fmt.Errorf("panic no handler websocket: %v", recovered))
+		}
 	}()
-
-	s.conn.SetReadLimit(10 * 1024 * 1024) // 10MB max packet
-
-	// Configurar pong handler
-	s.conn.SetPongHandler(func(string) error {
-		_ = s.conn.SetReadDeadline(time.Now().Add(60 * time.Second))
-		return nil
-	})
-
 	for {
-		_ = s.conn.SetReadDeadline(time.Now().Add(60 * time.Second))
-		_, message, err := s.conn.ReadMessage()
+		_, message, err := conn.ReadMessage()
 		if err != nil {
-			s.mu.Lock()
-			wasConnected := s.isConnected
-			s.isConnected = false
-			s.mu.Unlock()
-
-			if wasConnected && s.onDisconnect != nil {
-				s.onDisconnect(err)
-			}
+			s.disconnect(conn, err)
 			return
 		}
-
 		if s.onMessage != nil {
 			s.onMessage(message)
 		}
 	}
 }
 
-// SendJSON envia payload serializado em JSON com proteção de concorrência
+func (s *SocketClient) keepAlive(conn *websocket.Conn, done <-chan struct{}) {
+	ticker := time.NewTicker(20 * time.Second)
+	defer ticker.Stop()
+	for {
+		select {
+		case <-done:
+			return
+		case <-ticker.C:
+			if err := conn.WriteControl(websocket.PingMessage, nil, time.Now().Add(5*time.Second)); err != nil {
+				s.disconnect(conn, err)
+				return
+			}
+		}
+	}
+}
+
+// disconnect limpa apenas a sessão que falhou, antes de permitir reconexão no callback.
+func (s *SocketClient) disconnect(conn *websocket.Conn, err error) {
+	s.mu.Lock()
+	current := s.conn == conn
+	if current {
+		s.conn = nil
+	}
+	s.mu.Unlock()
+	_ = conn.Close()
+	if current && s.onDisconnect != nil {
+		func() {
+			defer func() {
+				if recovered := recover(); recovered != nil {
+					log.Printf("panic no handler de desconexão websocket: %v", recovered)
+				}
+			}()
+			s.onDisconnect(err)
+		}()
+	}
+}
+
 func (s *SocketClient) SendJSON(v any) error {
 	data, err := json.Marshal(v)
 	if err != nil {
@@ -109,61 +144,55 @@ func (s *SocketClient) SendJSON(v any) error {
 	return s.SendText(string(data))
 }
 
-// SendText envia string em modo TextMessage
 func (s *SocketClient) SendText(text string) error {
 	s.writeMu.Lock()
-	defer s.writeMu.Unlock()
-
 	s.mu.RLock()
 	conn := s.conn
-	connected := s.isConnected
 	s.mu.RUnlock()
-
-	if !connected || conn == nil {
+	if conn == nil {
+		s.writeMu.Unlock()
 		return fmt.Errorf("socket não conectado")
 	}
-
-	_ = conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
-	return conn.WriteMessage(websocket.TextMessage, []byte(text))
+	err := conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
+	if err == nil {
+		err = conn.WriteMessage(websocket.TextMessage, []byte(text))
+	}
+	s.writeMu.Unlock()
+	if err != nil {
+		s.disconnect(conn, err)
+	}
+	return err
 }
 
-// SendPing envia frame de ping para keepalive
 func (s *SocketClient) SendPing() error {
-	s.writeMu.Lock()
-	defer s.writeMu.Unlock()
-
 	s.mu.RLock()
 	conn := s.conn
-	connected := s.isConnected
 	s.mu.RUnlock()
-
-	if !connected || conn == nil {
+	if conn == nil {
 		return nil
 	}
-
-	_ = conn.SetWriteDeadline(time.Now().Add(5 * time.Second))
-	return conn.WriteMessage(websocket.PingMessage, []byte{})
+	err := conn.WriteControl(websocket.PingMessage, nil, time.Now().Add(5*time.Second))
+	if err != nil {
+		s.disconnect(conn, err)
+	}
+	return err
 }
 
 func (s *SocketClient) IsConnected() bool {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
-	return s.isConnected
+	return s.conn != nil
 }
 
 func (s *SocketClient) Close() {
 	s.mu.Lock()
-	if !s.isConnected {
-		s.mu.Unlock()
-		return
-	}
-	s.isConnected = false
 	conn := s.conn
 	s.conn = nil
+	s.generation++
 	s.mu.Unlock()
-
 	if conn != nil {
-		_ = conn.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
+		// WriteControl permite Close concorrente com o escritor de dados.
+		_ = conn.WriteControl(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""), time.Now().Add(time.Second))
 		_ = conn.Close()
 	}
 }

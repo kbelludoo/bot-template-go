@@ -14,11 +14,12 @@ import (
 
 // Bot implementa o bot autônomo completo para PokeTrue
 type Bot struct {
-	config  AccountConfig
-	mu      sync.RWMutex
-	status  engine.AccountStatus
-	api     *PokeTrueClient
-	cb      *engine.CircuitBreaker
+	config AccountConfig
+	mu     sync.RWMutex
+	stepMu sync.Mutex
+	status engine.AccountStatus
+	api    *PokeTrueClient
+	cb     *engine.CircuitBreaker
 
 	// Estado canônico do jogo
 	state        *PokeTrueState
@@ -27,20 +28,20 @@ type Bot struct {
 	serverCombat bool
 
 	// Controles temporais
-	startTime       time.Time
-	initialXp       int
-	lastSyncAt      time.Time
-	lastSellAt      time.Time
-	lastHeldAt      time.Time
-	lastTreinoAt    time.Time
-	lastJennyAt     time.Time
-	lastCandyAt     time.Time
-	lastHuntChangeAt time.Time
-	lastPokeLogAt   time.Time
-	lastRunasAt     time.Time
-	lastEvoAt       time.Time
-	lastGinasioAt   time.Time
-	lastBossAt      time.Time
+	startTime          time.Time
+	initialXp          int
+	lastSyncAt         time.Time
+	lastSellAt         time.Time
+	lastHeldAt         time.Time
+	lastTreinoAt       time.Time
+	lastJennyAt        time.Time
+	lastCandyAt        time.Time
+	lastHuntChangeAt   time.Time
+	lastPokeLogAt      time.Time
+	lastRunasAt        time.Time
+	lastEvoAt          time.Time
+	lastGinasioAt      time.Time
+	lastBossAt         time.Time
 	lastSwitchedPokeID int
 
 	// Canais para supply externo de tickets/tokens
@@ -52,9 +53,6 @@ type Bot struct {
 func NewBot(cfg AccountConfig) *Bot {
 	InitCatalog()
 
-	cbCfg := engine.DefaultCircuitBreakerConfig()
-	cb := engine.NewCircuitBreaker(cfg.ID, cbCfg)
-
 	st := engine.NewStatus(cfg.ID, cfg.Name)
 	st.CurrentArea = cfg.Settings.HuntTarget
 	if st.CurrentArea == "" {
@@ -62,31 +60,33 @@ func NewBot(cfg AccountConfig) *Bot {
 	}
 	st.Status = "Iniciando"
 
-	client := NewPokeTrueClient(cfg.Credentials.Token, cfg.BindIP, cb)
-
 	b := &Bot{
 		config:        cfg,
 		status:        st,
-		api:           client,
-		cb:            cb,
 		ticketChan:    make(chan string, 1),
 		turnstileChan: make(chan string, 1),
 	}
 
+	cbCfg := engine.DefaultCircuitBreakerConfig()
 	cbCfg.OnTrip = func(reason string) {
 		b.addLog(fmt.Sprintf("⚠️ Anti-Cheat disparado: %s. Pausando combate e recuando.", reason))
-		b.updateStatus(func(s *engine.AccountStatus) {
-			s.Status = "Proteção Anti-Cheat Ativa (Cooldown)"
-		})
-		_ = b.api.StopHunt(context.Background())
+		b.mu.Lock()
+		b.config.Settings.AutoHunt = false
+		b.status.Status = "cooldown"
+		b.status.Extra["isResting"] = true
+		b.status.UpdatedAt = time.Now().UnixMilli()
+		b.mu.Unlock()
 	}
 
 	cbCfg.OnReset = func() {
-		b.addLog("✅ Cooldown concluído. Retomando caça normal.")
+		b.addLog("✅ Estado canônico recuperado. Caça disponível para reativação manual.")
 		b.updateStatus(func(s *engine.AccountStatus) {
-			s.Status = "hunting"
+			s.Status = "idle"
+			s.Extra["isResting"] = false
 		})
 	}
+	b.cb = engine.NewCircuitBreaker(cfg.ID, cbCfg)
+	b.api = NewPokeTrueClient(cfg.Credentials.Token, cfg.BindIP, b.cb)
 
 	return b
 }
@@ -100,6 +100,11 @@ func (b *Bot) Name() string {
 }
 
 func (b *Bot) Init(ctx context.Context) error {
+	b.stepMu.Lock()
+	defer b.stepMu.Unlock()
+	if b.cb.State() == engine.StateOpen {
+		return ErrCircuitOpen
+	}
 	b.updateStatus(func(s *engine.AccountStatus) {
 		s.Status = "Autenticando..."
 	})
@@ -156,7 +161,7 @@ func (b *Bot) Init(ctx context.Context) error {
 
 func (b *Bot) Run(ctx context.Context) error {
 	b.updateStatus(func(s *engine.AccountStatus) {
-		s.Status = "hunting"
+		s.Status = "idle"
 	})
 	b.addLog("⚡ Ciclo de caça autônomo iniciado.")
 
@@ -167,7 +172,9 @@ func (b *Bot) Run(ctx context.Context) error {
 		select {
 		case <-ctx.Done():
 			b.addLog("Encerrando bot...")
-			_ = b.api.StopHunt(context.Background())
+			stopCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+			_ = b.api.StopHunt(stopCtx)
+			cancel()
 			return ctx.Err()
 
 		case tk := <-b.ticketChan:
@@ -176,26 +183,64 @@ func (b *Bot) Run(ctx context.Context) error {
 			_ = b.Init(ctx)
 
 		case <-ticker.C:
+			if b.cb.State() == engine.StateHalfOpen {
+				if err := b.recoverCanonicalState(ctx); err != nil {
+					b.addLog(fmt.Sprintf("Recuperação adiada: %v", err))
+				}
+				continue
+			}
 			if !b.cb.AllowAction() {
 				continue
 			}
 
 			if err := b.performBotStep(ctx); err != nil {
 				b.addLog(fmt.Sprintf("Aviso no ciclo: %v", err))
-				time.Sleep(2 * time.Second)
+				timer := time.NewTimer(2 * time.Second)
+				select {
+				case <-ctx.Done():
+					timer.Stop()
+				case <-timer.C:
+				}
 			}
 		}
 	}
 }
 
+func (b *Bot) recoverCanonicalState(ctx context.Context) error {
+	b.stepMu.Lock()
+	defer b.stepMu.Unlock()
+	st, err := b.api.GetState(ctx)
+	if err != nil {
+		return err
+	}
+	b.mu.Lock()
+	b.state = st
+	b.mu.Unlock()
+	b.refreshStatusFromState(st)
+	return nil
+}
+
 // performBotStep executa um ciclo completo de caça, fraquezas, cura, helds, treino e loot
 func (b *Bot) performBotStep(ctx context.Context) error {
+	b.stepMu.Lock()
+	defer b.stepMu.Unlock()
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	if !b.cb.AllowAction() {
+		return ErrCircuitOpen
+	}
 	b.mu.RLock()
 	st := b.state
 	b.mu.RUnlock()
 	if st == nil || b.api.GetToken() == "" {
 		return nil
 	}
+	if !b.settings().AutoHunt {
+		b.updateStatus(func(s *engine.AccountStatus) { s.Status = "idle" })
+		return nil
+	}
+	b.updateStatus(func(s *engine.AccountStatus) { s.Status = "hunting" })
 
 	now := time.Now()
 
@@ -209,6 +254,9 @@ func (b *Bot) performBotStep(ctx context.Context) error {
 		b.lastSyncAt = now
 		activeHp := b.getActivePokemonHP()
 		syncResp, err := b.api.SyncHunt(ctx, activeHp, false)
+		if err != nil {
+			return err
+		}
 		if err == nil && syncResp != nil {
 			if syncResp.Delta != nil {
 				b.mu.Lock()
@@ -245,68 +293,68 @@ func (b *Bot) performBotStep(ctx context.Context) error {
 	}
 
 	// 4. Gestão de Vida e Auto-Heal (Stamina de HP)
-	if b.config.Settings.AutoHeal {
+	if b.settings().AutoHeal {
 		b.manageAutoHeal(ctx)
 	}
 
 	// 5. Gestão de Helds / Equips (Auto-Equip e Fusão de Tiers)
-	if b.config.Settings.AutoEquip && now.Sub(b.lastHeldAt) > 5*time.Minute {
+	if b.settings().AutoEquip && now.Sub(b.lastHeldAt) > 5*time.Minute {
 		b.lastHeldAt = now
-		go b.manageHelds(context.Background())
+		b.manageHelds(ctx)
 	}
 
 	// 6. Gestão de Campo de Treino (Treino de EVs dos Pokémon de reserva)
-	if b.config.Settings.AutoTreino && now.Sub(b.lastTreinoAt) > 4*time.Minute {
+	if b.settings().AutoTreino && now.Sub(b.lastTreinoAt) > 4*time.Minute {
 		b.lastTreinoAt = now
-		go b.manageTreino(context.Background())
+		b.manageTreino(ctx)
 	}
 
 	// 7. Auto-Sell inteligente de Loot acumulado
-	if b.config.Settings.AutoSell && now.Sub(b.lastSellAt) > 3*time.Minute {
+	if b.settings().AutoSell && now.Sub(b.lastSellAt) > 3*time.Minute {
 		b.lastSellAt = now
-		go b.manageAutoSell(context.Background())
+		b.manageAutoSell(ctx)
 	}
 
 	// 8. Missões da Oficial Jenny & Tarefas Diárias
-	if b.config.Settings.AutoDaily && now.Sub(b.lastJennyAt) > 8*time.Minute {
+	if b.settings().AutoDaily && now.Sub(b.lastJennyAt) > 8*time.Minute {
 		b.lastJennyAt = now
-		go b.manageJenny(context.Background())
+		b.manageJenny(ctx)
 	}
 
 	// 9. Consumo automático de Rare Candies para acelerar evolução
 	if now.Sub(b.lastCandyAt) > 5*time.Minute {
 		b.lastCandyAt = now
-		go b.manageCandies(context.Background())
+		b.manageCandies(ctx)
 	}
 
 	// 10. Gestão de PokéLog / Bestiário (Resgate automático de marcos de abates alcançados)
 	if now.Sub(b.lastPokeLogAt) > 2*time.Minute {
 		b.lastPokeLogAt = now
-		go b.managePokeLog(context.Background())
+		b.managePokeLog(ctx)
 	}
 
 	// 11. Gestão de Runas do PokéLog (Compra e ativação de bônus passivos de EXP e Loot)
 	if now.Sub(b.lastRunasAt) > 6*time.Minute {
 		b.lastRunasAt = now
-		go b.manageRunas(context.Background())
+		b.manageRunas(ctx)
 	}
 
 	// 12. Gestão de Evolução de Pokémon (Nível e pedras elementais)
 	if now.Sub(b.lastEvoAt) > 5*time.Minute {
 		b.lastEvoAt = now
-		go b.manageEvolucao(context.Background())
+		b.manageEvolucao(ctx)
 	}
 
 	// 13. Gestão de Ginásios & Insígnias (Bônus permanente de dano)
 	if now.Sub(b.lastGinasioAt) > 10*time.Minute {
 		b.lastGinasioAt = now
-		go b.manageGinasios(context.Background())
+		b.manageGinasios(ctx)
 	}
 
 	// 14. Gestão de World Boss diário (Entrada grátis diária)
 	if now.Sub(b.lastBossAt) > 15*time.Minute {
 		b.lastBossAt = now
-		go b.manageBoss(context.Background())
+		b.manageBoss(ctx)
 	}
 
 	return nil
@@ -394,7 +442,7 @@ func (b *Bot) processCombatQueue(ctx context.Context) error {
 		}
 
 		// 1. Avaliar auto-captura (prioriza shinies ou bichos configurados)
-		if b.config.Settings.AutoCatch || monster.Shiny {
+		if b.settings().AutoCatch || monster.Shiny {
 			b.attemptCatch(ctx, monster)
 		}
 
@@ -413,7 +461,7 @@ func (b *Bot) processCombatQueue(ctx context.Context) error {
 				return nil
 			}
 			b.addLog(fmt.Sprintf("Erro ao abater monstro %s #%s: %v", monster.Especie, monster.ID, err))
-			return nil
+			return err
 		}
 
 		b.mu.Lock()
@@ -438,7 +486,13 @@ func (b *Bot) processCombatQueue(ctx context.Context) error {
 		}
 
 		// Ritmo humano realista entre abates (300ms a 700ms)
-		time.Sleep(350 * time.Millisecond)
+		timer := time.NewTimer(350 * time.Millisecond)
+		select {
+		case <-ctx.Done():
+			timer.Stop()
+			return ctx.Err()
+		case <-timer.C:
+		}
 		break // Processa um monstro por ciclo do loop
 	}
 
@@ -459,8 +513,8 @@ func (b *Bot) attemptCatch(ctx context.Context, m FilaMonster) {
 				break
 			}
 		}
-	} else if b.config.Settings.BallType != "" && b.config.Settings.BallType != "auto" {
-		ball = b.config.Settings.BallType
+	} else if b.settings().BallType != "" && b.settings().BallType != "auto" {
+		ball = b.settings().BallType
 	} else {
 		for _, bType := range []string{"pokeball", "greatball", "superball"} {
 			if stash[bType] > 0 {
@@ -482,7 +536,7 @@ func (b *Bot) manageAutoHeal(ctx context.Context) {
 		return
 	}
 
-	threshold := b.config.Settings.HealThreshold
+	threshold := b.settings().HealThreshold
 	if threshold <= 0 {
 		threshold = 0.50
 	}
@@ -506,7 +560,7 @@ func (b *Bot) manageAutoHeal(ctx context.Context) {
 	if potion != "" {
 		_ = b.api.ConsumeItem(ctx, potion, 1)
 		b.addLog(fmt.Sprintf("❤️ Auto-Heal: Monstro com %.0f%% HP. Usada poção '%s'.", currentRatio*100, potion))
-	} else if b.status.Gold > 1000 {
+	} else if b.GetStatus().Gold > 1000 {
 		// Comprar lote emergencial de 10 poções
 		b.addLog("🛒 Estoque de poções esgotado. Comprando 10 poções na loja...")
 		_ = b.api.BuyItem(ctx, "potion", 10)
@@ -611,6 +665,10 @@ func (b *Bot) manageTreino(ctx context.Context) {
 // manageAutoSell vende loot acumulado sem vender itens essenciais ou protegidos
 func (b *Bot) manageAutoSell(ctx context.Context) {
 	b.mu.RLock()
+	if b.state == nil {
+		b.mu.RUnlock()
+		return
+	}
 	stash := b.state.Itens
 	b.mu.RUnlock()
 
@@ -969,10 +1027,24 @@ func (b *Bot) updateStatus(fn func(*engine.AccountStatus)) {
 func (b *Bot) GetStatus() engine.AccountStatus {
 	b.mu.RLock()
 	defer b.mu.RUnlock()
-	return b.status
+	status := b.status
+	status.Logs = append([]string{}, b.status.Logs...)
+	status.Extra = make(map[string]any, len(b.status.Extra))
+	for key, value := range b.status.Extra {
+		status.Extra[key] = value
+	}
+	return status
+}
+
+func (b *Bot) settings() GameSettings {
+	b.mu.RLock()
+	defer b.mu.RUnlock()
+	return b.config.Settings
 }
 
 func (b *Bot) ExecuteAction(action string, payload map[string]any) (any, error) {
+	b.stepMu.Lock()
+	defer b.stepMu.Unlock()
 	switch action {
 	case "setHunt":
 		if target, ok := payload["target"].(string); ok {
@@ -985,22 +1057,31 @@ func (b *Bot) ExecuteAction(action string, payload map[string]any) (any, error) 
 		return nil, fmt.Errorf("parâmetro 'target' ausente")
 
 	case "autoHunt":
+		if !b.settings().AutoHunt && !b.cb.AllowAction() {
+			return nil, ErrCircuitOpen
+		}
 		b.mu.Lock()
 		b.config.Settings.AutoHunt = !b.config.Settings.AutoHunt
 		val := b.config.Settings.AutoHunt
 		b.mu.Unlock()
+		if !val {
+			if err := b.api.StopHunt(context.Background()); err != nil {
+				return nil, err
+			}
+			b.updateStatus(func(s *engine.AccountStatus) { s.Status = "idle" })
+		}
 		return map[string]any{"autoHunt": val}, nil
 
 	case "autoSell":
-		go b.manageAutoSell(context.Background())
+		b.manageAutoSell(context.Background())
 		return "Auto-sell disparado", nil
 
 	case "autoEquip":
-		go b.manageHelds(context.Background())
+		b.manageHelds(context.Background())
 		return "Verificação de helds disparada", nil
 
 	case "autoHeal":
-		go b.manageAutoHeal(context.Background())
+		b.manageAutoHeal(context.Background())
 		return "Auto-heal executado", nil
 
 	case "sync":

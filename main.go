@@ -4,12 +4,14 @@ import (
 	"context"
 	_ "embed"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"os"
 	"os/signal"
 	"runtime"
 	"strconv"
+	"sync"
 	"syscall"
 	"time"
 
@@ -40,8 +42,13 @@ func main() {
 	configFile := "accounts.json"
 	content, err := os.ReadFile(configFile)
 	if err != nil {
+		if !errors.Is(err, os.ErrNotExist) {
+			log.Fatalf("Falha ao ler %s: %v", configFile, err)
+		}
 		log.Printf("Aviso: %s não encontrado. Criando arquivo a partir do template...", configFile)
-		_ = os.WriteFile(configFile, defaultAccountsJSON, 0644)
+		if err := os.WriteFile(configFile, defaultAccountsJSON, 0600); err != nil {
+			log.Fatalf("Falha ao criar %s: %v", configFile, err)
+		}
 		content = defaultAccountsJSON
 	}
 
@@ -67,23 +74,37 @@ func main() {
 		log.Println("⚠️ Nenhuma conta com 'enabled: true' encontrada em accounts.json.")
 		log.Println("Edite accounts.json e habilite sua conta para iniciar.")
 	}
+	if err := game.ValidateActiveAccounts(activeConfigs); err != nil {
+		log.Fatalf("Configuração inválida: %v", err)
+	}
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
 	manager := engine.NewBotManager()
+	var botWorkers sync.WaitGroup
 
 	log.Printf("Iniciando %d conta(s) em Goroutines isoladas com supervisor…\n", len(activeConfigs))
 	for _, cfg := range activeConfigs {
 		b := game.NewBot(cfg)
-		manager.Register(b)
-		go engine.RunWithSupervisor(ctx, b)
+		if err := manager.Register(b); err != nil {
+			log.Fatalf("Configuração inválida: %v", err)
+		}
+	}
+	// Validar todos os IDs antes de abrir qualquer sessão.
+	for _, cfg := range activeConfigs {
+		b, _ := manager.GetBot(cfg.ID)
+		botWorkers.Add(1)
+		go func() {
+			defer botWorkers.Done()
+			engine.RunWithSupervisor(ctx, b)
+		}()
 	}
 
 	// 2. Iniciar Servidor Web / Dashboard HTTP
 	webPort := 3001
 	if p := os.Getenv("PORT"); p != "" {
-		if v, err := strconv.Atoi(p); err == nil && v > 0 {
+		if v, err := strconv.Atoi(p); err == nil && v > 0 && v <= 65535 {
 			webPort = v
 		}
 	}
@@ -156,10 +177,20 @@ func main() {
 	// 4. Capturar sinais para desligamento limpo
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
+	defer signal.Stop(sigChan)
 
 	<-sigChan
 	log.Println("\nSinal de encerramento recebido. Desligando bots...")
 	cancel()
-	time.Sleep(1 * time.Second)
+	done := make(chan struct{})
+	go func() {
+		botWorkers.Wait()
+		close(done)
+	}()
+	select {
+	case <-done:
+	case <-time.After(10 * time.Second):
+		log.Println("Tempo limite de encerramento dos bots atingido.")
+	}
 	log.Println("Bot encerrado com sucesso.")
 }

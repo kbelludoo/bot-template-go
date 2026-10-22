@@ -12,8 +12,8 @@ func TestCircuitBreaker_NormalLifecycle(t *testing.T) {
 
 	cfg := CircuitBreakerConfig{
 		MaxFailures:       2,
-		BaseCooldown:      50 * time.Millisecond,
-		MaxCooldown:       200 * time.Millisecond,
+		BaseCooldown:      15 * time.Minute,
+		MaxCooldown:       60 * time.Minute,
 		BackoffMultiplier: 2.0,
 		OnTrip: func(reason string) {
 			tripCalled = true
@@ -53,29 +53,30 @@ func TestCircuitBreaker_NormalLifecycle(t *testing.T) {
 		t.Fatalf("esperava StateOpen após atingir o limite")
 	}
 
-	time.Sleep(10 * time.Millisecond)
 	if !tripCalled {
 		t.Fatalf("esperava que o callback OnTrip tivesse sido invocado")
 	}
 
-	// Wait for cooldown to expire
-	time.Sleep(60 * time.Millisecond)
+	expireCooldown(cb)
 
 	// Now it should transition to StateHalfOpen
-	if !cb.AllowAction() {
-		t.Fatalf("esperava AllowAction() == true em HalfOpen para teste")
+	if cb.AllowAction() {
+		t.Fatalf("ações de progresso devem continuar bloqueadas em HalfOpen")
 	}
 	if cb.State() != StateHalfOpen {
 		t.Fatalf("esperava StateHalfOpen após o cooldown")
 	}
 
-	// Canary succeeds -> back to Closed
-	cb.RecordSuccess()
+	// Somente a leitura canônica reservada pode restaurar Closed.
+	generation, allowed := cb.BeginRecovery()
+	if !allowed {
+		t.Fatal("leitura canônica deveria ser permitida")
+	}
+	cb.FinishRecovery(generation, nil)
 	if cb.State() != StateClosed {
-		t.Fatalf("esperava StateClosed após RecordSuccess()")
+		t.Fatalf("esperava StateClosed após recuperação canônica")
 	}
 
-	time.Sleep(10 * time.Millisecond)
 	if !resetCalled {
 		t.Fatalf("esperava que o callback OnReset tivesse sido invocado")
 	}
