@@ -212,10 +212,18 @@ const hubTemplate = `<!DOCTYPE html>
                   <span style="font-weight: 700; font-size: 0.72rem;">🗺️ {{$acc.CurrentArea}}</span>
                 </div>
                 {{end}}
+                {{if gt $acc.MaxHP 0}}
                 <div class="stat-row">
                   <span>❤️ HP</span>
                   <span style="color: #4ade80;">{{$acc.HP}} / {{$acc.MaxHP}}</span>
                 </div>
+                {{end}}
+                {{if $acc.Stamina}}
+                <div class="stat-row">
+                  <span>⚡ Stamina</span>
+                  <span style="color: #38bdf8; font-weight: 600;">{{$acc.Stamina}}</span>
+                </div>
+                {{end}}
                 <div class="stat-row">
                   <span style="color: #facc15; font-weight: 800;">💰 {{formatNumber $acc.Gold}} gp</span>
                   <span style="color: #38bdf8; font-weight: 700;">⚔️ {{$acc.Kills}} kills</span>
@@ -246,50 +254,105 @@ const hubTemplate = `<!DOCTYPE html>
   </div>
 
   <script>
+    function getUnifiedAccounts(b) {
+      if (!b || !b.status) return [];
+      if (Array.isArray(b.status.accounts) && b.status.accounts.length > 0) {
+        return b.status.accounts;
+      }
+      if (b.status.accounts && typeof b.status.accounts === 'object' && Object.keys(b.status.accounts).length > 0) {
+        return Object.values(b.status.accounts);
+      }
+      if (b.status.bots && typeof b.status.bots === 'object') {
+        var keys = Object.keys(b.status.bots).sort();
+        return keys.map(function(k) {
+          var entry = b.status.bots[k];
+          var s = entry.status || {};
+          var tel = s.telemetry || {};
+          var statusStr = s.status || 'online';
+          if (s.treino) statusStr = 'Treino';
+          return {
+            name: entry.label || entry.name || k,
+            level: s.level || tel.level || 1,
+            vocation: s.vocation || '',
+            currentArea: s.currentArea || (s.hunt && s.hunt.name) || (s.treino ? 'Treino de Skills' : ''),
+            gold: s.gold || tel.gold || 0,
+            kills: s.kills || tel.kills || 0,
+            stamina: tel.stamina || '',
+            status: statusStr
+          };
+        });
+      }
+      if (b.status.statuses && typeof b.status.statuses === 'object') {
+        var keys = Object.keys(b.status.statuses).sort();
+        return keys.map(function(k) {
+          var entry = b.status.statuses[k];
+          var streams = entry.streamers || {};
+          var watching = Object.values(streams).filter(function(x) { return x.watching; }).map(function(x) { return x.displayName || x.login; });
+          var totalPts = 0;
+          Object.values(streams).forEach(function(x) { totalPts += (x.points || 0); });
+          return {
+            name: entry.username || k,
+            level: 1,
+            vocation: 'Twitch Drops',
+            currentArea: watching.length ? 'Assistindo ' + watching.join(', ') : 'Minerando canais Twitch',
+            gold: totalPts,
+            kills: 0,
+            status: 'Online'
+          };
+        });
+      }
+      return [];
+    }
+
     async function refreshHub() {
       try {
-        const res = await fetch('status.json?t=' + Date.now());
+        var res = await fetch('status.json?t=' + Date.now());
         if (!res.ok) return;
-        const data = await res.json();
+        var data = await res.json();
         if (!data || !data.bots) return;
 
         if (data.vps) {
-          const v = data.vps;
-          document.getElementById('ramVal').textContent = ` + "`${v.ramUsedMb || 0} / ${v.ramTotalMb || 0} MB`" + `;
-          document.getElementById('ramProgress').style.width = (v.ramPercent || 0) + '%';
-          document.getElementById('ramSub').textContent = ` + "`Livre: ${v.ramAvailableMb || 0} MB (${v.ramPercent || 0}% em uso)`" + `;
+          var v = data.vps;
+          var ramVal = document.getElementById('ramVal');
+          var ramProg = document.getElementById('ramProgress');
+          var ramSub = document.getElementById('ramSub');
+          if (ramVal) ramVal.textContent = (v.ramUsedMb || 0) + ' / ' + (v.ramTotalMb || 0) + ' MB';
+          if (ramProg) ramProg.style.width = (v.ramPercent || 0) + '%';
+          if (ramSub) ramSub.textContent = 'Livre: ' + (v.ramAvailableMb || 0) + ' MB (' + (v.ramPercent || 0) + '% em uso)';
         }
 
-        const botKeys = Object.keys(data.bots);
-        const activeCount = botKeys.filter(k => (data.bots[k].status?.accounts || []).length > 0).length;
-        document.getElementById('botsCountVal').textContent = ` + "`${activeCount} / ${botKeys.length}`" + `;
+        var botKeys = Object.keys(data.bots);
+        var activeCount = botKeys.filter(function(k) { return getUnifiedAccounts(data.bots[k]).length > 0; }).length;
+        var botsCountEl = document.getElementById('botsCountVal');
+        if (botsCountEl) botsCountEl.textContent = activeCount + ' / ' + botKeys.length;
 
-        for (const [k, b] of Object.entries(data.bots)) {
-          const accList = document.getElementById('acclist-' + k);
-          const badge = document.getElementById('badge-' + k);
-          const accounts = Array.isArray(b.status?.accounts) ? b.status.accounts : Object.values(b.status?.accounts || {});
+        for (var i = 0; i < botKeys.length; i++) {
+          var k = botKeys[i];
+          var b = data.bots[k];
+          var accList = document.getElementById('acclist-' + k);
+          var badge = document.getElementById('badge-' + k);
+          var accounts = getUnifiedAccounts(b);
 
           if (badge && accounts.length > 0) {
-            badge.textContent = accounts[0].status ? accounts[0].status.toUpperCase() : accounts.length + '/' + accounts.length + ' ATIVO';
+            badge.textContent = accounts.length > 1 ? accounts.length + '/' + accounts.length + ' ATIVAS' : (accounts[0].status ? accounts[0].status.toUpperCase() : 'ONLINE');
           }
           if (accList && accounts.length > 0) {
-            accList.innerHTML = accounts.map(a => ` + "`" + `
-              <div class="acc-item">
-                <div class="acc-item-header">
-                  <span>${a.name || 'Conta'} (Nv. ${a.level || 1})</span>
-                  <span>${a.vocation || ''}</span>
-                </div>
-                ${a.currentArea ? ` + "`" + `<div class="stat-row" style="padding: 4px 8px; border-radius: 6px; margin-bottom: 4px; background: rgba(255,255,255,0.05); font-weight: 700;">🗺️ ${a.currentArea}</div>` + "`" + ` : ''}
-                <div class="stat-row">
-                  <span>❤️ HP</span>
-                  <span style="color: #4ade80;">${(a.hp || 0).toLocaleString()} / ${(a.maxHp || 0).toLocaleString()}</span>
-                </div>
-                <div class="stat-row">
-                  <span style="color: #facc15; font-weight: 800;">💰 ${(a.gold || 0).toLocaleString()} gp</span>
-                  <span style="color: #38bdf8;">⚔️ ${(a.kills || 0).toLocaleString()} kills</span>
-                </div>
-              </div>
-            ` + "`" + `).join('');
+            accList.innerHTML = accounts.map(function(a) {
+              var s = '<div class="acc-item">';
+              s += '<div class="acc-item-header"><span>' + (a.name || 'Conta') + ' (Nv. ' + (a.level || 1) + ')</span><span>' + (a.vocation || '') + '</span></div>';
+              if (a.currentArea) {
+                s += '<div class="stat-row" style="padding: 4px 8px; border-radius: 6px; margin-bottom: 4px; background: rgba(255,255,255,0.05); font-weight: 700;">🗺️ ' + a.currentArea + '</div>';
+              }
+              if (a.maxHp) {
+                s += '<div class="stat-row"><span>❤️ HP</span><span style="color: #4ade80;">' + (a.hp || 0).toLocaleString() + ' / ' + (a.maxHp || 0).toLocaleString() + '</span></div>';
+              }
+              if (a.stamina) {
+                s += '<div class="stat-row"><span>⚡ Stamina</span><span style="color: #38bdf8; font-weight: 600;">' + a.stamina + '</span></div>';
+              }
+              s += '<div class="stat-row"><span style="color: #facc15; font-weight: 800;">💰 ' + (a.gold || 0).toLocaleString() + ' gp</span><span style="color: #38bdf8;">⚔️ ' + (a.kills || 0).toLocaleString() + ' kills</span></div>';
+              s += '</div>';
+              return s;
+            }).join('');
           }
         }
       } catch (e) {

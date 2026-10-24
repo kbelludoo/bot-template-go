@@ -64,7 +64,8 @@ func BuildViewHub(data HubData) ViewHub {
 	for _, k := range sortedKeys {
 		b := data.Bots[k]
 		meta := GetMeta(k, b)
-		accs := b.Status.Accounts
+		accs := b.Status.GetUnifiedAccounts()
+		b.Status.Accounts = accs
 
 		isActive := len(accs) > 0
 		if isActive {
@@ -76,12 +77,21 @@ func BuildViewHub(data HubData) ViewHub {
 			totalGold += acc.Gold
 		}
 
-		summary := fmt.Sprintf("💰 %s gp • RAM: %.1f MB", formatNumber(totalGold), b.Status.RAMSysMB)
+		summary := fmt.Sprintf("💰 %s gp", formatNumber(totalGold))
+		if b.Status.RAMSysMB > 0 {
+			summary = fmt.Sprintf("💰 %s gp • RAM: %.1f MB", formatNumber(totalGold), b.Status.RAMSysMB)
+		}
+
 		badge := "OFFLINE"
 		if isActive {
-			badge = fmt.Sprintf("%d/%d ATIVO", len(accs), len(accs))
-			if accs[0].Status != "" {
-				badge = strings.ToUpper(accs[0].Status)
+			if len(accs) > 1 {
+				badge = fmt.Sprintf("%d/%d ATIVAS", len(accs), len(accs))
+			} else if len(accs) == 1 {
+				if accs[0].Status != "" {
+					badge = strings.ToUpper(accs[0].Status)
+				} else {
+					badge = "ONLINE"
+				}
 			}
 		}
 

@@ -47,9 +47,9 @@ var knownMetas = map[string]BotMeta{
 	},
 	"baiak": {
 		Key: "baiak", Icon: "🔮", Name: "Baiak Idle Multi-Bot", Game: "Baiak Idle • Open Tibia Idle",
-		Port: 3004, Theme: "#c084fc", ThemeBg: "rgba(192, 132, 252, 0.12)",
+		Port: 8090, Theme: "#c084fc", ThemeBg: "rgba(192, 132, 252, 0.12)",
 		ThemeBorder: "rgba(192, 132, 252, 0.45)", ThemeGlow: "rgba(192, 132, 252, 0.25)",
-		DashboardURL: "https://kbelludoo.github.io/baiak-bot-ts/", Order: 5,
+		DashboardURL: "https://kbelludoo.github.io/baiak-idle-bot/", Order: 5,
 	},
 	"pokelegacy": {
 		Key: "pokelegacy", Icon: "⚡", Name: "PokeLegacy Online", Game: "PokeLegacy Online • Web RPG",
@@ -77,9 +77,9 @@ var knownMetas = map[string]BotMeta{
 	},
 	"twitchminer": {
 		Key: "twitchminer", Icon: "🟣", Name: "Twitch Miner Go", Game: "Twitch.tv Channel Points & Drops Automation",
-		Port: 3011, Theme: "#a855f7", ThemeBg: "rgba(168, 85, 247, 0.12)",
+		Port: 3010, Theme: "#a855f7", ThemeBg: "rgba(168, 85, 247, 0.12)",
 		ThemeBorder: "rgba(168, 85, 247, 0.45)", ThemeGlow: "rgba(168, 85, 247, 0.25)",
-		DashboardURL: "https://kbelludoo.github.io/twitch-miner/", Order: 10,
+		DashboardURL: "https://kbelludoo.github.io/twitch-miner-go/", Order: 10,
 	},
 	"lolidle": {
 		Key: "lolidle", Icon: "⚔️", Name: "LoL Idle Multi-Bot", Game: "LoL Idle • Summoner's Rift Idle RPG",
