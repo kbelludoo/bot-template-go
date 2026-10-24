@@ -96,7 +96,6 @@ const hubTemplate = `<!DOCTYPE html>
     }
     .progress-fill { height: 100%; border-radius: 999px; transition: width 0.4s ease; }
     .fill-ram { background: linear-gradient(90deg, #10b981, #00f0ff); }
-    .fill-hp { background: linear-gradient(90deg, #ef4444, #10b981); }
 
     .bots-grid {
       display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 20px; margin-bottom: 32px;
@@ -128,7 +127,6 @@ const hubTemplate = `<!DOCTYPE html>
     }
     .acc-item-header { display: flex; justify-content: space-between; margin-bottom: 6px; font-weight: 600; }
     .stat-row { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
-    .bar-slim { width: 100%; height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; margin: 4px 0; overflow: hidden; }
     .bot-footer {
       display: flex; justify-content: space-between; align-items: center; padding-top: 14px;
       border-top: 1px solid rgba(255, 255, 255, 0.06); font-size: 0.75rem;
@@ -190,26 +188,27 @@ const hubTemplate = `<!DOCTYPE html>
 
     <div class="bots-grid" id="botsGrid">
       {{range .Bots}}
-      <div class="bot-card" id="card-{{.Meta.Key}}" style="--theme: {{.Meta.Theme}}; --theme-bg: {{.Meta.ThemeBg}}; --theme-border: {{.Meta.ThemeBorder}}; --theme-glow: {{.Meta.ThemeGlow}};">
+      {{$bot := .}}
+      <div class="bot-card" id="card-{{$bot.Meta.Key}}" style="--theme: {{css $bot.Meta.Theme}}; --theme-bg: {{css $bot.Meta.ThemeBg}}; --theme-border: {{css $bot.Meta.ThemeBorder}}; --theme-glow: {{css $bot.Meta.ThemeGlow}};">
         <div>
           <div class="bot-header">
             <div class="bot-name-group">
-              <h3>{{.Meta.Icon}} {{.Meta.Name}}</h3>
-              <span class="bot-port">PORTA {{.Meta.Port}} • GO NATIVE</span>
+              <h3>{{$bot.Meta.Icon}} {{$bot.Meta.Name}}</h3>
+              <span class="bot-port">PORTA {{$bot.Meta.Port}} • GO NATIVE</span>
             </div>
-            <span class="badge-status" id="badge-{{.Meta.Key}}">{{.BadgeText}}</span>
+            <span class="badge-status" id="badge-{{$bot.Meta.Key}}">{{$bot.BadgeText}}</span>
           </div>
 
-          <div class="acc-list" id="acclist-{{.Meta.Key}}">
-            {{if .Bot.Status.Accounts}}
-              {{range $idx, $acc := .Bot.Status.Accounts}}
+          <div class="acc-list" id="acclist-{{$bot.Meta.Key}}">
+            {{if $bot.Bot.Status.Accounts}}
+              {{range $idx, $acc := $bot.Bot.Status.Accounts}}
               <div class="acc-item">
                 <div class="acc-item-header">
-                  <span>{{$.Meta.Icon}} {{$acc.Name}} (Nv. {{$acc.Level}})</span>
-                  <span style="color: {{$.Meta.Theme}};">{{$acc.Vocation}}</span>
+                  <span>{{$bot.Meta.Icon}} {{$acc.Name}} (Nv. {{$acc.Level}})</span>
+                  <span style="color: {{css $bot.Meta.Theme}};">{{$acc.Vocation}}</span>
                 </div>
                 {{if $acc.CurrentArea}}
-                <div class="stat-row" style="background: {{$.Meta.ThemeBg}}; padding: 4px 8px; border-radius: 6px; margin-bottom: 4px;">
+                <div class="stat-row" style="background: {{css $bot.Meta.ThemeBg}}; padding: 4px 8px; border-radius: 6px; margin-bottom: 4px;">
                   <span style="font-weight: 700; font-size: 0.72rem;">🗺️ {{$acc.CurrentArea}}</span>
                 </div>
                 {{end}}
@@ -230,8 +229,8 @@ const hubTemplate = `<!DOCTYPE html>
         </div>
 
         <div class="bot-footer">
-          <span style="font-size: 0.72rem; color: var(--text-dim);" id="summary-{{.Meta.Key}}">{{.SummaryText}}</span>
-          <a href="{{.Meta.DashboardURL}}" target="_blank" class="btn-link">Abrir Dashboard ↗</a>
+          <span style="font-size: 0.72rem; color: var(--text-dim);" id="summary-{{$bot.Meta.Key}}">{{$bot.SummaryText}}</span>
+          <a href="{{$bot.Meta.DashboardURL}}" target="_blank" class="btn-link">Abrir Dashboard ↗</a>
         </div>
       </div>
       {{end}}
@@ -268,11 +267,10 @@ const hubTemplate = `<!DOCTYPE html>
         for (const [k, b] of Object.entries(data.bots)) {
           const accList = document.getElementById('acclist-' + k);
           const badge = document.getElementById('badge-' + k);
-          const summary = document.getElementById('summary-' + k);
-          const accounts = b.status?.accounts || [];
+          const accounts = Array.isArray(b.status?.accounts) ? b.status.accounts : Object.values(b.status?.accounts || {});
 
           if (badge && accounts.length > 0) {
-            badge.textContent = accounts[0].status ? accounts[0].status.toUpperCase() : accounts.length + '/'+ accounts.length + ' ATIVO';
+            badge.textContent = accounts[0].status ? accounts[0].status.toUpperCase() : accounts.length + '/' + accounts.length + ' ATIVO';
           }
           if (accList && accounts.length > 0) {
             accList.innerHTML = accounts.map(a => ` + "`" + `

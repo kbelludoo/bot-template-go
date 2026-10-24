@@ -124,6 +124,9 @@ func BuildHTML(data HubData) (string, error) {
 
 	tmpl, err := template.New("hub").Funcs(template.FuncMap{
 		"formatNumber": formatNumber,
+		"css": func(s string) template.CSS {
+			return template.CSS(s)
+		},
 	}).Parse(hubTemplate)
 	if err != nil {
 		return "", fmt.Errorf("falha ao analisar template do hub: %w", err)

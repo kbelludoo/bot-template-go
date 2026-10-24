@@ -1,5 +1,9 @@
 package hubview
 
+import (
+	"encoding/json"
+)
+
 // HubData represents the complete cluster telemetry payload
 type HubData struct {
 	Timestamp string             `json:"timestamp"`
@@ -36,13 +40,38 @@ type BotData struct {
 	Status       BotStatusData `json:"status"`
 }
 
+// AccountsList handles both JSON arrays []AccountData and JSON maps map[string]AccountData
+type AccountsList []AccountData
+
+func (a *AccountsList) UnmarshalJSON(data []byte) error {
+	var list []AccountData
+	if err := json.Unmarshal(data, &list); err == nil {
+		*a = list
+		return nil
+	}
+	var m map[string]AccountData
+	if err := json.Unmarshal(data, &m); err == nil {
+		var res []AccountData
+		for k, v := range m {
+			if v.Name == "" {
+				v.Name = k
+			}
+			res = append(res, v)
+		}
+		*a = res
+		return nil
+	}
+	*a = []AccountData{}
+	return nil
+}
+
 // BotStatusData represents live runtime stats of a bot
 type BotStatusData struct {
-	Uptime     string        `json:"uptime"`
-	Goroutines int           `json:"goroutines"`
-	RAMAllocMB float64       `json:"ramAllocMB"`
-	RAMSysMB   float64       `json:"ramSysMB"`
-	Accounts   []AccountData `json:"accounts"`
+	Uptime     string       `json:"uptime"`
+	Goroutines int          `json:"goroutines"`
+	RAMAllocMB float64      `json:"ramAllocMB"`
+	RAMSysMB   float64      `json:"ramSysMB"`
+	Accounts   AccountsList `json:"accounts"`
 }
 
 // AccountData represents a single game character or runner
