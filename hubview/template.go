@@ -5,7 +5,7 @@ const hubTemplate = `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>⚡ Bot Hub — VPS Command Center & Game Bot Starter Kit (Go Engine)</title>
+  <title>⚡ Bot Hub — VPS Command Center & Game/Stream Bot Kit (Go Engine)</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -155,7 +155,7 @@ const hubTemplate = `<!DOCTYPE html>
       <div class="header-left">
         <div class="logo-badge">⚡</div>
         <div class="header-title">
-          <h1>VPS Bot Command Center</h1>
+          <h1>VPS Command Center</h1>
           <p><span>🌐 Cluster OCI Always-Free</span> • <span>🚀 Go 1.27 Native Engine</span></p>
         </div>
       </div>
@@ -169,9 +169,9 @@ const hubTemplate = `<!DOCTYPE html>
 
     <div class="vps-metrics-grid">
       <div class="vps-card">
-        <div class="vps-label">Bots em Operação</div>
+        <div class="vps-label">Serviços em Operação</div>
         <div class="vps-val" id="botsCountVal" style="color: var(--accent);">{{.ActiveBots}} / {{.TotalBots}}</div>
-        <div class="vps-sub">Bots conectados 24/7 na VPS</div>
+        <div class="vps-sub">Bots & Miners conectados 24/7 na VPS</div>
       </div>
       <div class="vps-card">
         <div class="vps-label">Memória RAM VPS</div>
@@ -194,15 +194,30 @@ const hubTemplate = `<!DOCTYPE html>
           <div class="bot-header">
             <div class="bot-name-group">
               <h3>{{$bot.Meta.Icon}} {{$bot.Meta.Name}}</h3>
-              <span class="bot-port">PORTA {{$bot.Meta.Port}} • GO NATIVE</span>
+              <span class="bot-port">PORTA {{$bot.Meta.Port}} • {{if $bot.Meta.IsStream}}STREAM HARVESTER{{else}}GO NATIVE{{end}}</span>
             </div>
             <span class="badge-status" id="badge-{{$bot.Meta.Key}}">{{$bot.BadgeText}}</span>
           </div>
 
           <div class="acc-list" id="acclist-{{$bot.Meta.Key}}">
-            {{if $bot.Bot.Status.Accounts}}
-              {{range $idx, $acc := $bot.Bot.Status.Accounts}}
+            {{if $bot.Accounts}}
+              {{range $idx, $acc := $bot.Accounts}}
               <div class="acc-item">
+                {{if $bot.Meta.IsStream}}
+                <div class="acc-item-header">
+                  <span>{{$bot.Meta.Icon}} {{$acc.Name}}</span>
+                  <span style="color: {{css $bot.Meta.Theme}}; font-size: 0.72rem; font-weight: 700;">STREAM VIEWER</span>
+                </div>
+                {{if $acc.CurrentArea}}
+                <div class="stat-row" style="background: {{css $bot.Meta.ThemeBg}}; padding: 4px 8px; border-radius: 6px; margin-bottom: 4px;">
+                  <span style="font-weight: 700; font-size: 0.72rem;">📡 {{$acc.CurrentArea}}</span>
+                </div>
+                {{end}}
+                <div class="stat-row">
+                  <span style="color: #facc15; font-weight: 800;">⭐ {{formatNumber $acc.Gold}} pontos</span>
+                  <span style="color: #38bdf8; font-weight: 700;">🔴 {{$acc.Kills}} {{if eq $acc.Kills 1}}canal ao vivo{{else}}canais ao vivo{{end}}</span>
+                </div>
+                {{else}}
                 <div class="acc-item-header">
                   <span>{{$bot.Meta.Icon}} {{$acc.Name}} (Nv. {{$acc.Level}})</span>
                   <span style="color: {{css $bot.Meta.Theme}};">{{$acc.Vocation}}</span>
@@ -228,6 +243,7 @@ const hubTemplate = `<!DOCTYPE html>
                   <span style="color: #facc15; font-weight: 800;">💰 {{formatNumber $acc.Gold}} gp</span>
                   <span style="color: #38bdf8; font-weight: 700;">⚔️ {{$acc.Kills}} kills</span>
                 </div>
+                {{end}}
               </div>
               {{end}}
             {{else}}
@@ -247,8 +263,8 @@ const hubTemplate = `<!DOCTYPE html>
     <div class="stream-ticker-wrap">
       <div class="ticker-badge">🔴 LIVE FLEET</div>
       <div class="stream-ticker-track">
-        <span>⚡ VPS CLUSTER ONLINE • BOTS NATIVOS EM GO • ZERO NODE.JS</span>
-        <span>🎮 {{.TickerBotsList}}</span>
+        <span>⚡ VPS CLUSTER ONLINE • BOTS & STREAM MINERS NATIVOS EM GO • ZERO NODE.JS</span>
+        <span>🎮 JOGOS & 📺 STREAMS: {{.TickerBotsList}}</span>
       </div>
     </div>
   </div>
@@ -256,6 +272,42 @@ const hubTemplate = `<!DOCTYPE html>
   <script>
     function getUnifiedAccounts(b) {
       if (!b || !b.status) return [];
+
+      // Kick Miner
+      if (b.status.accounts && typeof b.status.accounts === 'object') {
+        var accKeys = Object.keys(b.status.accounts);
+        if (accKeys.length > 0 && b.status.accounts[accKeys[0]] && b.status.accounts[accKeys[0]].streamers) {
+          return accKeys.sort().map(function(k) {
+            var entry = b.status.accounts[k];
+            var streams = entry.streamers || {};
+            var sKeys = Object.keys(streams).sort();
+            var totalPts = 0;
+            var liveCount = 0;
+            var liveNames = [];
+            for (var si = 0; si < sKeys.length; si++) {
+              var st = streams[sKeys[si]];
+              totalPts += (st.points || 0);
+              if (st.isLive) {
+                liveCount++;
+                if (liveNames.length < 3) liveNames.push(st.streamer || sKeys[si]);
+              }
+            }
+            var areaText = (entry.activeStreams || liveCount) + ' canais ativos';
+            if (liveNames.length > 0) areaText = 'Ao vivo: ' + liveNames.join(', ') + ' (+' + liveCount + ')';
+            return {
+              name: 'Conta Kick #1',
+              level: 0,
+              vocation: 'Kick Stream',
+              currentArea: areaText,
+              gold: totalPts,
+              kills: liveCount,
+              status: 'Minerando',
+              isStream: true
+            };
+          });
+        }
+      }
+
       if (Array.isArray(b.status.accounts) && b.status.accounts.length > 0) {
         return b.status.accounts;
       }
@@ -288,16 +340,18 @@ const hubTemplate = `<!DOCTYPE html>
           var entry = b.status.statuses[k];
           var streams = entry.streamers || {};
           var watching = Object.values(streams).filter(function(x) { return x.watching; }).map(function(x) { return x.displayName || x.login; });
+          var liveCount = Object.values(streams).filter(function(x) { return x.isLive; }).length;
           var totalPts = 0;
           Object.values(streams).forEach(function(x) { totalPts += (x.points || 0); });
           return {
             name: entry.username || k,
-            level: 1,
+            level: 0,
             vocation: 'Twitch Drops',
             currentArea: watching.length ? 'Assistindo ' + watching.join(', ') : 'Minerando canais Twitch',
             gold: totalPts,
-            kills: 0,
-            status: 'Online'
+            kills: liveCount,
+            status: 'Online',
+            isStream: true
           };
         });
       }
@@ -332,24 +386,37 @@ const hubTemplate = `<!DOCTYPE html>
           var accList = document.getElementById('acclist-' + k);
           var badge = document.getElementById('badge-' + k);
           var accounts = getUnifiedAccounts(b);
+          var isStream = (k === 'kickminer' || k === 'twitchminer');
 
           if (badge && accounts.length > 0) {
-            badge.textContent = accounts.length > 1 ? accounts.length + '/' + accounts.length + ' ATIVAS' : (accounts[0].status ? accounts[0].status.toUpperCase() : 'ONLINE');
+            if (isStream) {
+              badge.textContent = accounts[0].kills > 0 ? accounts[0].kills + ' AO VIVO' : 'MINERANDO';
+            } else {
+              badge.textContent = accounts.length > 1 ? accounts.length + '/' + accounts.length + ' ATIVAS' : (accounts[0].status ? accounts[0].status.toUpperCase() : 'ONLINE');
+            }
           }
           if (accList && accounts.length > 0) {
             accList.innerHTML = accounts.map(function(a) {
               var s = '<div class="acc-item">';
-              s += '<div class="acc-item-header"><span>' + (a.name || 'Conta') + ' (Nv. ' + (a.level || 1) + ')</span><span>' + (a.vocation || '') + '</span></div>';
-              if (a.currentArea) {
-                s += '<div class="stat-row" style="padding: 4px 8px; border-radius: 6px; margin-bottom: 4px; background: rgba(255,255,255,0.05); font-weight: 700;">🗺️ ' + a.currentArea + '</div>';
+              if (isStream) {
+                s += '<div class="acc-item-header"><span>' + (a.name || 'Conta') + '</span><span style="font-size: 0.72rem; font-weight: 700;">STREAM VIEWER</span></div>';
+                if (a.currentArea) {
+                  s += '<div class="stat-row" style="padding: 4px 8px; border-radius: 6px; margin-bottom: 4px; background: rgba(255,255,255,0.05); font-weight: 700;">📡 ' + a.currentArea + '</div>';
+                }
+                s += '<div class="stat-row"><span style="color: #facc15; font-weight: 800;">⭐ ' + (a.gold || 0).toLocaleString() + ' pontos</span><span style="color: #38bdf8; font-weight: 700;">🔴 ' + (a.kills || 0) + ' ' + ((a.kills === 1) ? 'canal ao vivo' : 'canais ao vivo') + '</span></div>';
+              } else {
+                s += '<div class="acc-item-header"><span>' + (a.name || 'Conta') + ' (Nv. ' + (a.level || 1) + ')</span><span>' + (a.vocation || '') + '</span></div>';
+                if (a.currentArea) {
+                  s += '<div class="stat-row" style="padding: 4px 8px; border-radius: 6px; margin-bottom: 4px; background: rgba(255,255,255,0.05); font-weight: 700;">🗺️ ' + a.currentArea + '</div>';
+                }
+                if (a.maxHp) {
+                  s += '<div class="stat-row"><span>❤️ HP</span><span style="color: #4ade80;">' + (a.hp || 0).toLocaleString() + ' / ' + (a.maxHp || 0).toLocaleString() + '</span></div>';
+                }
+                if (a.stamina) {
+                  s += '<div class="stat-row"><span>⚡ Stamina</span><span style="color: #38bdf8; font-weight: 600;">' + a.stamina + '</span></div>';
+                }
+                s += '<div class="stat-row"><span style="color: #facc15; font-weight: 800;">💰 ' + (a.gold || 0).toLocaleString() + ' gp</span><span style="color: #38bdf8;">⚔️ ' + (a.kills || 0).toLocaleString() + ' kills</span></div>';
               }
-              if (a.maxHp) {
-                s += '<div class="stat-row"><span>❤️ HP</span><span style="color: #4ade80;">' + (a.hp || 0).toLocaleString() + ' / ' + (a.maxHp || 0).toLocaleString() + '</span></div>';
-              }
-              if (a.stamina) {
-                s += '<div class="stat-row"><span>⚡ Stamina</span><span style="color: #38bdf8; font-weight: 600;">' + a.stamina + '</span></div>';
-              }
-              s += '<div class="stat-row"><span style="color: #facc15; font-weight: 800;">💰 ' + (a.gold || 0).toLocaleString() + ' gp</span><span style="color: #38bdf8;">⚔️ ' + (a.kills || 0).toLocaleString() + ' kills</span></div>';
               s += '</div>';
               return s;
             }).join('');

@@ -43,29 +43,19 @@ type BotData struct {
 	Status       BotStatusData `json:"status"`
 }
 
-// AccountsList handles both JSON arrays []AccountData and JSON maps map[string]AccountData
-type AccountsList []AccountData
+// KickStreamerEntry represents individual streamer channel monitored in Kick Miner
+type KickStreamerEntry struct {
+	Streamer  string `json:"streamer"`
+	IsLive    bool   `json:"isLive"`
+	Watching  bool   `json:"watching"`
+	Points    int64  `json:"points"`
+	WatchTime string `json:"watchTime"`
+}
 
-func (a *AccountsList) UnmarshalJSON(data []byte) error {
-	var list []AccountData
-	if err := json.Unmarshal(data, &list); err == nil {
-		*a = list
-		return nil
-	}
-	var m map[string]AccountData
-	if err := json.Unmarshal(data, &m); err == nil {
-		var res []AccountData
-		for k, v := range m {
-			if v.Name == "" {
-				v.Name = k
-			}
-			res = append(res, v)
-		}
-		*a = res
-		return nil
-	}
-	*a = []AccountData{}
-	return nil
+// KickAccountEntry represents an account entry in Kick Miner
+type KickAccountEntry struct {
+	ActiveStreams int                          `json:"activeStreams"`
+	Streamers     map[string]KickStreamerEntry `json:"streamers"`
 }
 
 // BaiakBotEntry represents individual bot in Baiak Idle fleet
@@ -124,16 +114,18 @@ type TwitchStreamerEntry struct {
 
 // BotStatusData represents live runtime stats of a bot
 type BotStatusData struct {
-	Uptime     string                       `json:"uptime"`
-	Goroutines int                          `json:"goroutines"`
-	RAMAllocMB float64                      `json:"ramAllocMB"`
-	RAMSysMB   float64                      `json:"ramSysMB"`
-	Accounts   AccountsList                 `json:"accounts"`
-	Bots       map[string]BaiakBotEntry     `json:"bots"`
-	Statuses   map[string]TwitchStatusEntry `json:"statuses"`
+	Uptime        string                       `json:"uptime"`
+	Goroutines    int                          `json:"goroutines"`
+	RAMAllocMB    float64                      `json:"ramAllocMB"`
+	RAMSysMB      float64                      `json:"ramSysMB"`
+	RAMMB         float64                      `json:"ramMb"`
+	TotalStreams  int                          `json:"totalStreams"`
+	Accounts      json.RawMessage              `json:"accounts"`
+	Bots          map[string]BaiakBotEntry     `json:"bots"`
+	Statuses      map[string]TwitchStatusEntry `json:"statuses"`
 }
 
-// AccountData represents a single game character or runner
+// AccountData represents a single character runner or stream harvester
 type AccountData struct {
 	ID          string         `json:"id"`
 	Name        string         `json:"name"`
@@ -150,15 +142,104 @@ type AccountData struct {
 	DurationSec int            `json:"durationSec"`
 	ExpPerHour  float64        `json:"expPerHour"`
 	Stamina     string         `json:"stamina,omitempty"`
+	IsStream    bool           `json:"isStream,omitempty"`
 	Extra       map[string]any `json:"extra,omitempty"`
 }
 
-// GetUnifiedAccounts returns a normalized slice of AccountData across all bot types
+// GetUnifiedAccounts returns a normalized slice of AccountData across all game and stream bot types
 func (s BotStatusData) GetUnifiedAccounts() []AccountData {
+	// 1. Kick Miner check (accounts as map[string]KickAccountEntry)
 	if len(s.Accounts) > 0 {
-		return s.Accounts
+		var kickMap map[string]KickAccountEntry
+		if err := json.Unmarshal(s.Accounts, &kickMap); err == nil && len(kickMap) > 0 {
+			hasKick := false
+			for _, v := range kickMap {
+				if len(v.Streamers) > 0 || v.ActiveStreams > 0 {
+					hasKick = true
+					break
+				}
+			}
+			if hasKick {
+				var keys []string
+				for k := range kickMap {
+					keys = append(keys, k)
+				}
+				sort.Strings(keys)
+
+				var res []AccountData
+				for _, k := range keys {
+					entry := kickMap[k]
+					var totalPts int64
+					var liveCount int
+					var liveNames []string
+
+					var sNames []string
+					for sName := range entry.Streamers {
+						sNames = append(sNames, sName)
+					}
+					sort.Strings(sNames)
+
+					for _, sName := range sNames {
+						st := entry.Streamers[sName]
+						totalPts += st.Points
+						if st.IsLive {
+							liveCount++
+							if len(liveNames) < 3 {
+								liveNames = append(liveNames, st.Streamer)
+							}
+						}
+					}
+
+					area := fmt.Sprintf("%d canais ativos", entry.ActiveStreams)
+					if entry.ActiveStreams == 1 {
+						area = "1 canal ativo"
+					}
+					if len(liveNames) > 0 {
+						area = fmt.Sprintf("Ao vivo: %s (+%d)", strings.Join(liveNames, ", "), liveCount)
+					}
+
+					name := "Conta Kick #1"
+					if k != "miner_1" && k != "" {
+						name = k
+					}
+
+					res = append(res, AccountData{
+						ID:          k,
+						Name:        name,
+						Level:       0,
+						Gold:        totalPts,
+						Kills:       liveCount,
+						Vocation:    "Kick Stream",
+						CurrentArea: area,
+						Status:      "Minerando",
+						IsStream:    true,
+					})
+				}
+				return res
+			}
+		}
+
+		// Standard slice []AccountData
+		var list []AccountData
+		if err := json.Unmarshal(s.Accounts, &list); err == nil && len(list) > 0 {
+			return list
+		}
+
+		// Standard map map[string]AccountData
+		var m map[string]AccountData
+		if err := json.Unmarshal(s.Accounts, &m); err == nil && len(m) > 0 {
+			var res []AccountData
+			for k, v := range m {
+				if v.Name == "" {
+					v.Name = k
+				}
+				res = append(res, v)
+			}
+			return res
+		}
 	}
 
+	// 2. Baiak Idle fleet check
 	if len(s.Bots) > 0 {
 		var keys []string
 		for k := range s.Bots {
@@ -215,6 +296,7 @@ func (s BotStatusData) GetUnifiedAccounts() []AccountData {
 		return res
 	}
 
+	// 3. Twitch Miner check
 	if len(s.Statuses) > 0 {
 		var keys []string
 		for k := range s.Statuses {
@@ -232,9 +314,13 @@ func (s BotStatusData) GetUnifiedAccounts() []AccountData {
 
 			var watching []string
 			var totalPts int64
+			var liveCount int
 			for _, stream := range st.Streamers {
 				if stream.Watching {
 					watching = append(watching, stream.DisplayName)
+				}
+				if stream.IsLive {
+					liveCount++
 				}
 				totalPts += stream.Points
 			}
@@ -247,11 +333,13 @@ func (s BotStatusData) GetUnifiedAccounts() []AccountData {
 			res = append(res, AccountData{
 				ID:          st.UserID,
 				Name:        name,
-				Level:       1,
+				Level:       0,
 				Gold:        totalPts,
+				Kills:       liveCount,
 				Vocation:    "Twitch Drops",
 				CurrentArea: area,
 				Status:      "Online",
+				IsStream:    true,
 			})
 		}
 		return res

@@ -14,6 +14,7 @@ import (
 type ViewBot struct {
 	Meta        BotMeta
 	Bot         BotData
+	Accounts    []AccountData
 	SummaryText string
 	BadgeText   string
 	IsActive    bool
@@ -65,26 +66,44 @@ func BuildViewHub(data HubData) ViewHub {
 		b := data.Bots[k]
 		meta := GetMeta(k, b)
 		accs := b.Status.GetUnifiedAccounts()
-		b.Status.Accounts = accs
 
 		isActive := len(accs) > 0
 		if isActive {
 			activeCount++
 		}
 
-		var totalGold int64
+		var totalVal int64
 		for _, acc := range accs {
-			totalGold += acc.Gold
+			totalVal += acc.Gold
 		}
 
-		summary := fmt.Sprintf("💰 %s gp", formatNumber(totalGold))
-		if b.Status.RAMSysMB > 0 {
-			summary = fmt.Sprintf("💰 %s gp • RAM: %.1f MB", formatNumber(totalGold), b.Status.RAMSysMB)
+		ramMB := b.Status.RAMSysMB
+		if ramMB == 0 && b.Status.RAMMB > 0 {
+			ramMB = b.Status.RAMMB
+		}
+
+		var summary string
+		if meta.IsStream {
+			summary = fmt.Sprintf("⭐ %s pontos", formatNumber(totalVal))
+			if ramMB > 0 {
+				summary = fmt.Sprintf("⭐ %s pontos • RAM: %.1f MB", formatNumber(totalVal), ramMB)
+			}
+		} else {
+			summary = fmt.Sprintf("💰 %s gp", formatNumber(totalVal))
+			if ramMB > 0 {
+				summary = fmt.Sprintf("💰 %s gp • RAM: %.1f MB", formatNumber(totalVal), ramMB)
+			}
 		}
 
 		badge := "OFFLINE"
 		if isActive {
-			if len(accs) > 1 {
+			if meta.IsStream {
+				if len(accs) > 0 && accs[0].Kills > 0 {
+					badge = fmt.Sprintf("%d AO VIVO", accs[0].Kills)
+				} else {
+					badge = "MINERANDO"
+				}
+			} else if len(accs) > 1 {
 				badge = fmt.Sprintf("%d/%d ATIVAS", len(accs), len(accs))
 			} else if len(accs) == 1 {
 				if accs[0].Status != "" {
@@ -98,6 +117,7 @@ func BuildViewHub(data HubData) ViewHub {
 		viewBots = append(viewBots, ViewBot{
 			Meta:        meta,
 			Bot:         b,
+			Accounts:    accs,
 			SummaryText: summary,
 			BadgeText:   badge,
 			IsActive:    isActive,

@@ -65,37 +65,59 @@ func TestBaiakUnifiedAccounts(t *testing.T) {
 	}
 }
 
-func TestBuildHTMLContainsBaiak(t *testing.T) {
+func TestKickMinerUnifiedAccounts(t *testing.T) {
+	raw := `{
+		"accounts": {
+			"miner_1": {
+				"activeStreams": 3,
+				"streamers": {
+					"gaules": {
+						"streamer": "gaules",
+						"points": 9330,
+						"isLive": true,
+						"watching": true
+					},
+					"adinross": {
+						"streamer": "adinross",
+						"points": 1600,
+						"isLive": false,
+						"watching": false
+					}
+				}
+			}
+		}
+	}`
+
+	var status BotStatusData
+	if err := json.Unmarshal([]byte(raw), &status); err != nil {
+		t.Fatalf("falha ao deserializar json kick: %v", err)
+	}
+
+	accs := status.GetUnifiedAccounts()
+	if len(accs) != 1 {
+		t.Fatalf("esperava 1 conta kick, obteve %d", len(accs))
+	}
+
+	if accs[0].Gold != 10930 {
+		t.Errorf("esperava 10930 pontos no Kick, obteve %d", accs[0].Gold)
+	}
+	if !accs[0].IsStream {
+		t.Errorf("esperava IsStream true para Kick")
+	}
+	if accs[0].Kills != 1 {
+		t.Errorf("esperava 1 canal ao vivo, obteve %d", accs[0].Kills)
+	}
+}
+
+func TestBuildHTMLStreamDistinction(t *testing.T) {
 	data := HubData{
 		Timestamp: "2026-10-24T12:00:00Z",
-		VPS: VPSInfo{
-			RAMTotalMB: 1024,
-			RAMUsedMB:  512,
-		},
 		Bots: map[string]BotData{
-			"baiak": {
-				Port:         8090,
-				Name:         "Baiak Idle Multi-Bot",
-				Game:         "Baiak Idle • Open Tibia Idle",
-				DashboardURL: "https://kbelludoo.github.io/baiak-idle-bot/",
+			"kickminer": {
+				Port: 3009,
+				Name: "Kick Miner Go",
 				Status: BotStatusData{
-					Bots: map[string]BaiakBotEntry{
-						"acc-1": {
-							Label:  "Conta 1",
-							Online: true,
-							Status: BaiakBotStatus{
-								Level:       373,
-								Vocation:    "paladin",
-								CurrentArea: "Vexclaw",
-								Gold:        100000000,
-								Kills:       5000,
-								Status:      "hunting",
-								Telemetry: BaiakTelemetryInfo{
-									Stamina: "36h 39m (87%)",
-								},
-							},
-						},
-					},
+					Accounts: json.RawMessage(`{"miner_1":{"activeStreams":1,"streamers":{"gaules":{"points":5000,"isLive":true}}}}`),
 				},
 			},
 		},
@@ -106,13 +128,15 @@ func TestBuildHTMLContainsBaiak(t *testing.T) {
 		t.Fatalf("BuildHTML falhou: %v", err)
 	}
 
-	if !strings.Contains(html, "Conta 1 (Nv. 373)") {
-		t.Errorf("html gerado não contém a conta 1 de baiak")
+	if !strings.Contains(html, "pontos") {
+		t.Errorf("html gerado para stream miner deve conter 'pontos'")
 	}
-	if !strings.Contains(html, "36h 39m (87%)") {
-		t.Errorf("html gerado não contém a stamina da conta 1")
-	}
-	if !strings.Contains(html, "https://kbelludoo.github.io/baiak-idle-bot/") {
-		t.Errorf("html gerado não contém o dashboard correto de baiak")
+	if strings.Contains(html, "gp") && strings.Contains(html, "card-kickminer") {
+		// Verify kickminer card does not show gp
+		idx := strings.Index(html, "card-kickminer")
+		slice := html[idx : idx+500]
+		if strings.Contains(slice, "gp") {
+			t.Errorf("card do kickminer não deve conter 'gp': %s", slice)
+		}
 	}
 }

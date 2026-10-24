@@ -18,6 +18,7 @@ type BotMeta struct {
 	ThemeGlow    string
 	DashboardURL string
 	Order        int
+	IsStream     bool
 }
 
 var knownMetas = map[string]BotMeta{
@@ -70,16 +71,18 @@ var knownMetas = map[string]BotMeta{
 		DashboardURL: "https://kbelludoo.github.io/pokeidleworld-bot/", Order: 8,
 	},
 	"kickminer": {
-		Key: "kickminer", Icon: "🟩", Name: "Kick Miner Go", Game: "Kick.com Live Stream Point Harvester",
-		Port: 3010, Theme: "#53fc18", ThemeBg: "rgba(83, 252, 24, 0.12)",
+		Key: "kickminer", Icon: "📺", Name: "Kick Miner Go", Game: "Kick.com • Stream Points & Drops",
+		Port: 3009, Theme: "#53fc18", ThemeBg: "rgba(83, 252, 24, 0.12)",
 		ThemeBorder: "rgba(83, 252, 24, 0.45)", ThemeGlow: "rgba(83, 252, 24, 0.25)",
-		DashboardURL: "https://kbelludoo.github.io/kick-miner/", Order: 9,
+		DashboardURL: "https://kbelludoo.github.io/kick-miner-go/", Order: 9,
+		IsStream: true,
 	},
 	"twitchminer": {
-		Key: "twitchminer", Icon: "🟣", Name: "Twitch Miner Go", Game: "Twitch.tv Channel Points & Drops Automation",
+		Key: "twitchminer", Icon: "🟣", Name: "Twitch Miner Go", Game: "Twitch.tv • Channel Points & Drops",
 		Port: 3010, Theme: "#a855f7", ThemeBg: "rgba(168, 85, 247, 0.12)",
 		ThemeBorder: "rgba(168, 85, 247, 0.45)", ThemeGlow: "rgba(168, 85, 247, 0.25)",
 		DashboardURL: "https://kbelludoo.github.io/twitch-miner-go/", Order: 10,
+		IsStream: true,
 	},
 	"lolidle": {
 		Key: "lolidle", Icon: "⚔️", Name: "LoL Idle Multi-Bot", Game: "LoL Idle • Summoner's Rift Idle RPG",
