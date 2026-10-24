@@ -332,7 +332,7 @@
       <div class="vps-card">
         <div class="vps-label">Uptime & Conexão</div>
         <div class="vps-val" style="color: var(--gold); font-size: 1.15rem;">OCI Ashburn</div>
-        <div class="vps-sub" id="lastUpdatedSub">há 33s</div>
+        <div class="vps-sub" id="lastUpdatedSub">há 5m25s</div>
       </div>
     </div>
 
@@ -3102,26 +3102,21 @@
 
     
     var gameCelebrationGifs = {
-      'pokelegacy': 'assets/gifs/pokelegacy.gif',
-      'pokeidle': 'assets/gifs/pokeidle.gif',
-      'pokeidleworld': 'assets/gifs/pokeidleworld.gif',
-      'pokepixel': 'assets/gifs/pokepixel.gif',
-      'poketrue': 'assets/gifs/poketrue.gif',
-      'huntera': 'assets/gifs/huntera.gif',
-      'tibidle': 'assets/gifs/tibidle.gif',
-      'baiak': 'assets/gifs/baiak.gif',
-      'luxidle': 'assets/gifs/luxidle.gif',
-      'lolidle': 'assets/gifs/lolidle.gif',
-      'leveling': 'assets/gifs/leveling.gif',
-      'sigma': 'assets/gifs/sigma.gif',
-      'farmricochet': 'assets/gifs/farmricochet.gif',
-      'default': 'assets/gifs/pokelegacy.gif'
+      'pokelegacy': 'assets/gifs/pokelegacy.gif', 'pokeidle': 'assets/gifs/pokeidle.gif',
+      'pokeidleworld': 'assets/gifs/pokeidleworld.gif', 'pokepixel': 'assets/gifs/pokepixel.gif',
+      'poketrue': 'assets/gifs/poketrue.gif', 'huntera': 'assets/gifs/huntera.gif',
+      'tibidle': 'assets/gifs/tibidle.gif', 'baiak': 'assets/gifs/baiak.gif',
+      'luxidle': 'assets/gifs/luxidle.gif', 'lolidle': 'assets/gifs/lolidle.gif',
+      'leveling': 'assets/gifs/leveling.gif', 'sigma': 'assets/gifs/sigma.gif',
+      'farmricochet': 'assets/gifs/farmricochet.gif', 'default': 'assets/gifs/pokelegacy.gif'
     };
 
     
     var knownLevels = {}, levelUpQueue = [], isShowingLevelUp = false, levelUpTimer = null;
 
     function triggerLevelUpModal(info) {
+      var dup = levelUpQueue.some(function(it) { return it.botKey === info.botKey && it.newLevel === info.newLevel; });
+      if (dup) return;
       levelUpQueue.push(info);
       if (!isShowingLevelUp) showNextLevelUp();
     }
@@ -3351,9 +3346,11 @@
           for (var ai = 0; ai < accounts.length; ai++) {
             var a = accounts[ai];
             var curLvl = parseInt(a.level) || 0;
-            var accKey = k + '_' + (a.name || ai);
-            if (knownLevels[accKey] !== undefined) {
-              if (curLvl > knownLevels[accKey] && knownLevels[accKey] > 0 && !isStream && !isService) {
+            var accKey = k + '_' + ai + (a.name ? '_' + a.name : '');
+            if (knownLevels[accKey] === undefined) {
+              knownLevels[accKey] = curLvl;
+            } else if (curLvl > knownLevels[accKey]) {
+              if (knownLevels[accKey] > 0 && !isStream && !isService) {
                 triggerLevelUpModal({
                   botKey: k,
                   icon: b.icon || '⚔️',
@@ -3366,8 +3363,8 @@
                   gif: gameCelebrationGifs[k] || gameCelebrationGifs['default']
                 });
               }
+              knownLevels[accKey] = curLvl;
             }
-            knownLevels[accKey] = curLvl;
           }
 
           if (badge && accounts.length > 0) {

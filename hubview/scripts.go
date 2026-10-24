@@ -44,26 +44,21 @@ const hubScripts = `
 
     // Catálogo de GIFs animados temáticos locais dos personagens por jogo
     var gameCelebrationGifs = {
-      'pokelegacy': 'assets/gifs/pokelegacy.gif',
-      'pokeidle': 'assets/gifs/pokeidle.gif',
-      'pokeidleworld': 'assets/gifs/pokeidleworld.gif',
-      'pokepixel': 'assets/gifs/pokepixel.gif',
-      'poketrue': 'assets/gifs/poketrue.gif',
-      'huntera': 'assets/gifs/huntera.gif',
-      'tibidle': 'assets/gifs/tibidle.gif',
-      'baiak': 'assets/gifs/baiak.gif',
-      'luxidle': 'assets/gifs/luxidle.gif',
-      'lolidle': 'assets/gifs/lolidle.gif',
-      'leveling': 'assets/gifs/leveling.gif',
-      'sigma': 'assets/gifs/sigma.gif',
-      'farmricochet': 'assets/gifs/farmricochet.gif',
-      'default': 'assets/gifs/pokelegacy.gif'
+      'pokelegacy': 'assets/gifs/pokelegacy.gif', 'pokeidle': 'assets/gifs/pokeidle.gif',
+      'pokeidleworld': 'assets/gifs/pokeidleworld.gif', 'pokepixel': 'assets/gifs/pokepixel.gif',
+      'poketrue': 'assets/gifs/poketrue.gif', 'huntera': 'assets/gifs/huntera.gif',
+      'tibidle': 'assets/gifs/tibidle.gif', 'baiak': 'assets/gifs/baiak.gif',
+      'luxidle': 'assets/gifs/luxidle.gif', 'lolidle': 'assets/gifs/lolidle.gif',
+      'leveling': 'assets/gifs/leveling.gif', 'sigma': 'assets/gifs/sigma.gif',
+      'farmricochet': 'assets/gifs/farmricochet.gif', 'default': 'assets/gifs/pokelegacy.gif'
     };
 
     // Fullscreen Level Up Spotlight System
     var knownLevels = {}, levelUpQueue = [], isShowingLevelUp = false, levelUpTimer = null;
 
     function triggerLevelUpModal(info) {
+      var dup = levelUpQueue.some(function(it) { return it.botKey === info.botKey && it.newLevel === info.newLevel; });
+      if (dup) return;
       levelUpQueue.push(info);
       if (!isShowingLevelUp) showNextLevelUp();
     }
@@ -289,13 +284,15 @@ const hubScripts = `
           var isStream = (k === 'kickminer' || k === 'twitchminer');
           var isService = (k === 'pocketweb' || k === 'kaggle' || k === 'telegram');
 
-          // Verificação de Level Up com GIF temático do personagem
+          // Verificação de Level Up com chave única por conta e sem repetição
           for (var ai = 0; ai < accounts.length; ai++) {
             var a = accounts[ai];
             var curLvl = parseInt(a.level) || 0;
-            var accKey = k + '_' + (a.name || ai);
-            if (knownLevels[accKey] !== undefined) {
-              if (curLvl > knownLevels[accKey] && knownLevels[accKey] > 0 && !isStream && !isService) {
+            var accKey = k + '_' + ai + (a.name ? '_' + a.name : '');
+            if (knownLevels[accKey] === undefined) {
+              knownLevels[accKey] = curLvl;
+            } else if (curLvl > knownLevels[accKey]) {
+              if (knownLevels[accKey] > 0 && !isStream && !isService) {
                 triggerLevelUpModal({
                   botKey: k,
                   icon: b.icon || '⚔️',
@@ -308,8 +305,8 @@ const hubScripts = `
                   gif: gameCelebrationGifs[k] || gameCelebrationGifs['default']
                 });
               }
+              knownLevels[accKey] = curLvl;
             }
-            knownLevels[accKey] = curLvl;
           }
 
           if (badge && accounts.length > 0) {
