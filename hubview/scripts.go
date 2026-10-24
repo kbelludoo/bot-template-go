@@ -107,8 +107,8 @@ const hubScripts = `
       }, 400);
     }
 
-    // Tecla 'L' ou window.testLevelUp() para testar o destaque na tela
-    window.testLevelUp = function() {
+    // Função de teste executável via botão, console ou tecla 'L'
+    function testLevelUp() {
       triggerLevelUpModal({
         icon: '⚔️',
         gameName: 'Huntera Multi-Bot',
@@ -118,10 +118,12 @@ const hubScripts = `
         oldLevel: 100,
         newLevel: 101
       });
-    };
+    }
+    window.testLevelUp = testLevelUp;
+
     window.addEventListener('keydown', function(e) {
       if ((e.key === 'l' || e.key === 'L') && !e.target.matches('input, textarea')) {
-        window.testLevelUp();
+        testLevelUp();
       }
     });
 

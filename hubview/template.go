@@ -23,6 +23,9 @@ const hubTemplate = `<!DOCTYPE html>
         </div>
       </div>
       <div class="header-right">
+        <button class="test-levelup-badge" onclick="testLevelUp()" title="Clique para testar a celebração Fullscreen de Level Up (4 segundos)">
+          🎉 TESTAR LEVEL UP
+        </button>
         <div class="live-badge">
           <span class="pulse-dot"></span>
           <span>LIVE TELEMETRY</span>

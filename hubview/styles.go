@@ -63,6 +63,17 @@ const hubStyles = `
       display: flex; align-items: center; gap: 8px; margin-top: 2px;
     }
     .header-right { display: flex; align-items: center; gap: 12px; }
+    .test-levelup-badge {
+      display: inline-flex; align-items: center; gap: 6px; padding: 7px 15px; border-radius: 999px;
+      font-size: 0.75rem; font-weight: 700; font-family: 'JetBrains Mono', monospace;
+      background: rgba(245, 158, 11, 0.16); border: 1px solid var(--gold); color: #fef08a;
+      cursor: pointer; transition: all 0.2s ease; user-select: none;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
+    }
+    .test-levelup-badge:hover {
+      background: rgba(245, 158, 11, 0.32); transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+    }
     
     /* Live Radar Pulse */
     .live-badge {

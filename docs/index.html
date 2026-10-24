@@ -70,6 +70,17 @@
       display: flex; align-items: center; gap: 8px; margin-top: 2px;
     }
     .header-right { display: flex; align-items: center; gap: 12px; }
+    .test-levelup-badge {
+      display: inline-flex; align-items: center; gap: 6px; padding: 7px 15px; border-radius: 999px;
+      font-size: 0.75rem; font-weight: 700; font-family: 'JetBrains Mono', monospace;
+      background: rgba(245, 158, 11, 0.16); border: 1px solid var(--gold); color: #fef08a;
+      cursor: pointer; transition: all 0.2s ease; user-select: none;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
+    }
+    .test-levelup-badge:hover {
+      background: rgba(245, 158, 11, 0.32); transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+    }
     
      
     .live-badge {
@@ -403,6 +414,9 @@
         </div>
       </div>
       <div class="header-right">
+        <button class="test-levelup-badge" onclick="testLevelUp()" title="Clique para testar a celebração Fullscreen de Level Up (4 segundos)">
+          🎉 TESTAR LEVEL UP
+        </button>
         <div class="live-badge">
           <span class="pulse-dot"></span>
           <span>LIVE TELEMETRY</span>
@@ -418,14 +432,14 @@
       </div>
       <div class="vps-card">
         <div class="vps-label">Memória RAM VPS</div>
-        <div class="vps-val" id="ramVal" style="color: var(--green);">465 / 951 MB</div>
-        <div class="progress-bar"><div class="progress-fill fill-ram" id="ramProgress" style="width: 48%;"></div></div>
-        <div class="vps-sub" id="ramSub">Livre: 486 MB (48% em uso)</div>
+        <div class="vps-val" id="ramVal" style="color: var(--green);">467 / 951 MB</div>
+        <div class="progress-bar"><div class="progress-fill fill-ram" id="ramProgress" style="width: 49%;"></div></div>
+        <div class="vps-sub" id="ramSub">Livre: 484 MB (49% em uso)</div>
       </div>
       <div class="vps-card">
         <div class="vps-label">Uptime & Conexão</div>
         <div class="vps-val" style="color: var(--gold); font-size: 1.15rem;">OCI Ashburn</div>
-        <div class="vps-sub" id="lastUpdatedSub">há 24s</div>
+        <div class="vps-sub" id="lastUpdatedSub">há 38s</div>
       </div>
     </div>
 
@@ -468,12 +482,12 @@
                   
                   <div class="stat-row">
                     <span>❤️ HP</span>
-                    <span style="color: #4ade80;">1817 / 1955</span>
+                    <span style="color: #4ade80;">1955 / 1955</span>
                   </div>
                   
                   
                   <div class="stat-row">
-                    <span style="color: #facc15; font-weight: 800;">💰 111.4k gp</span>
+                    <span style="color: #facc15; font-weight: 800;">💰 111.9k gp</span>
                     <span style="color: #38bdf8; font-weight: 700;">⚔️ 0 kills</span>
                   </div>
                   
@@ -531,12 +545,12 @@
                   
                   <div class="stat-row">
                     <span>❤️ HP</span>
-                    <span style="color: #4ade80;">648 / 660</span>
+                    <span style="color: #4ade80;">520 / 660</span>
                   </div>
                   
                   
                   <div class="stat-row">
-                    <span style="color: #facc15; font-weight: 800;">💰 21.7k gp</span>
+                    <span style="color: #facc15; font-weight: 800;">💰 22.2k gp</span>
                     <span style="color: #38bdf8; font-weight: 700;">⚔️ 0 kills</span>
                   </div>
                   
@@ -653,7 +667,7 @@
         </div>
 
         <div class="bot-footer">
-          <span style="font-size: 0.72rem; color: var(--text-dim);" id="summary-huntera">💰 299.1k gp</span>
+          <span style="font-size: 0.72rem; color: var(--text-dim);" id="summary-huntera">💰 300.1k gp</span>
           <a href="https://kbelludoo.github.io/huntera-bot/" target="_blank" class="btn-link">Abrir Dashboard ↗</a>
         </div>
       </div>
@@ -831,8 +845,8 @@
                   
                   
                   <div class="stat-row">
-                    <span style="color: #facc15; font-weight: 800;">💰 42.43kk gp</span>
-                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 249425 kills</span>
+                    <span style="color: #facc15; font-weight: 800;">💰 42.45kk gp</span>
+                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 249611 kills</span>
                   </div>
                   
                 </div>
@@ -862,7 +876,7 @@
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
-                    <span style="color: #94a3b8;">1.7 MB</span>
+                    <span style="color: #94a3b8;">2.8 MB</span>
                   </div>
                   
                 </div>
@@ -887,7 +901,7 @@
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
-                    <span style="color: #94a3b8;">1.7 MB</span>
+                    <span style="color: #94a3b8;">2.8 MB</span>
                   </div>
                   
                 </div>
@@ -912,7 +926,7 @@
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
-                    <span style="color: #94a3b8;">1.7 MB</span>
+                    <span style="color: #94a3b8;">2.8 MB</span>
                   </div>
                   
                 </div>
@@ -923,7 +937,7 @@
         </div>
 
         <div class="bot-footer">
-          <span style="font-size: 0.72rem; color: var(--text-dim);" id="summary-sigma">💰 67.69kk gp • RAM: 1.7 MB</span>
+          <span style="font-size: 0.72rem; color: var(--text-dim);" id="summary-sigma">💰 67.71kk gp • RAM: 2.8 MB</span>
           <a href="https://kbelludoo.github.io/sigma-bot/" target="_blank" class="btn-link">Abrir Dashboard ↗</a>
         </div>
       </div>
@@ -974,8 +988,8 @@
                   
                   
                   <div class="stat-row">
-                    <span style="color: #facc15; font-weight: 800;">💰 847.6k gp</span>
-                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 2206404 kills</span>
+                    <span style="color: #facc15; font-weight: 800;">💰 847.8k gp</span>
+                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 2209953 kills</span>
                   </div>
                   
                 </div>
@@ -1000,7 +1014,7 @@
                   
                   <div class="stat-row">
                     <span style="color: #facc15; font-weight: 800;">💰 1.50kk gp</span>
-                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 2274465 kills</span>
+                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 2278057 kills</span>
                   </div>
                   
                 </div>
@@ -1025,7 +1039,7 @@
                   
                   <div class="stat-row">
                     <span style="color: #facc15; font-weight: 800;">💰 1.08kk gp</span>
-                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 2232533 kills</span>
+                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 2236032 kills</span>
                   </div>
                   
                 </div>
@@ -1050,7 +1064,7 @@
                   
                   <div class="stat-row">
                     <span style="color: #facc15; font-weight: 800;">💰 1.52kk gp</span>
-                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 2274191 kills</span>
+                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 2277789 kills</span>
                   </div>
                   
                 </div>
@@ -1068,7 +1082,7 @@
                   </div>
                   <div class="stat-row">
                     <span>📈 EXP / Hora</span>
-                    <span style="color: #4ade80; font-weight: 700;">&#43;223.0k/h</span>
+                    <span style="color: #4ade80; font-weight: 700;">&#43;222.9k/h</span>
                   </div>
                   <div class="stat-row">
                     <span>💰 Ouro / Hora</span>
@@ -1076,7 +1090,7 @@
                   </div>
                   <div class="stat-row">
                     <span>⏱️ Tempo de Caça</span>
-                    <span style="color: #38bdf8;">119h 49m</span>
+                    <span style="color: #38bdf8;">120h 01m</span>
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
@@ -1093,7 +1107,7 @@
                   </div>
                   <div class="stat-row">
                     <span>📈 EXP / Hora</span>
-                    <span style="color: #4ade80; font-weight: 700;">&#43;228.2k/h</span>
+                    <span style="color: #4ade80; font-weight: 700;">&#43;228.1k/h</span>
                   </div>
                   <div class="stat-row">
                     <span>💰 Ouro / Hora</span>
@@ -1101,7 +1115,7 @@
                   </div>
                   <div class="stat-row">
                     <span>⏱️ Tempo de Caça</span>
-                    <span style="color: #38bdf8;">142h 19m</span>
+                    <span style="color: #38bdf8;">142h 32m</span>
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
@@ -1118,7 +1132,7 @@
                   </div>
                   <div class="stat-row">
                     <span>📈 EXP / Hora</span>
-                    <span style="color: #4ade80; font-weight: 700;">&#43;224.5k/h</span>
+                    <span style="color: #4ade80; font-weight: 700;">&#43;224.4k/h</span>
                   </div>
                   <div class="stat-row">
                     <span>💰 Ouro / Hora</span>
@@ -1126,7 +1140,7 @@
                   </div>
                   <div class="stat-row">
                     <span>⏱️ Tempo de Caça</span>
-                    <span style="color: #38bdf8;">121h 40m</span>
+                    <span style="color: #38bdf8;">121h 51m</span>
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
@@ -1143,7 +1157,7 @@
                   </div>
                   <div class="stat-row">
                     <span>📈 EXP / Hora</span>
-                    <span style="color: #4ade80; font-weight: 700;">&#43;228.0k/h</span>
+                    <span style="color: #4ade80; font-weight: 700;">&#43;227.9k/h</span>
                   </div>
                   <div class="stat-row">
                     <span>💰 Ouro / Hora</span>
@@ -1151,7 +1165,7 @@
                   </div>
                   <div class="stat-row">
                     <span>⏱️ Tempo de Caça</span>
-                    <span style="color: #38bdf8;">147h 43m</span>
+                    <span style="color: #38bdf8;">147h 57m</span>
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
@@ -1226,7 +1240,7 @@
                 <div class="acc-item">
                   
                   <div class="acc-item-header">
-                    <span>⚡ Treinador #2 (Nv. 108)</span>
+                    <span>⚡ Treinador #2 (Nv. 109)</span>
                     <span style="color: #fbbf24;">Treinador</span>
                   </div>
                   
@@ -1237,13 +1251,13 @@
                   
                   <div class="stat-row">
                     <span>❤️ HP</span>
-                    <span style="color: #4ade80;">5569 / 5577</span>
+                    <span style="color: #4ade80;">5575 / 5577</span>
                   </div>
                   
                   
                   <div class="stat-row">
-                    <span style="color: #facc15; font-weight: 800;">💰 289.5k gp</span>
-                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 8291 kills</span>
+                    <span style="color: #facc15; font-weight: 800;">💰 311.8k gp</span>
+                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 8384 kills</span>
                   </div>
                   
                 </div>
@@ -1262,13 +1276,13 @@
                   
                   <div class="stat-row">
                     <span>❤️ HP</span>
-                    <span style="color: #4ade80;">4721 / 4725</span>
+                    <span style="color: #4ade80;">4718 / 4725</span>
                   </div>
                   
                   
                   <div class="stat-row">
-                    <span style="color: #facc15; font-weight: 800;">💰 6.5k gp</span>
-                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 11734 kills</span>
+                    <span style="color: #facc15; font-weight: 800;">💰 6.3k gp</span>
+                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 11781 kills</span>
                   </div>
                   
                 </div>
@@ -1287,13 +1301,13 @@
                   
                   <div class="stat-row">
                     <span>❤️ HP</span>
-                    <span style="color: #4ade80;">5728 / 5737</span>
+                    <span style="color: #4ade80;">5727 / 5737</span>
                   </div>
                   
                   
                   <div class="stat-row">
-                    <span style="color: #facc15; font-weight: 800;">💰 291.2k gp</span>
-                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 6026 kills</span>
+                    <span style="color: #facc15; font-weight: 800;">💰 313.6k gp</span>
+                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 6118 kills</span>
                   </div>
                   
                 </div>
@@ -1301,7 +1315,7 @@
                 <div class="acc-item">
                   
                   <div class="acc-item-header">
-                    <span>⚡ Treinador #5 (Nv. 114)</span>
+                    <span>⚡ Treinador #5 (Nv. 115)</span>
                     <span style="color: #fbbf24;">Treinador</span>
                   </div>
                   
@@ -1312,13 +1326,13 @@
                   
                   <div class="stat-row">
                     <span>❤️ HP</span>
-                    <span style="color: #4ade80;">328 / 335</span>
+                    <span style="color: #4ade80;">331 / 335</span>
                   </div>
                   
                   
                   <div class="stat-row">
-                    <span style="color: #facc15; font-weight: 800;">💰 310.3k gp</span>
-                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 8409 kills</span>
+                    <span style="color: #facc15; font-weight: 800;">💰 333.8k gp</span>
+                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 8502 kills</span>
                   </div>
                   
                 </div>
@@ -1369,7 +1383,7 @@
                   </div>
                   <div class="stat-row">
                     <span>⏱️ Tempo de Caça</span>
-                    <span style="color: #38bdf8;">40h 21m</span>
+                    <span style="color: #38bdf8;">40h 27m</span>
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
@@ -1386,7 +1400,7 @@
                   </div>
                   <div class="stat-row">
                     <span>📈 EXP / Hora</span>
-                    <span style="color: #4ade80; font-weight: 700;">&#43;791.0k/h</span>
+                    <span style="color: #4ade80; font-weight: 700;">&#43;792.8k/h</span>
                   </div>
                   <div class="stat-row">
                     <span>💰 Ouro / Hora</span>
@@ -1394,7 +1408,7 @@
                   </div>
                   <div class="stat-row">
                     <span>⏱️ Tempo de Caça</span>
-                    <span style="color: #38bdf8;">40h 21m</span>
+                    <span style="color: #38bdf8;">40h 27m</span>
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
@@ -1419,7 +1433,7 @@
                   </div>
                   <div class="stat-row">
                     <span>⏱️ Tempo de Caça</span>
-                    <span style="color: #38bdf8;">40h 21m</span>
+                    <span style="color: #38bdf8;">40h 27m</span>
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
@@ -1444,7 +1458,7 @@
                   </div>
                   <div class="stat-row">
                     <span>⏱️ Tempo de Caça</span>
-                    <span style="color: #38bdf8;">40h 21m</span>
+                    <span style="color: #38bdf8;">40h 27m</span>
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
@@ -1459,7 +1473,7 @@
         </div>
 
         <div class="bot-footer">
-          <span style="font-size: 0.72rem; color: var(--text-dim);" id="summary-pokelegacy">💰 2.31kk gp • RAM: 13.6 MB</span>
+          <span style="font-size: 0.72rem; color: var(--text-dim);" id="summary-pokelegacy">💰 2.38kk gp • RAM: 13.6 MB</span>
           <a href="https://kbelludoo.github.io/pokelegacy-bot/" target="_blank" class="btn-link">Abrir Dashboard ↗</a>
         </div>
       </div>
@@ -1505,13 +1519,13 @@
                   
                   <div class="stat-row">
                     <span>❤️ HP</span>
-                    <span style="color: #4ade80;">379 / 1260</span>
+                    <span style="color: #4ade80;">365 / 1260</span>
                   </div>
                   
                   
                   <div class="stat-row">
-                    <span style="color: #facc15; font-weight: 800;">💰 18.10kk gp</span>
-                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 3192 kills</span>
+                    <span style="color: #facc15; font-weight: 800;">💰 18.11kk gp</span>
+                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 3295 kills</span>
                   </div>
                   
                 </div>
@@ -1537,7 +1551,7 @@
                   </div>
                   <div class="stat-row">
                     <span>⏱️ Tempo de Caça</span>
-                    <span style="color: #38bdf8;">2h 57m</span>
+                    <span style="color: #38bdf8;">3h 03m</span>
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
@@ -1552,7 +1566,7 @@
         </div>
 
         <div class="bot-footer">
-          <span style="font-size: 0.72rem; color: var(--text-dim);" id="summary-pokeidle">💰 18.10kk gp • RAM: 17.1 MB</span>
+          <span style="font-size: 0.72rem; color: var(--text-dim);" id="summary-pokeidle">💰 18.11kk gp • RAM: 17.1 MB</span>
           <a href="https://kbelludoo.github.io/pokeidle-go/" target="_blank" class="btn-link">Abrir Dashboard ↗</a>
         </div>
       </div>
@@ -1603,8 +1617,8 @@
                   
                   
                   <div class="stat-row">
-                    <span style="color: #facc15; font-weight: 800;">💰 36.8k gp</span>
-                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 32 kills</span>
+                    <span style="color: #facc15; font-weight: 800;">💰 2.2k gp</span>
+                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 34 kills</span>
                   </div>
                   
                 </div>
@@ -1622,7 +1636,7 @@
                   </div>
                   <div class="stat-row">
                     <span>📈 EXP / Hora</span>
-                    <span style="color: #4ade80; font-weight: 700;">&#43;50.5k/h</span>
+                    <span style="color: #4ade80; font-weight: 700;">&#43;51.5k/h</span>
                   </div>
                   <div class="stat-row">
                     <span>💰 Ouro / Hora</span>
@@ -1630,7 +1644,7 @@
                   </div>
                   <div class="stat-row">
                     <span>⏱️ Tempo de Caça</span>
-                    <span style="color: #38bdf8;">2h 26m</span>
+                    <span style="color: #38bdf8;">2h 32m</span>
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
@@ -1645,7 +1659,7 @@
         </div>
 
         <div class="bot-footer">
-          <span style="font-size: 0.72rem; color: var(--text-dim);" id="summary-pokeidleworld">💰 36.8k gp • RAM: 17.6 MB</span>
+          <span style="font-size: 0.72rem; color: var(--text-dim);" id="summary-pokeidleworld">💰 2.2k gp • RAM: 17.6 MB</span>
           <a href="https://kbelludoo.github.io/pokeidleworld-bot/" target="_blank" class="btn-link">Abrir Dashboard ↗</a>
         </div>
       </div>
@@ -1715,7 +1729,7 @@
                   </div>
                   <div class="stat-row">
                     <span>📈 EXP / Hora</span>
-                    <span style="color: #4ade80; font-weight: 700;">&#43;290/h</span>
+                    <span style="color: #4ade80; font-weight: 700;">&#43;289/h</span>
                   </div>
                   <div class="stat-row">
                     <span>💰 Ouro / Hora</span>
@@ -1723,7 +1737,7 @@
                   </div>
                   <div class="stat-row">
                     <span>⏱️ Tempo de Caça</span>
-                    <span style="color: #38bdf8;">111h 31m</span>
+                    <span style="color: #38bdf8;">111h 37m</span>
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
@@ -1774,23 +1788,23 @@
                   
                   <div class="acc-item-header">
                     <span>🔥 anonimo (Nv. 105)</span>
-                    <span style="color: #ef4444;">Mudkip</span>
+                    <span style="color: #ef4444;">Caterpie</span>
                   </div>
                   
                   <div class="stat-row" style="background: rgba(239, 68, 68, 0.12); padding: 4px 8px; border-radius: 6px; margin-bottom: 4px;">
-                    <span style="font-weight: 700; font-size: 0.72rem;">🗺️ lagoa_de_prata</span>
+                    <span style="font-weight: 700; font-size: 0.72rem;">🗺️ celeiro</span>
                   </div>
                   
                   
                   <div class="stat-row">
                     <span>❤️ HP</span>
-                    <span style="color: #4ade80;">309 / 100</span>
+                    <span style="color: #4ade80;">41 / 100</span>
                   </div>
                   
                   
                   <div class="stat-row">
-                    <span style="color: #facc15; font-weight: 800;">💰 622.1k gp</span>
-                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 12167 kills</span>
+                    <span style="color: #facc15; font-weight: 800;">💰 623.2k gp</span>
+                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 12184 kills</span>
                   </div>
                   
                 </div>
@@ -1803,19 +1817,19 @@
                   </div>
                   
                   <div class="stat-row" style="background: rgba(239, 68, 68, 0.12); padding: 4px 8px; border-radius: 6px; margin-bottom: 4px;">
-                    <span style="font-weight: 700; font-size: 0.72rem;">🗺️ floresta_ancia</span>
+                    <span style="font-weight: 700; font-size: 0.72rem;">🗺️ caverna_do_fogo</span>
                   </div>
                   
                   
                   <div class="stat-row">
                     <span>❤️ HP</span>
-                    <span style="color: #4ade80;">282 / 100</span>
+                    <span style="color: #4ade80;">0 / 100</span>
                   </div>
                   
                   
                   <div class="stat-row">
-                    <span style="color: #facc15; font-weight: 800;">💰 118.4k gp</span>
-                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 9828 kills</span>
+                    <span style="color: #facc15; font-weight: 800;">💰 119.7k gp</span>
+                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 9830 kills</span>
                   </div>
                   
                 </div>
@@ -1824,23 +1838,23 @@
                   
                   <div class="acc-item-header">
                     <span>🔥 anonimo (Nv. 100)</span>
-                    <span style="color: #ef4444;">Kakuna</span>
+                    <span style="color: #ef4444;">Squirtle</span>
                   </div>
                   
                   <div class="stat-row" style="background: rgba(239, 68, 68, 0.12); padding: 4px 8px; border-radius: 6px; margin-bottom: 4px;">
-                    <span style="font-weight: 700; font-size: 0.72rem;">🗺️ floresta_ancia</span>
+                    <span style="font-weight: 700; font-size: 0.72rem;">🗺️ caverna_do_fogo</span>
                   </div>
                   
                   
                   <div class="stat-row">
                     <span>❤️ HP</span>
-                    <span style="color: #4ade80;">231 / 100</span>
+                    <span style="color: #4ade80;">35 / 100</span>
                   </div>
                   
                   
                   <div class="stat-row">
-                    <span style="color: #facc15; font-weight: 800;">💰 114.0k gp</span>
-                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 12005 kills</span>
+                    <span style="color: #facc15; font-weight: 800;">💰 114.6k gp</span>
+                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 12007 kills</span>
                   </div>
                   
                 </div>
@@ -1858,7 +1872,7 @@
                   </div>
                   <div class="stat-row">
                     <span>📈 EXP / Hora</span>
-                    <span style="color: #4ade80; font-weight: 700;">&#43;1.1k/h</span>
+                    <span style="color: #4ade80; font-weight: 700;">&#43;1.3k/h</span>
                   </div>
                   <div class="stat-row">
                     <span>💰 Ouro / Hora</span>
@@ -1866,7 +1880,7 @@
                   </div>
                   <div class="stat-row">
                     <span>⏱️ Tempo de Caça</span>
-                    <span style="color: #38bdf8;">111h 31m</span>
+                    <span style="color: #38bdf8;">111h 37m</span>
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
@@ -1891,7 +1905,7 @@
                   </div>
                   <div class="stat-row">
                     <span>⏱️ Tempo de Caça</span>
-                    <span style="color: #38bdf8;">111h 31m</span>
+                    <span style="color: #38bdf8;">111h 37m</span>
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
@@ -1908,7 +1922,7 @@
                   </div>
                   <div class="stat-row">
                     <span>📈 EXP / Hora</span>
-                    <span style="color: #4ade80; font-weight: 700;">&#43;1.2k/h</span>
+                    <span style="color: #4ade80; font-weight: 700;">&#43;1.3k/h</span>
                   </div>
                   <div class="stat-row">
                     <span>💰 Ouro / Hora</span>
@@ -1916,7 +1930,7 @@
                   </div>
                   <div class="stat-row">
                     <span>⏱️ Tempo de Caça</span>
-                    <span style="color: #38bdf8;">111h 31m</span>
+                    <span style="color: #38bdf8;">111h 37m</span>
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
@@ -1931,7 +1945,7 @@
         </div>
 
         <div class="bot-footer">
-          <span style="font-size: 0.72rem; color: var(--text-dim);" id="summary-poketrue">💰 854.5k gp • RAM: 13.6 MB</span>
+          <span style="font-size: 0.72rem; color: var(--text-dim);" id="summary-poketrue">💰 857.5k gp • RAM: 13.6 MB</span>
           <a href="https://kbelludoo.github.io/bot-template-go/?v=force1" target="_blank" class="btn-link">Abrir Dashboard ↗</a>
         </div>
       </div>
@@ -1978,12 +1992,12 @@
                   
                   <div class="stat-row">
                     <span>⚡ Stamina</span>
-                    <span style="color: #38bdf8; font-weight: 600;">35h 34m (85%)</span>
+                    <span style="color: #38bdf8; font-weight: 600;">35h 28m (84%)</span>
                   </div>
                   
                   <div class="stat-row">
-                    <span style="color: #facc15; font-weight: 800;">💰 109.68kk gp</span>
-                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 7031 kills</span>
+                    <span style="color: #facc15; font-weight: 800;">💰 109.65kk gp</span>
+                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 7096 kills</span>
                   </div>
                   
                 </div>
@@ -2003,7 +2017,7 @@
                   
                   <div class="stat-row">
                     <span>⚡ Stamina</span>
-                    <span style="color: #38bdf8; font-weight: 600;">26h 49m (64%)</span>
+                    <span style="color: #38bdf8; font-weight: 600;">27h 13m (65%)</span>
                   </div>
                   
                   <div class="stat-row">
@@ -2028,12 +2042,12 @@
                   
                   <div class="stat-row">
                     <span>⚡ Stamina</span>
-                    <span style="color: #38bdf8; font-weight: 600;">34h 07m (81%)</span>
+                    <span style="color: #38bdf8; font-weight: 600;">34h 01m (81%)</span>
                   </div>
                   
                   <div class="stat-row">
-                    <span style="color: #facc15; font-weight: 800;">💰 149 gp</span>
-                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 7882 kills</span>
+                    <span style="color: #facc15; font-weight: 800;">💰 568 gp</span>
+                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 7957 kills</span>
                   </div>
                   
                 </div>
@@ -2053,12 +2067,12 @@
                   
                   <div class="stat-row">
                     <span>⚡ Stamina</span>
-                    <span style="color: #38bdf8; font-weight: 600;">32h 21m (77%)</span>
+                    <span style="color: #38bdf8; font-weight: 600;">32h 15m (77%)</span>
                   </div>
                   
                   <div class="stat-row">
-                    <span style="color: #facc15; font-weight: 800;">💰 204.71kk gp</span>
-                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 7863 kills</span>
+                    <span style="color: #facc15; font-weight: 800;">💰 204.62kk gp</span>
+                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 7936 kills</span>
                   </div>
                   
                 </div>
@@ -2084,7 +2098,7 @@
                   </div>
                   <div class="stat-row">
                     <span>⏱️ Tempo de Caça</span>
-                    <span style="color: #38bdf8;">15h 34m</span>
+                    <span style="color: #38bdf8;">15h 40m</span>
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
@@ -2109,7 +2123,7 @@
                   </div>
                   <div class="stat-row">
                     <span>⏱️ Tempo de Caça</span>
-                    <span style="color: #38bdf8;">15h 34m</span>
+                    <span style="color: #38bdf8;">15h 39m</span>
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
@@ -2134,7 +2148,7 @@
                   </div>
                   <div class="stat-row">
                     <span>⏱️ Tempo de Caça</span>
-                    <span style="color: #38bdf8;">15h 34m</span>
+                    <span style="color: #38bdf8;">15h 40m</span>
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
@@ -2151,15 +2165,15 @@
                   </div>
                   <div class="stat-row">
                     <span>📈 EXP / Hora</span>
-                    <span style="color: #4ade80; font-weight: 700;">&#43;4.45kk/h</span>
+                    <span style="color: #4ade80; font-weight: 700;">&#43;4.35kk/h</span>
                   </div>
                   <div class="stat-row">
                     <span>💰 Ouro / Hora</span>
-                    <span style="color: #facc15; font-weight: 700;">&#43;2.84kk/h</span>
+                    <span style="color: #facc15; font-weight: 700;">&#43;2.78kk/h</span>
                   </div>
                   <div class="stat-row">
                     <span>⏱️ Tempo de Caça</span>
-                    <span style="color: #38bdf8;">15h 33m</span>
+                    <span style="color: #38bdf8;">15h 39m</span>
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
@@ -2174,7 +2188,7 @@
         </div>
 
         <div class="bot-footer">
-          <span style="font-size: 0.72rem; color: var(--text-dim);" id="summary-baiak">💰 505.53kk gp</span>
+          <span style="font-size: 0.72rem; color: var(--text-dim);" id="summary-baiak">💰 505.42kk gp</span>
           <a href="https://kbelludoo.github.io/baiak-idle-bot/" target="_blank" class="btn-link">Abrir Dashboard ↗</a>
         </div>
       </div>
@@ -2247,7 +2261,7 @@
                   </div>
                   <div class="stat-row">
                     <span>⏱️ Tempo de Caça</span>
-                    <span style="color: #38bdf8;">164h59m0s</span>
+                    <span style="color: #38bdf8;">165h5m0s</span>
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
@@ -2297,25 +2311,25 @@
                 <div class="acc-item">
                   
                   <div class="acc-item-header">
-                    <span>✨ Personagem #1 (Nv. 14)</span>
+                    <span>✨ Personagem #1 (Nv. 15)</span>
                     <span style="color: #f59e0b;">knight</span>
                   </div>
                   
                   
                   <div class="stat-row">
                     <span>❤️ HP</span>
-                    <span style="color: #4ade80;">345 / 345</span>
+                    <span style="color: #4ade80;">360 / 360</span>
                   </div>
                   
                   
                   <div class="stat-row">
                     <span>⚡ Stamina</span>
-                    <span style="color: #38bdf8; font-weight: 600;">30%</span>
+                    <span style="color: #38bdf8; font-weight: 600;">24%</span>
                   </div>
                   
                   <div class="stat-row">
-                    <span style="color: #facc15; font-weight: 800;">💰 30.8k gp</span>
-                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 1513 kills</span>
+                    <span style="color: #facc15; font-weight: 800;">💰 31.2k gp</span>
+                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 1900 kills</span>
                   </div>
                   
                 </div>
@@ -2336,12 +2350,12 @@
                   
                   <div class="stat-row">
                     <span>⚡ Stamina</span>
-                    <span style="color: #38bdf8; font-weight: 600;">30%</span>
+                    <span style="color: #38bdf8; font-weight: 600;">24%</span>
                   </div>
                   
                   <div class="stat-row">
-                    <span style="color: #facc15; font-weight: 800;">💰 1.4k gp</span>
-                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 1513 kills</span>
+                    <span style="color: #facc15; font-weight: 800;">💰 1.7k gp</span>
+                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 1900 kills</span>
                   </div>
                   
                 </div>
@@ -2366,7 +2380,7 @@
                   
                   <div class="stat-row">
                     <span>⚡ Stamina</span>
-                    <span style="color: #38bdf8; font-weight: 600;">60%</span>
+                    <span style="color: #38bdf8; font-weight: 600;">72%</span>
                   </div>
                   
                   <div class="stat-row">
@@ -2379,25 +2393,25 @@
                 <div class="acc-item">
                   
                   <div class="acc-item-header">
-                    <span>✨ Personagem #4 (Nv. 16)</span>
+                    <span>✨ Personagem #4 (Nv. 17)</span>
                     <span style="color: #f59e0b;">paladin</span>
                   </div>
                   
                   
                   <div class="stat-row">
                     <span>❤️ HP</span>
-                    <span style="color: #4ade80;">300 / 300</span>
+                    <span style="color: #4ade80;">310 / 310</span>
                   </div>
                   
                   
                   <div class="stat-row">
                     <span>⚡ Stamina</span>
-                    <span style="color: #38bdf8; font-weight: 600;">31%</span>
+                    <span style="color: #38bdf8; font-weight: 600;">25%</span>
                   </div>
                   
                   <div class="stat-row">
-                    <span style="color: #facc15; font-weight: 800;">💰 1.2k gp</span>
-                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 1513 kills</span>
+                    <span style="color: #facc15; font-weight: 800;">💰 1.4k gp</span>
+                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 1900 kills</span>
                   </div>
                   
                 </div>
@@ -2405,25 +2419,25 @@
                 <div class="acc-item">
                   
                   <div class="acc-item-header">
-                    <span>✨ Personagem #5 (Nv. 14)</span>
+                    <span>✨ Personagem #5 (Nv. 15)</span>
                     <span style="color: #f59e0b;">monk</span>
                   </div>
                   
                   
                   <div class="stat-row">
                     <span>❤️ HP</span>
-                    <span style="color: #4ade80;">319 / 319</span>
+                    <span style="color: #4ade80;">332 / 332</span>
                   </div>
                   
                   
                   <div class="stat-row">
                     <span>⚡ Stamina</span>
-                    <span style="color: #38bdf8; font-weight: 600;">27%</span>
+                    <span style="color: #38bdf8; font-weight: 600;">21%</span>
                   </div>
                   
                   <div class="stat-row">
-                    <span style="color: #facc15; font-weight: 800;">💰 1.3k gp</span>
-                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 1513 kills</span>
+                    <span style="color: #facc15; font-weight: 800;">💰 1.7k gp</span>
+                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 1900 kills</span>
                   </div>
                   
                 </div>
@@ -2441,7 +2455,7 @@
                   </div>
                   <div class="stat-row">
                     <span>📈 EXP / Hora</span>
-                    <span style="color: #4ade80; font-weight: 700;">&#43;84.7k/h</span>
+                    <span style="color: #4ade80; font-weight: 700;">&#43;81.4k/h</span>
                   </div>
                   <div class="stat-row">
                     <span>💰 Ouro / Hora</span>
@@ -2449,7 +2463,7 @@
                   </div>
                   <div class="stat-row">
                     <span>⏱️ Tempo de Caça</span>
-                    <span style="color: #38bdf8;">0h 14m</span>
+                    <span style="color: #38bdf8;">0h 20m</span>
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
@@ -2466,7 +2480,7 @@
                   </div>
                   <div class="stat-row">
                     <span>📈 EXP / Hora</span>
-                    <span style="color: #4ade80; font-weight: 700;">&#43;84.0k/h</span>
+                    <span style="color: #4ade80; font-weight: 700;">&#43;80.8k/h</span>
                   </div>
                   <div class="stat-row">
                     <span>💰 Ouro / Hora</span>
@@ -2474,7 +2488,7 @@
                   </div>
                   <div class="stat-row">
                     <span>⏱️ Tempo de Caça</span>
-                    <span style="color: #38bdf8;">0h 14m</span>
+                    <span style="color: #38bdf8;">0h 20m</span>
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
@@ -2499,7 +2513,7 @@
                   </div>
                   <div class="stat-row">
                     <span>⏱️ Tempo de Caça</span>
-                    <span style="color: #38bdf8;">0h 14m</span>
+                    <span style="color: #38bdf8;">0h 20m</span>
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
@@ -2516,7 +2530,7 @@
                   </div>
                   <div class="stat-row">
                     <span>📈 EXP / Hora</span>
-                    <span style="color: #4ade80; font-weight: 700;">&#43;78.1k/h</span>
+                    <span style="color: #4ade80; font-weight: 700;">&#43;76.7k/h</span>
                   </div>
                   <div class="stat-row">
                     <span>💰 Ouro / Hora</span>
@@ -2524,7 +2538,7 @@
                   </div>
                   <div class="stat-row">
                     <span>⏱️ Tempo de Caça</span>
-                    <span style="color: #38bdf8;">0h 14m</span>
+                    <span style="color: #38bdf8;">0h 20m</span>
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
@@ -2541,7 +2555,7 @@
                   </div>
                   <div class="stat-row">
                     <span>📈 EXP / Hora</span>
-                    <span style="color: #4ade80; font-weight: 700;">&#43;75.1k/h</span>
+                    <span style="color: #4ade80; font-weight: 700;">&#43;74.7k/h</span>
                   </div>
                   <div class="stat-row">
                     <span>💰 Ouro / Hora</span>
@@ -2549,7 +2563,7 @@
                   </div>
                   <div class="stat-row">
                     <span>⏱️ Tempo de Caça</span>
-                    <span style="color: #38bdf8;">0h 14m</span>
+                    <span style="color: #38bdf8;">0h 20m</span>
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
@@ -2564,7 +2578,7 @@
         </div>
 
         <div class="bot-footer">
-          <span style="font-size: 0.72rem; color: var(--text-dim);" id="summary-luxidle">💰 35.9k gp • RAM: 57.7 MB</span>
+          <span style="font-size: 0.72rem; color: var(--text-dim);" id="summary-luxidle">💰 37.2k gp • RAM: 57.7 MB</span>
           <a href="https://kbelludoo.github.io/luxidle-bot/" target="_blank" class="btn-link">Abrir Dashboard ↗</a>
         </div>
       </div>
@@ -2586,7 +2600,7 @@
               </button>
               <span class="badge-status" id="badge-farmricochet">
                 
-                JOGANDO FASE 35
+                JOGANDO FASE 36
               </span>
             </div>
           </div>
@@ -2599,12 +2613,12 @@
                 <div class="acc-item">
                   
                   <div class="acc-item-header">
-                    <span>🌾 anonimo (Nv. 35)</span>
+                    <span>🌾 anonimo (Nv. 36)</span>
                     <span style="color: #9bd26a;">knight</span>
                   </div>
                   
                   <div class="stat-row" style="background: rgba(155, 210, 106, 0.12); padding: 4px 8px; border-radius: 6px; margin-bottom: 4px;">
-                    <span style="font-weight: 700; font-size: 0.72rem;">🗺️ Fase 35: Ato 2 — Resistência · Outono 4/5</span>
+                    <span style="font-weight: 700; font-size: 0.72rem;">🗺️ Fase 36: Ato 2 — Resistência · Outono 5/5</span>
                   </div>
                   
                   
@@ -2615,8 +2629,8 @@
                   
                   
                   <div class="stat-row">
-                    <span style="color: #facc15; font-weight: 800;">💰 16.4k gp</span>
-                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 455 kills</span>
+                    <span style="color: #facc15; font-weight: 800;">💰 16.9k gp</span>
+                    <span style="color: #38bdf8; font-weight: 700;">⚔️ 460 kills</span>
                   </div>
                   
                 </div>
@@ -2634,7 +2648,7 @@
                   </div>
                   <div class="stat-row">
                     <span>📈 EXP / Hora</span>
-                    <span style="color: #4ade80; font-weight: 700;">&#43;5.8k/h</span>
+                    <span style="color: #4ade80; font-weight: 700;">&#43;5.9k/h</span>
                   </div>
                   <div class="stat-row">
                     <span>💰 Ouro / Hora</span>
@@ -2642,7 +2656,7 @@
                   </div>
                   <div class="stat-row">
                     <span>⏱️ Tempo de Caça</span>
-                    <span style="color: #38bdf8;">9h 20m</span>
+                    <span style="color: #38bdf8;">9h 24m</span>
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
@@ -2657,7 +2671,7 @@
         </div>
 
         <div class="bot-footer">
-          <span style="font-size: 0.72rem; color: var(--text-dim);" id="summary-farmricochet">💰 16.4k gp • RAM: 13.3 MB</span>
+          <span style="font-size: 0.72rem; color: var(--text-dim);" id="summary-farmricochet">💰 16.9k gp • RAM: 13.3 MB</span>
           <a href="https://kbelludoo.github.io/farmricochet-bot/" target="_blank" class="btn-link">Abrir Dashboard ↗</a>
         </div>
       </div>
@@ -2726,11 +2740,11 @@
                   </div>
                   <div class="stat-row">
                     <span>🧠 Memória Bot (Go)</span>
-                    <span style="color: #38bdf8; font-weight: 600;">1.5 MB</span>
+                    <span style="color: #38bdf8; font-weight: 600;">1.8 MB</span>
                   </div>
                   <div class="stat-row">
                     <span>⏱️ Uptime Contínuo</span>
-                    <span style="color: #facc15;">226h55m17s</span>
+                    <span style="color: #facc15;">227h1m17s</span>
                   </div>
                   <div class="stat-row">
                     <span>🛡️ Camuflagem IRC</span>
@@ -2745,7 +2759,7 @@
         </div>
 
         <div class="bot-footer">
-          <span style="font-size: 0.72rem; color: var(--text-dim);" id="summary-kickminer">⭐ 36.2k pontos • RAM: 1.5 MB</span>
+          <span style="font-size: 0.72rem; color: var(--text-dim);" id="summary-kickminer">⭐ 36.2k pontos • RAM: 1.8 MB</span>
           <a href="https://kbelludoo.github.io/kick-miner-go/" target="_blank" class="btn-link">Abrir Dashboard ↗</a>
         </div>
       </div>
@@ -3244,7 +3258,7 @@
     }
 
     
-    window.testLevelUp = function() {
+    function testLevelUp() {
       triggerLevelUpModal({
         icon: '⚔️',
         gameName: 'Huntera Multi-Bot',
@@ -3254,10 +3268,12 @@
         oldLevel: 100,
         newLevel: 101
       });
-    };
+    }
+    window.testLevelUp = testLevelUp;
+
     window.addEventListener('keydown', function(e) {
       if ((e.key === 'l' || e.key === 'L') && !e.target.matches('input, textarea')) {
-        window.testLevelUp();
+        testLevelUp();
       }
     });
 
