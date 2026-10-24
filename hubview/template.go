@@ -244,6 +244,13 @@ const hubTemplate = `<!DOCTYPE html>
     <div class="levelup-modal" onclick="event.stopPropagation()">
       <button class="levelup-close-btn" onclick="dismissLevelUp()" title="Fechar">✕</button>
       <div class="levelup-tag">⚡ LEVEL UP! ⚡</div>
+      
+      <!-- Character Celebration GIF -->
+      <div class="levelup-char-gif-wrap">
+        <img id="lvlCharGif" class="levelup-char-gif" src="" alt="Personagem" onerror="this.style.display='none'; document.getElementById('lvlFallbackEmoji').style.display='block';">
+        <div id="lvlFallbackEmoji" style="display:none; font-size: 3rem;">🏆</div>
+      </div>
+
       <div class="levelup-title">NOVO NÍVEL ALCANÇADO</div>
       <div class="levelup-game-name" id="lvlGameName">⚔️ Jogo</div>
       <div class="levelup-level-row">

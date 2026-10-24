@@ -42,24 +42,34 @@ const hubScripts = `
       return fallback || '24/7 Ativo';
     }
 
+    // Catálogo de GIFs animados temáticos dos personagens por jogo
+    var gameCelebrationGifs = {
+      'pokelegacy': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif',
+      'pokeidle': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/6.gif',
+      'pokeidleworld': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/9.gif',
+      'pokepixel': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/94.gif',
+      'poketrue': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/150.gif',
+      'huntera': 'https://media.tenor.com/C12p5U_e7rEAAAAi/pixel-knight.gif',
+      'tibidle': 'https://media.tenor.com/C12p5U_e7rEAAAAi/pixel-knight.gif',
+      'baiak': 'https://media.tenor.com/C12p5U_e7rEAAAAi/pixel-knight.gif',
+      'luxidle': 'https://media.tenor.com/N6E3y9Ew_sEAAAAi/poro-lol.gif',
+      'lolidle': 'https://media.tenor.com/N6E3y9Ew_sEAAAAi/poro-lol.gif',
+      'leveling': 'https://media.tenor.com/b9UaHjK9pSIAAAAi/chibi-anime.gif',
+      'sigma': 'https://media.tenor.com/b9UaHjK9pSIAAAAi/chibi-anime.gif',
+      'farmricochet': 'https://media.tenor.com/vHqJbK3qYQMAAAAi/pixel-chicken.gif',
+      'default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif'
+    };
+
     // Fullscreen Level Up Spotlight System
-    var knownLevels = {};
-    var levelUpQueue = [];
-    var isShowingLevelUp = false;
-    var levelUpTimer = null;
+    var knownLevels = {}, levelUpQueue = [], isShowingLevelUp = false, levelUpTimer = null;
 
     function triggerLevelUpModal(info) {
       levelUpQueue.push(info);
-      if (!isShowingLevelUp) {
-        showNextLevelUp();
-      }
+      if (!isShowingLevelUp) showNextLevelUp();
     }
 
     function showNextLevelUp() {
-      if (levelUpQueue.length === 0) {
-        isShowingLevelUp = false;
-        return;
-      }
+      if (levelUpQueue.length === 0) { isShowingLevelUp = false; return; }
       isShowingLevelUp = true;
       var item = levelUpQueue.shift();
 
@@ -70,6 +80,8 @@ const hubScripts = `
       var charEl = document.getElementById('lvlCharInfo');
       var areaEl = document.getElementById('lvlAreaInfo');
       var timerFill = document.getElementById('lvlTimerFill');
+      var gifEl = document.getElementById('lvlCharGif');
+      var fallbackEl = document.getElementById('lvlFallbackEmoji');
 
       if (gameEl) gameEl.textContent = (item.icon ? item.icon + ' ' : '') + item.gameName;
       if (oldLvlEl) oldLvlEl.textContent = 'Nv. ' + item.oldLevel;
@@ -77,46 +89,53 @@ const hubScripts = `
       if (charEl) charEl.textContent = '⚔️ ' + item.charName + (item.vocation ? ' (' + item.vocation + ')' : '');
       if (areaEl) areaEl.textContent = item.area ? '🗺️ ' + item.area : '⚡ Campo de Batalha';
 
+      var targetGif = item.gif || gameCelebrationGifs[item.botKey] || gameCelebrationGifs['default'];
+      if (gifEl) { gifEl.style.display = 'block'; gifEl.src = targetGif; }
+      if (fallbackEl) fallbackEl.style.display = 'none';
+
       if (timerFill) {
         timerFill.style.animation = 'none';
         void timerFill.offsetWidth;
         timerFill.style.animation = 'shrinkTimer 4s linear forwards';
       }
-
-      if (overlay) {
-        overlay.classList.add('active');
-      }
+      if (overlay) overlay.classList.add('active');
 
       if (levelUpTimer) clearTimeout(levelUpTimer);
-      levelUpTimer = setTimeout(function() {
-        dismissLevelUp();
-      }, 4000);
+      levelUpTimer = setTimeout(function() { dismissLevelUp(); }, 4000);
     }
 
     function dismissLevelUp() {
-      if (levelUpTimer) {
-        clearTimeout(levelUpTimer);
-        levelUpTimer = null;
-      }
+      if (levelUpTimer) { clearTimeout(levelUpTimer); levelUpTimer = null; }
       var overlay = document.getElementById('levelUpOverlay');
-      if (overlay) {
-        overlay.classList.remove('active');
-      }
-      setTimeout(function() {
-        showNextLevelUp();
-      }, 400);
+      if (overlay) overlay.classList.remove('active');
+      setTimeout(function() { showNextLevelUp(); }, 400);
     }
 
-    // Função de teste executável via botão, console ou tecla 'L'
+    var testGames = ['pokelegacy', 'huntera', 'luxidle', 'pokepixel', 'tibidle', 'farmricochet', 'leveling', 'poketrue'];
+    var testIdx = 0;
     function testLevelUp() {
+      var k = testGames[testIdx % testGames.length];
+      testIdx++;
+      var names = {
+        'pokelegacy': 'Pikachu (Nv. ' + (30 + testIdx) + ')',
+        'huntera': 'Warrior Huntera (Nv. ' + (100 + testIdx) + ')',
+        'luxidle': 'Lux Mage (Nv. ' + (20 + testIdx) + ')',
+        'pokepixel': 'Gengar (Nv. ' + (55 + testIdx) + ')',
+        'tibidle': 'Knight Tibidle (Nv. ' + (80 + testIdx) + ')',
+        'farmricochet': 'Farm Chicken (Nv. ' + (15 + testIdx) + ')',
+        'leveling': 'Jin-Woo Hunter (Nv. ' + (90 + testIdx) + ')',
+        'poketrue': 'Mewtwo (Nv. ' + (70 + testIdx) + ')'
+      };
       triggerLevelUpModal({
-        icon: '⚔️',
-        gameName: 'Huntera Multi-Bot',
-        charName: 'Personagem #1',
-        vocation: 'Knight',
-        area: 'Vexclaw Lair',
-        oldLevel: 100,
-        newLevel: 101
+        botKey: k,
+        icon: k.startsWith('poke') ? '🐉' : (k === 'luxidle' ? '✨' : '⚔️'),
+        gameName: k.toUpperCase() + ' (Demonstração)',
+        charName: names[k] || 'Personagem #' + testIdx,
+        vocation: k.startsWith('poke') ? 'Pokémon' : (k === 'luxidle' ? 'Elementalista' : 'Elite Knight'),
+        area: 'Área Épica de Caça',
+        oldLevel: 99 + testIdx,
+        newLevel: 100 + testIdx,
+        gif: gameCelebrationGifs[k]
       });
     }
     window.testLevelUp = testLevelUp;
@@ -264,7 +283,7 @@ const hubScripts = `
           var isStream = (k === 'kickminer' || k === 'twitchminer');
           var isService = (k === 'pocketweb' || k === 'kaggle' || k === 'telegram');
 
-          // Verificação de Level Up para disparar o Spotlight de 4 segundos
+          // Verificação de Level Up com GIF temático do personagem
           for (var ai = 0; ai < accounts.length; ai++) {
             var a = accounts[ai];
             var curLvl = parseInt(a.level) || 0;
@@ -272,13 +291,15 @@ const hubScripts = `
             if (knownLevels[accKey] !== undefined) {
               if (curLvl > knownLevels[accKey] && knownLevels[accKey] > 0 && !isStream && !isService) {
                 triggerLevelUpModal({
+                  botKey: k,
                   icon: b.icon || '⚔️',
                   gameName: b.name || b.game || k,
                   charName: a.name || ('Conta #' + (ai + 1)),
                   vocation: a.vocation || '',
                   area: a.currentArea || '',
                   oldLevel: knownLevels[accKey],
-                  newLevel: curLvl
+                  newLevel: curLvl,
+                  gif: gameCelebrationGifs[k] || gameCelebrationGifs['default']
                 });
               }
             }
