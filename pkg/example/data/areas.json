@@ -1,0 +1,32 @@
+[
+  {
+    "id": "area_iniciante",
+    "name": "Área dos Ratos",
+    "minLevel": 1,
+    "maxLevel": 15,
+    "baseExp": 35,
+    "baseGold": 10,
+    "killsPerHour": 450,
+    "monsters": ["Rato", "Aranha"]
+  },
+  {
+    "id": "area_floresta",
+    "name": "Floresta dos Elfos",
+    "minLevel": 15,
+    "maxLevel": 40,
+    "baseExp": 120,
+    "baseGold": 45,
+    "killsPerHour": 380,
+    "monsters": ["Elfo", "Lobo"]
+  },
+  {
+    "id": "area_caverna",
+    "name": "Caverna dos Dragões",
+    "minLevel": 40,
+    "maxLevel": 100,
+    "baseExp": 550,
+    "baseGold": 180,
+    "killsPerHour": 250,
+    "monsters": ["Dragão", "Lorde Dragão"]
+  }
+]

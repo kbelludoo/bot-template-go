@@ -83,7 +83,7 @@ func (s *StaminaController) UpdateFatigue(milli uint32, farmAvailMs uint64, kpm 
 	s.hasFatigue = true
 }
 
-// UpdateStaminaHours atualiza métrica de horas de stamina (estilo Tibia/Huntera)
+// UpdateStaminaHours atualiza métrica de horas de stamina (estilo Tibia/Huntera/Baiak)
 func (s *StaminaController) UpdateStaminaHours(hours float64) {
 	s.mu.Lock()
 	defer s.mu.Unlock()

@@ -73,6 +73,7 @@ var allBots = []BotProbe{
 	{ID: "tibidle", Name: "🛡️ Tibidle Multi-Bot", Port: 3001, URL: "http://127.0.0.1:3001/api/status", RestartCmd: "sudo systemctl restart tibidle.service", Type: "systemd"},
 	{ID: "sigma", Name: "⚡ Pokemon Sigma", Port: 3002, URL: "http://127.0.0.1:3002/api/status", RestartCmd: "sudo systemctl restart sigma-bot.service", Type: "systemd"},
 	{ID: "leveling", Name: "🏹 Leveling Idle 2D", Port: 3003, URL: "http://127.0.0.1:3003/api/status", RestartCmd: "sudo systemctl restart leveling-bot.service", Type: "systemd"},
+	{ID: "pokelegacy", Name: "⚡ PokeLegacy Online", Port: 3005, URL: "http://127.0.0.1:3005/api/status", RestartCmd: "sudo systemctl restart pokelegacy.service", Type: "systemd"},
 	{ID: "pokeidle", Name: "⚡ PokeIdle.io", Port: 3006, URL: "http://127.0.0.1:3006/api/status", RestartCmd: "sudo systemctl restart pokeidle.service", Type: "systemd"},
 	{ID: "pokeidleworld", Name: "🌍 Poke Idle World", Port: 3007, URL: "http://127.0.0.1:3007/api/status", RestartCmd: "sudo systemctl restart pokeidleworld.service", Type: "systemd"},
 	{ID: "kickminer", Name: "🟢 Kick Miner Go", Port: 3009, URL: "http://127.0.0.1:3009/api/status", RestartCmd: "sudo systemctl restart kick-miner.service", Type: "systemd"},
@@ -82,6 +83,8 @@ var allBots = []BotProbe{
 	{ID: "luxidle", Name: "⚔️ Lux Idle Multi-Bot", Port: 3012, URL: "http://127.0.0.1:3012/api/status", RestartCmd: "sudo systemctl restart luxidle.service", Type: "systemd"},
 	{ID: "farmricochet", Name: "🌾 Farm Ricochet", Port: 3013, URL: "http://127.0.0.1:3013/api/status", RestartCmd: "sudo systemctl restart farmbot.service", Type: "systemd"},
 	{ID: "poketrue", Name: "🔥 PokeTrue Multi-Bot", Port: 3014, URL: "http://127.0.0.1:3014/api/status", RestartCmd: "sudo systemctl restart poketrue.service", Type: "systemd"},
+	{ID: "pokepixel", Name: "👾 PokePixel Multi-Bot", Port: 3015, URL: "http://127.0.0.1:3015/api/status", RestartCmd: "sudo systemctl restart pokepixel.service", Type: "systemd"},
+	{ID: "pocketweb", Name: "🌐 PocketWeb Server", Port: 8888, URL: "http://127.0.0.1:8888/", RestartCmd: "sudo systemctl restart floppy-server.service", Type: "systemd"},
 }
 
 // -------------------------------------------------------------
@@ -353,12 +356,14 @@ func syncIndividual() {
 		{repo: "sigma-bot", port: 3002, label: "Treinador"},
 		{repo: "tibidle-bot", port: 3001, label: "Conta"},
 		{repo: "leveling-bot", port: 3003, label: "Party"},
+		{repo: "pokelegacy-bot", port: 3005, label: "Treinador"},
 		{repo: "pokeidle-go", port: 3006, label: "Treinador"},
 		{repo: "pokeidleworld-bot", port: 3007, label: "Treinador"},
 		{repo: "twitch-miner-go", port: 3010, label: "Minerador"},
 		{repo: "lolidle-bot", port: 3011, label: "Campeão"},
 		{repo: "luxidle-bot", port: 3012, label: "Personagem"},
 		{repo: "farmricochet-bot", port: 3013, label: "Fazendeiro"},
+		{repo: "pokepixel-bot", port: 3015, label: "Treinador"},
 	}
 
 	for _, tgt := range targets {
@@ -450,36 +455,126 @@ func syncIndividual() {
 }
 
 // -------------------------------------------------------------
+// PROBING HELPER FOR ALL SERVICES
+// -------------------------------------------------------------
+
+type botItem struct {
+	name         string
+	game         string
+	engine       string
+	port         int
+	dashboardURL string
+	status       interface{}
+}
+
+func probeService(key string, d botItem) interface{} {
+	if key == "baiak" {
+		return fetchJSON(fmt.Sprintf("http://127.0.0.1:%d/api/fleet", d.port))
+	}
+
+	if key == "pocketweb" {
+		resp, err := httpClient.Get("http://127.0.0.1:8888/")
+		if err == nil && (resp.StatusCode == http.StatusOK || resp.StatusCode == http.StatusNotFound) {
+			resp.Body.Close()
+			return map[string]interface{}{
+				"uptime":   "24/7",
+				"ramSysMB": 8.5,
+				"accounts": []interface{}{
+					map[string]interface{}{
+						"name":        "PocketWeb Hub",
+						"vocation":    "Offline Web Mesh",
+						"currentArea": "Navegador & Cache P2P",
+						"status":      "Online",
+						"gold":        int64(0),
+						"kills":       0,
+					},
+				},
+			}
+		}
+		return nil
+	}
+
+	if key == "kaggle" {
+		out, err := exec.Command("pgrep", "-f", "kaggle-watcher-linux").Output()
+		if err == nil && len(strings.TrimSpace(string(out))) > 0 {
+			area := "GPU T4 / P100 Ativa"
+			if logData, err := os.ReadFile("/home/ubuntu/kaggle_monitor.log"); err == nil {
+				lines := strings.Split(strings.TrimSpace(string(logData)), "\n")
+				if len(lines) > 0 {
+					lastLine := lines[len(lines)-1]
+					if strings.Contains(lastLine, "running") {
+						area = "Treinamento em Andamento (GPU)"
+					}
+				}
+			}
+			return map[string]interface{}{
+				"uptime":   "24/7",
+				"ramSysMB": 9.2,
+				"accounts": []interface{}{
+					map[string]interface{}{
+						"name":        "Kaggle Worker",
+						"vocation":    "ML Pipeline Watcher",
+						"currentArea": area,
+						"status":      "Running",
+						"gold":        int64(0),
+						"kills":       0,
+					},
+				},
+			}
+		}
+		return nil
+	}
+
+	if key == "telegram" {
+		out, err := exec.Command("pgrep", "-f", "telegram-agent-linux").Output()
+		if err == nil && len(strings.TrimSpace(string(out))) > 0 {
+			return map[string]interface{}{
+				"uptime":   "24/7",
+				"ramSysMB": 6.7,
+				"accounts": []interface{}{
+					map[string]interface{}{
+						"name":        "Relay Bot",
+						"vocation":    "Telegram Bridge",
+						"currentArea": "Alertas & Notificações 24/7",
+						"status":      "Online",
+						"gold":        int64(0),
+						"kills":       0,
+					},
+				},
+			}
+		}
+		return nil
+	}
+
+	return fetchJSON(fmt.Sprintf("http://127.0.0.1:%d/api/status", d.port))
+}
+
+// -------------------------------------------------------------
 // SYNC: HUB CENTRAL (bot-template-go)
 // -------------------------------------------------------------
 
 func syncHub() {
 	vpsMetrics := getSystemMetrics()
 
-	type botItem struct {
-		name         string
-		game         string
-		engine       string
-		port         int
-		dashboardURL string
-		status       interface{}
-	}
-
 	botDefs := map[string]botItem{
 		"huntera":       {"Huntera Idle Bot", "Huntera", "Go Native Engine", 3000, "https://kbelludoo.github.io/huntera-bot/", nil},
 		"tibidle":       {"Tibidle Multi-Bot", "Tibidle", "Go Native Engine", 3001, "https://kbelludoo.github.io/tibidle-bot/", nil},
 		"sigma":         {"Pokemon Sigma Multi-Bot", "Pokemon Sigma", "Go Native Engine", 3002, "https://kbelludoo.github.io/sigma-bot/", nil},
 		"leveling":      {"Leveling Idle 2D Bot", "Leveling Idle 2D", "Go Native Engine (Protobuf 3)", 3003, "https://kbelludoo.github.io/leveling-bot/", nil},
+		"pokelegacy":    {"PokeLegacy Online Multi-Bot", "PokeLegacy Online", "Go Native Engine (Party 5x)", 3005, "https://kbelludoo.github.io/pokelegacy-bot/", nil},
 		"pokeidle":      {"PokeIdle.io Bot", "PokeIdle.io", "Go Native Engine (Twitch Lurker)", 3006, "https://kbelludoo.github.io/pokeidle-go/", nil},
 		"pokeidleworld": {"Poke Idle World Bot", "Poke Idle World", "Go Native Engine (Auto-Catch)", 3007, "https://kbelludoo.github.io/pokeidleworld-bot/", nil},
 		"kickminer":     {"Kick Channel Points Miner", "Kick.com", "Go Native (Zero-Video WS)", 3009, "https://kbelludoo.github.io/kick-miner-go/", nil},
 		"twitchminer":   {"Twitch Channel Points Miner", "Twitch.tv", "Go Native (Zero-Video WS)", 3010, "https://kbelludoo.github.io/twitch-miner-go/", nil},
 		"baiak":         {"Baiak Idle Multi-Account", "Baiak Idle", "Go Native Engine", 8090, "https://kbelludoo.github.io/baiak-idle-bot/", nil},
 		"lolidle":       {"LoL Idle Multi-Bot", "LoL Idle", "Go Native Engine (Runeterra 4x Party)", 3011, "https://kbelludoo.github.io/lolidle-bot/", nil},
-		"pokelegacy":    {"PokeLegacy Online Multi-Bot", "PokeLegacy Online", "Go Native Engine (Party 5x)", 3005, "https://kbelludoo.github.io/pokelegacy-bot/", nil},
 		"luxidle":       {"Lux Idle Multi-Bot", "Lux Idle", "Go Native Engine (5x Party)", 3012, "https://kbelludoo.github.io/luxidle-bot/", nil},
 		"farmricochet":  {"Farm Ricochet Bot", "Farm Ricochet", "Go Native Engine (Circuit Breaker)", 3013, "https://kbelludoo.github.io/farmricochet-bot/", nil},
 		"poketrue":      {"PokeTrue Multi-Bot", "PokeTrue", "Go Native Engine (Weakness Solver)", 3014, "https://kbelludoo.github.io/bot-template-go/?v=force1", nil},
+		"pokepixel":     {"PokePixel Multi-Bot", "PokePixel Online", "Go Native Engine (Auto-Catch)", 3015, "https://kbelludoo.github.io/pokepixel-bot/", nil},
+		"pocketweb":     {"PocketWeb Mesh Server", "PocketWeb", "Go Native Engine (Mesh Server)", 8888, "https://kbelludoo.github.io/agent-go/", nil},
+		"kaggle":        {"Kaggle Training Watcher", "Kaggle", "Go Native Agent (24/7 Watcher)", 0, "https://kbelludoo.github.io/agent-go/", nil},
+		"telegram":      {"Telegram Relay Agent", "Telegram", "Go Native Agent (Bot Command)", 0, "https://kbelludoo.github.io/agent-go/", nil},
 	}
 
 	var wg sync.WaitGroup
@@ -490,13 +585,7 @@ func syncHub() {
 		wg.Add(1)
 		go func(key string, d botItem) {
 			defer wg.Done()
-			var url string
-			if key == "baiak" {
-				url = fmt.Sprintf("http://127.0.0.1:%d/api/fleet", d.port)
-			} else {
-				url = fmt.Sprintf("http://127.0.0.1:%d/api/status", d.port)
-			}
-			st := fetchJSON(url)
+			st := probeService(key, d)
 
 			mu.Lock()
 			d.status = st
@@ -593,15 +682,13 @@ func syncHub() {
 							}
 						}
 					}
-				case "pokeidle", "pokeidleworld":
+				case "pokeidle", "pokeidleworld", "pokepixel":
 					if accs, ok := stMap["accounts"].([]interface{}); ok {
 						for i, a := range accs {
 							if am, ok := a.(map[string]interface{}); ok {
 								am["name"] = fmt.Sprintf("Treinador #%d", i+1)
 								am["id"] = fmt.Sprintf("acc-%d", i+1)
-								if extra, ok := am["extra"].(map[string]interface{}); ok {
-									extra["trainerName"] = fmt.Sprintf("Treinador #%d", i+1)
-								}
+								delete(am, "extra")
 							}
 						}
 					}

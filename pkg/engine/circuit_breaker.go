@@ -18,7 +18,7 @@ const (
 	StateClosed CircuitState = iota
 	// StateOpen: Disjuntor desarmado. Erro de anti-cheat detectado. Combate parado e saves pausados.
 	StateOpen
-	// StateHalfOpen: Período de resfriamento terminou. Testando 1 requisição canário ou recarregando estado.
+	// StateHalfOpen: Período de resfriamento terminou. Testando 1 requisição canônica ou recarregando estado.
 	StateHalfOpen
 )
 
@@ -174,6 +174,7 @@ func (cb *CircuitBreaker) FinishRecovery(generation uint64, err error) {
 	cb.failures = 0
 	cb.consecTrips = 0
 	cb.currentWait = cb.config.BaseCooldown
+	log.Printf("[%s] 🛡️ [CIRCUIT BREAKER] Estado canônico validado. Disjuntor restaurado para CLOSED.", cb.name)
 	cb.mu.Unlock()
 	if cb.config.OnReset != nil {
 		cb.config.OnReset()
@@ -381,10 +382,6 @@ func rejectionInJSON(value any) string {
 // Garante que a soma da EXP compartilhada de todos os membros não ultrapasse o teto matemático do anti-cheat do servidor.
 //
 // Fórmula: TaxaIndividual <= TaxaMaxSolo / (TamanhoGrupo * (1 + BonusExpGrupo))
-//
-// Exemplo:
-// Se o teto solo seguro for 40 monstros/minuto, em uma party de 4 com +45% de bônus (+0.45):
-// 40 / (4 * 1.45) = 40 / 5.8 ~= 6.89 monstros/minuto por bot.
 func CalculatePartyMaxKillRate(soloMaxKillRate float64, partySize int, groupBonusExpPercent float64) float64 {
 	if partySize <= 1 {
 		return soloMaxKillRate

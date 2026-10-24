@@ -88,6 +88,11 @@ func BuildViewHub(data HubData) ViewHub {
 			if ramMB > 0 {
 				summary = fmt.Sprintf("⭐ %s pontos • RAM: %.1f MB", formatNumber(totalVal), ramMB)
 			}
+		} else if meta.IsService {
+			summary = "⚙️ Serviço Ativo 24/7"
+			if ramMB > 0 {
+				summary = fmt.Sprintf("⚙️ RAM: %.1f MB • 24/7", ramMB)
+			}
 		} else {
 			summary = fmt.Sprintf("💰 %s gp", formatNumber(totalVal))
 			if ramMB > 0 {
@@ -102,6 +107,12 @@ func BuildViewHub(data HubData) ViewHub {
 					badge = fmt.Sprintf("%d AO VIVO", accs[0].Kills)
 				} else {
 					badge = "MINERANDO"
+				}
+			} else if meta.IsService {
+				if len(accs) > 0 && accs[0].Status != "" {
+					badge = strings.ToUpper(accs[0].Status)
+				} else {
+					badge = "ONLINE"
 				}
 			} else if len(accs) > 1 {
 				badge = fmt.Sprintf("%d/%d ATIVAS", len(accs), len(accs))

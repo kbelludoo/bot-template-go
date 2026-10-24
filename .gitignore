@@ -20,10 +20,9 @@ secrets.json
 *.tok
 tokens.tok
 oci-manager
-data/
-!pkg/game/data/
-!pkg/game/data/*.json
-bin/
+/data/
+/bin/
+!pkg/**/data/**
 
 # Logs e arquivos temporários
 *.log

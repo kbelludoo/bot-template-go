@@ -5,7 +5,7 @@ const hubTemplate = `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>⚡ Bot Hub — VPS Command Center & Game/Stream Bot Kit (Go Engine)</title>
+  <title>⚡ Bot Hub — VPS Command Center & Game/Stream/Service Hub (Go Engine)</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -147,75 +147,6 @@ const hubTemplate = `<!DOCTYPE html>
       font-size: 0.72rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; white-space: nowrap;
     }
     .stream-ticker-track { display: flex; gap: 28px; white-space: nowrap; font-size: 0.8rem; color: var(--text-muted); }
-
-    /* Live Stream Unified Section */
-    .live-stream-panel {
-      background: var(--card-bg); backdrop-filter: blur(16px); border-radius: 20px;
-      border: 1px solid rgba(0, 240, 255, 0.35); border-top: 4px solid var(--accent);
-      padding: 24px; margin-bottom: 28px; box-shadow: 0 10px 40px -10px rgba(0, 240, 255, 0.2);
-    }
-    .stream-panel-header {
-      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;
-      margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-    .stream-title-group { display: flex; align-items: center; gap: 14px; }
-    .stream-icon {
-      width: 44px; height: 44px; border-radius: 12px; background: rgba(0, 240, 255, 0.15);
-      border: 1px solid var(--accent); display: flex; align-items: center; justify-content: center;
-      font-size: 1.5rem;
-    }
-    .stream-title-group h2 { font-size: 1.25rem; font-weight: 800; color: #fff; }
-    .stream-title-group p { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
-    .live-status-pill {
-      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700;
-      padding: 6px 14px; border-radius: 999px; background: rgba(16, 185, 129, 0.15);
-      border: 1px solid var(--green); color: var(--green); display: inline-flex; align-items: center; gap: 6px;
-    }
-    .stream-content-grid {
-      display: grid; grid-template-columns: 2fr 1fr; gap: 20px;
-    }
-    @media (max-width: 900px) {
-      .stream-content-grid { grid-template-columns: 1fr; }
-    }
-    .player-tabs { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
-    .player-tab {
-      padding: 6px 14px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; cursor: pointer;
-      border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.4); color: var(--text-muted);
-      transition: all 0.2s; font-family: 'JetBrains Mono', monospace;
-    }
-    .player-tab.active {
-      background: rgba(0, 240, 255, 0.18); border-color: var(--accent); color: var(--accent);
-    }
-    .player-frame-box {
-      width: 100%; aspect-ratio: 16 / 9; background: #000; border-radius: 12px;
-      overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.1); position: relative;
-    }
-    .player-view { display: none; width: 100%; height: 100%; }
-    .player-view.active { display: block; }
-    .player-view iframe { width: 100%; height: 100%; border: none; }
-    .player-view img { width: 100%; height: 100%; object-fit: contain; background: #07090e; }
-    .stream-watch-buttons { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
-    .btn-watch {
-      flex: 1; min-width: 130px; text-align: center; padding: 10px 14px; border-radius: 10px;
-      font-size: 0.78rem; font-weight: 700; text-decoration: none; transition: transform 0.15s ease, filter 0.2s ease;
-      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-    }
-    .btn-watch:hover { transform: translateY(-2px); filter: brightness(1.15); }
-    .btn-watch.kick { background: rgba(83, 252, 24, 0.15); border: 1px solid #53fc18; color: #53fc18; }
-    .btn-watch.twitch { background: rgba(168, 85, 247, 0.15); border: 1px solid #a855f7; color: #c084fc; }
-    .btn-watch.youtube { background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #ef4444; }
-    .stream-specs-card {
-      background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 10px;
-    }
-    .specs-title {
-      font-size: 0.82rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
-      color: var(--accent); margin-bottom: 4px; padding-bottom: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    }
-    .spec-row {
-      display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem;
-      color: var(--text-muted); font-family: 'JetBrains Mono', monospace;
-    }
   </style>
 </head>
 <body>
@@ -229,9 +160,6 @@ const hubTemplate = `<!DOCTYPE html>
         </div>
       </div>
       <div class="header-right">
-        <a href="#liveStreamSection" class="btn-link" style="background: rgba(0, 240, 255, 0.12); border-color: rgba(0, 240, 255, 0.4); color: #00f0ff; display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem;">
-          <span>📡</span> Live Stream
-        </a>
         <div class="live-badge">
           <span class="pulse-dot"></span>
           <span>LIVE TELEMETRY</span>
@@ -256,96 +184,6 @@ const hubTemplate = `<!DOCTYPE html>
         <div class="vps-val" style="color: var(--gold); font-size: 1.15rem;">OCI Ashburn</div>
         <div class="vps-sub" id="lastUpdatedSub">{{.TimeAgo}}</div>
       </div>
-      <div class="vps-card">
-        <div class="vps-label">Restream Multicast (Go)</div>
-        <div class="vps-val" id="streamRamVal" style="color: #00f0ff;">~24 MB RAM</div>
-        <div class="vps-sub">720p10 • Kick + Twitch + YouTube</div>
-      </div>
-    </div>
-
-    <!-- Live Stream Unified Section -->
-    <div class="live-stream-panel" id="liveStreamSection">
-      <div class="stream-panel-header">
-        <div class="stream-title-group">
-          <div class="stream-icon">📡</div>
-          <div>
-            <h2>Restream Go — Transmissão Multicast 24/7</h2>
-            <p>Transmissão simultânea de telemetria em Go puro para Kick, Twitch e YouTube • Áudio: Nightwave Plaza Lo-Fi</p>
-          </div>
-        </div>
-        <div class="stream-header-actions">
-          <span class="live-status-pill">
-            <span class="pulse-dot"></span>
-            TRANSMITINDO AO VIVO
-          </span>
-        </div>
-      </div>
-
-      <div class="stream-content-grid">
-        <!-- Left: Player & Preview -->
-        <div class="stream-player-container">
-          <div class="player-tabs">
-            <button class="player-tab active" id="tab-twitch" onclick="switchPlayerTab('twitch')">🟣 Twitch Player</button>
-            <button class="player-tab" id="tab-youtube" onclick="switchPlayerTab('youtube')">🔴 YouTube Player</button>
-            <button class="player-tab" id="tab-preview" onclick="switchPlayerTab('preview')">🖼️ Frame Snapshot (HUD)</button>
-          </div>
-          
-          <div class="player-frame-box">
-            <div id="twitchPlayerWrap" class="player-view active">
-              <iframe id="twitchIframe" src="https://player.twitch.tv/?channel=kbelludoo&parent=kbelludoo.github.io&parent=localhost" allowfullscreen></iframe>
-            </div>
-            <div id="youtubePlayerWrap" class="player-view">
-              <iframe id="youtubeIframe" src="https://www.youtube.com/embed/live_stream?channel=5fst-9b20-k652-g8mg-10p0" allowfullscreen></iframe>
-            </div>
-            <div id="previewPlayerWrap" class="player-view">
-              <img id="streamPreviewImg" src="preview.png" alt="Snapshot da Stream HUD Go" />
-            </div>
-          </div>
-
-          <div class="stream-watch-buttons">
-            <a href="https://kick.com" target="_blank" rel="noreferrer" class="btn-watch kick">⚡ Assistir no Kick</a>
-            <a href="https://twitch.tv/kbelludoo" target="_blank" rel="noreferrer" class="btn-watch twitch">🟣 Assistir na Twitch</a>
-            <a href="https://youtube.com" target="_blank" rel="noreferrer" class="btn-watch youtube">🔴 Assistir no YouTube</a>
-          </div>
-        </div>
-
-        <!-- Right: Stream Info & Specs -->
-        <div class="stream-specs-card">
-          <div class="specs-title">⚡ Especificações da Transmissão</div>
-          <div class="spec-row">
-            <span>Motor de Renderização</span>
-            <strong style="color: #00f0ff;">Go 1.27 Nativo (2D Framebuffer)</strong>
-          </div>
-          <div class="spec-row">
-            <span>Consumo do Processo</span>
-            <strong style="color: #10b981;">~24 MB RAM (Zero Chrome)</strong>
-          </div>
-          <div class="spec-row">
-            <span>Resolução & Taxa</span>
-            <strong>1280x720 (720p) @ 10 FPS</strong>
-          </div>
-          <div class="spec-row">
-            <span>Bitrate & Codec</span>
-            <strong>1200 kbps CBR • H.264 ultrafast</strong>
-          </div>
-          <div class="spec-row">
-            <span>Canal de Áudio</span>
-            <strong style="color: #c084fc;">Nightwave Plaza Radio Lo-Fi (AAC)</strong>
-          </div>
-          <div class="spec-row">
-            <span>Fan-out Simultâneo</span>
-            <strong>Tee Muxer: Kick + Twitch + YouTube</strong>
-          </div>
-          <div class="spec-row">
-            <span>Status do Pipeline</span>
-            <strong style="color: #10b981;">🟢 Ativo e Estável 24/7</strong>
-          </div>
-          <div class="spec-row">
-            <span>Telemetria HUD</span>
-            <strong style="color: var(--gold);">Sincronizada em Tempo Real</strong>
-          </div>
-        </div>
-      </div>
     </div>
 
     <div class="bots-grid" id="botsGrid">
@@ -356,7 +194,10 @@ const hubTemplate = `<!DOCTYPE html>
           <div class="bot-header">
             <div class="bot-name-group">
               <h3>{{$bot.Meta.Icon}} {{$bot.Meta.Name}}</h3>
-              <span class="bot-port">PORTA {{$bot.Meta.Port}} • {{if $bot.Meta.IsStream}}STREAM HARVESTER{{else}}GO NATIVE{{end}}</span>
+              <span class="bot-port">
+                {{if gt $bot.Meta.Port 0}}PORTA {{$bot.Meta.Port}} • {{end}}
+                {{if $bot.Meta.IsStream}}STREAM HARVESTER{{else if $bot.Meta.IsService}}BACKGROUND AGENT{{else}}GO NATIVE{{end}}
+              </span>
             </div>
             <span class="badge-status" id="badge-{{$bot.Meta.Key}}">{{$bot.BadgeText}}</span>
           </div>
@@ -378,6 +219,20 @@ const hubTemplate = `<!DOCTYPE html>
                 <div class="stat-row">
                   <span style="color: #facc15; font-weight: 800;">⭐ {{formatNumber $acc.Gold}} pontos</span>
                   <span style="color: #38bdf8; font-weight: 700;">🔴 {{$acc.Kills}} {{if eq $acc.Kills 1}}canal ao vivo{{else}}canais ao vivo{{end}}</span>
+                </div>
+                {{else if $bot.Meta.IsService}}
+                <div class="acc-item-header">
+                  <span>{{$bot.Meta.Icon}} {{$acc.Name}}</span>
+                  <span style="color: {{css $bot.Meta.Theme}}; font-size: 0.72rem; font-weight: 700;">{{$acc.Vocation}}</span>
+                </div>
+                {{if $acc.CurrentArea}}
+                <div class="stat-row" style="background: {{css $bot.Meta.ThemeBg}}; padding: 4px 8px; border-radius: 6px; margin-bottom: 4px;">
+                  <span style="font-weight: 700; font-size: 0.72rem;">⚙️ {{$acc.CurrentArea}}</span>
+                </div>
+                {{end}}
+                <div class="stat-row">
+                  <span style="color: #4ade80; font-weight: 700;">🟢 {{$acc.Status}}</span>
+                  <span style="color: #38bdf8; font-weight: 600;">⚡ Operação Contínua</span>
                 </div>
                 {{else}}
                 <div class="acc-item-header">
@@ -425,8 +280,8 @@ const hubTemplate = `<!DOCTYPE html>
     <div class="stream-ticker-wrap">
       <div class="ticker-badge">🔴 LIVE FLEET</div>
       <div class="stream-ticker-track">
-        <span>⚡ VPS CLUSTER ONLINE • BOTS & STREAM MINERS NATIVOS EM GO • ZERO NODE.JS</span>
-        <span>🎮 JOGOS & 📺 STREAMS: {{.TickerBotsList}}</span>
+        <span>⚡ VPS CLUSTER ONLINE • 18 SERVIÇOS & BOTS NATIVOS EM GO • ZERO NODE.JS</span>
+        <span>🎮 JOGOS, 📺 STREAMS & ⚙️ AGENTES: {{.TickerBotsList}}</span>
       </div>
     </div>
   </div>
@@ -520,46 +375,9 @@ const hubTemplate = `<!DOCTYPE html>
       return [];
     }
 
-    function switchPlayerTab(tab) {
-      document.querySelectorAll('.player-tab').forEach(function(b) { b.classList.remove('active'); });
-      document.querySelectorAll('.player-view').forEach(function(v) { v.classList.remove('active'); });
-      if (tab === 'twitch') {
-        document.getElementById('tab-twitch')?.classList.add('active');
-        document.getElementById('twitchPlayerWrap')?.classList.add('active');
-      } else if (tab === 'youtube') {
-        document.getElementById('tab-youtube')?.classList.add('active');
-        document.getElementById('youtubePlayerWrap')?.classList.add('active');
-      } else if (tab === 'preview') {
-        document.getElementById('tab-preview')?.classList.add('active');
-        document.getElementById('previewPlayerWrap')?.classList.add('active');
-        refreshPreview();
-      }
-    }
-
-    function refreshPreview() {
-      var img = document.getElementById('streamPreviewImg');
-      if (img) {
-        var isRestreamRepo = window.location.pathname.indexOf('restream-go') !== -1;
-        var base = isRestreamRepo ? 'https://kbelludoo.github.io/restream-go/' : '';
-        img.src = base + 'preview.png?t=' + Date.now();
-      }
-    }
-    setInterval(refreshPreview, 8000);
-
     async function refreshHub() {
       try {
-        var isRestreamRepo = window.location.pathname.indexOf('restream-go') !== -1;
-        var statusUrl = isRestreamRepo
-          ? 'https://kbelludoo.github.io/bot-template-go/status.json?t=' + Date.now() + '&v=' + Math.random()
-          : 'status.json?t=' + Date.now() + '&v=' + Math.random();
-
-        var res = await fetch(statusUrl, {
-          cache: 'no-store',
-          headers: {
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-            'Pragma': 'no-cache'
-          }
-        });
+        var res = await fetch('status.json?t=' + Date.now());
         if (!res.ok) return;
         var data = await res.json();
         if (!data || !data.bots) return;
@@ -586,10 +404,13 @@ const hubTemplate = `<!DOCTYPE html>
           var badge = document.getElementById('badge-' + k);
           var accounts = getUnifiedAccounts(b);
           var isStream = (k === 'kickminer' || k === 'twitchminer');
+          var isService = (k === 'pocketweb' || k === 'kaggle' || k === 'telegram');
 
           if (badge && accounts.length > 0) {
             if (isStream) {
               badge.textContent = accounts[0].kills > 0 ? accounts[0].kills + ' AO VIVO' : 'MINERANDO';
+            } else if (isService) {
+              badge.textContent = accounts[0].status ? accounts[0].status.toUpperCase() : 'ONLINE';
             } else {
               badge.textContent = accounts.length > 1 ? accounts.length + '/' + accounts.length + ' ATIVAS' : (accounts[0].status ? accounts[0].status.toUpperCase() : 'ONLINE');
             }
@@ -603,6 +424,12 @@ const hubTemplate = `<!DOCTYPE html>
                   s += '<div class="stat-row" style="padding: 4px 8px; border-radius: 6px; margin-bottom: 4px; background: rgba(255,255,255,0.05); font-weight: 700;">📡 ' + a.currentArea + '</div>';
                 }
                 s += '<div class="stat-row"><span style="color: #facc15; font-weight: 800;">⭐ ' + (a.gold || 0).toLocaleString() + ' pontos</span><span style="color: #38bdf8; font-weight: 700;">🔴 ' + (a.kills || 0) + ' ' + ((a.kills === 1) ? 'canal ao vivo' : 'canais ao vivo') + '</span></div>';
+              } else if (isService) {
+                s += '<div class="acc-item-header"><span>' + (a.name || 'Serviço') + '</span><span style="font-size: 0.72rem; font-weight: 700;">' + (a.vocation || 'Service') + '</span></div>';
+                if (a.currentArea) {
+                  s += '<div class="stat-row" style="padding: 4px 8px; border-radius: 6px; margin-bottom: 4px; background: rgba(255,255,255,0.05); font-weight: 700;">⚙️ ' + a.currentArea + '</div>';
+                }
+                s += '<div class="stat-row"><span style="color: #4ade80; font-weight: 700;">🟢 ' + (a.status || 'Online') + '</span><span style="color: #38bdf8; font-weight: 600;">⚡ Operação Contínua</span></div>';
               } else {
                 s += '<div class="acc-item-header"><span>' + (a.name || 'Conta') + ' (Nv. ' + (a.level || 1) + ')</span><span>' + (a.vocation || '') + '</span></div>';
                 if (a.currentArea) {
@@ -625,7 +452,7 @@ const hubTemplate = `<!DOCTYPE html>
         console.warn('Erro ao atualizar hub:', e);
       }
     }
-    setInterval(refreshHub, 4000);
+    setInterval(refreshHub, 12000);
   </script>
 </body>
 </html>`

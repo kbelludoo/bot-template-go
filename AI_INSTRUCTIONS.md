@@ -1,26 +1,26 @@
-﻿# 🤖 AI_INSTRUCTIONS.md — MANUAL DE ENGENHARIA PARA IAs
+# 🤖 AI_INSTRUCTIONS.md — MANUAL DE ENGENHARIA PARA IAs
 
-> **DESTINATÁRIO:** Qualquer modelo ou agente de IA (Antigravity, Claude, ChatGPT, etc.) encarregado de criar ou modificar um bot de jogo em Go para o **dj**.
+> **DESTINATÁRIO:** Qualquer modelo ou agente de IA (Antigravity, Claude, ChatGPT, etc.) encarregado de criar ou modificar um bot de jogo em Go.
 > **LEIA ESTE ARQUIVO ANTES DE TOCAR EM QUALQUER LINHA DE CÓDIGO.**
 
 ---
 
 ## 🎯 OBJETIVO PRINCIPAL
-Você está construindo um bot autônomo nativo em **Go (Golang)** de altíssima performance e baixo consumo de recursos para um jogo de navegador/idle.
+Você está construindo ou aprimorando bots autônomos nativos em **Go (Golang)** de altíssima performance e baixíssimo consumo de recursos para jogos de navegador/idle (ex: PokeIdle, PokeIdleWorld, LoL Idle, Baiak, Tibia Idle, Sigma, Leveling Idle, Lux Idle, PokeLegacy, Farm Ricochet, etc.).
 
 **Invariantes Inegociáveis:**
 1. **Cada Jogo é um Binário Independente:** Nunca misture múltiplos jogos no mesmo executável. Se o jogo X cair ou mudar de protocolo, os outros jogos não podem ser afetados.
 2. **Consumo de Memória Cirúrgico:** O processo deve consumir **menos de 15 MB de RAM** (geralmente entre 2 e 5 MB). Nunca use browsers headless (Puppeteer/Playwright/Chromium) na VPS para rodar o loop de jogo. Conecte diretamente via WebSockets ou HTTP.
-3. **Resiliência Total contra Crash:** Toda conta roda em Goroutine protegida com `engine.RunWithSupervisor` e `recover()`. Um panic de unmarshal ou erro de rede NUNCA deve derrubar o executável principal.
+3. **Resiliência Total contra Crash:** Toda conta roda em Goroutine protegida com `engine.RunWithSupervisor` com `recover()` e cancelamento limpo via `context.Context`. Um panic de unmarshal ou erro de rede NUNCA deve derrubar o executável principal.
 4. **Isolamento de Portas Web:** Cada bot tem sua própria porta no dashboard embutido (ex: Huntera usa 3000, Tibidle usa 3001, Sigma usa 3002). Nunca crie conflito de portas.
-5. **Segurança Absoluta de Segredos (Zero Hardcoding):** NUNCA insira tokens de API (Telegram, Discord, Twitch OAuth), senhas, cookies, chaves SSH (`*.key`) ou IPs públicos da VPS diretamente em arquivos `.go`, `.json`, `.sh`, `.bat` ou scripts que serão commitados. TODAS as credenciais devem ser obrigatoriamente carregadas via variáveis de ambiente (`os.Getenv`) ou arquivos locais no `.gitignore` (`.secrets.json`, `.env`, `accounts.json`). Commitar tokens gera vazamento público imediato!
-6. **Modo Stealth & Anti-Ban (Zero Nicks Públicos):** NUNCA exponha o nome real do personagem/treinador/streamer nos dashboards web do GitHub Pages (`docs/index.html` ou `status.json`). Sempre exiba apenas a classe/vocação, índice anônimo (ex: `Conta #1`, `Treinador #1`, `Guerreiro`, `Arqueiro`) e estatísticas técnicas (Level, EXP/h, Kills, Gold, Mapa). Transmitir nicks reais gera denúncias e banimentos manuais imediatos!
-7. **Proteção Anti-Ban Circuit Breaker Obrigatória:** Todo bot deve integrar `pkg/engine.CircuitBreaker`. Diante de qualquer recusa de save, rate-limit ou erro de anti-cheat (`experiência rápida demais`, `recusado: true`), o bot NUNCA deve insistir em novos saves. Deve desarmar o combate, recuar para zona segura e aguardar cooldown de 15 a 30 minutos. Insistir em saves rejeitados resulta em banimento de 7 dias por programa de terceiros!
-8. **Proibição Absoluta de Bots "Barebones" / Superficiais (Completude Máxima Obrigatória):** É expressamente proibido construir bots simplistas que apenas batem em monstros e coletam ouro básico. A IA DEVE ler e minerar TODO o código client-side do jogo (scripts JS, bundles Vite/Webpack, HTML e Wasm). O bot DEVE implementar 100% dos subsistemas do jogo: Presas (Preys), Recompensas Diárias (Dailies), Missões/Tasks, Bênçãos (Blessings), Chefes (World Bosses), Forja/Gemas, Promoção de Vocação, Dummies de Treino e Gestão de Inventário. O bot deve operar como um jogador humano experiente de elite.
+5. **Segurança Absoluta de Segredos (Zero Hardcoding):** NUNCA insira tokens de API, senhas, cookies, chaves SSH (`*.key`), certificados (`*.pem`), tokens (`*.tok`) ou IPs públicos da VPS diretamente em arquivos commitáveis. Credenciais ficam no `accounts.json` (no `.gitignore`) ou variáveis de ambiente.
+6. **Modo Stealth & Anti-Ban (Zero Nicks Públicos):** NUNCA exponha o nome real do personagem nos dashboards públicos ou `status.json`. Exiba apenas vocação/classe, índice anônimo (`Conta #1`) e métricas técnicas.
+7. **Proteção Anti-Ban Circuit Breaker Obrigatória:** Todo bot DEVE integrar `pkg/engine.CircuitBreaker`. Diante de qualquer recusa de save, rate-limit ou erro de anti-cheat (`experiência rápida demais`, `recusado: true`), o bot NUNCA deve insistir em novos saves. Deve desarmar o combate, recuar para zona segura e aguardar cooldown de 15 a 30 minutos.
+8. **Proibição Absoluta de Bots "Barebones" (Completude Máxima):** É proibido construir bots simplistas que apenas batem em monstros e coletam ouro. O bot DEVE implementar os 13 subsistemas do jogo: Presas, Recompensas Diárias, Missões/Tasks, Bênçãos, Chefes Mundiais, Forja/Gemas, Promoção de Vocação, Dummies de Treino e Gestão de Inventário.
 
 ---
 
-## 📁 ESTRUTURA DO PROJETO E RESPONSABILIDADES
+## 📁 ESTRUTURA DO TEMPLATE E MÓDULOS NATIVOS
 
 ```text
 bot-template-go/
@@ -28,272 +28,118 @@ bot-template-go/
 ├── accounts.json               # Credenciais reais (IGNORADO PELO GIT)
 ├── accounts.example.json       # Exemplo limpo para o usuário
 ├── AGENTS.md                   # Diretrizes universais de IA e anti-ban
+├── AI_INSTRUCTIONS.md          # Manual de engenharia para desenvolvimento de novos bots
 ├── go.mod / go.sum             # Módulo Go nativo (dependência única: gorilla/websocket)
 │
+├── cmd/
+│   ├── scaffold/               # ⚡ GERADOR AUTOMÁTICO DE NOVOS BOTS PARA A IA ⚡
+│   │   └── main.go             # Executa: go run ./cmd/scaffold -game "Jogo" -pkg "slug"
+│   ├── watchdog/               # Monitor de integridade e reinício de processos
+│   ├── telegram-agent/         # Bot de alertas e telemetria remota via Telegram
+│   └── vps-agent/              # Agente de saúde e métricas de hardware da VPS
+│
 ├── pkg/
-│   ├── engine/                 # [NÃO MODIFICAR A MENOS QUE NECESSÁRIO]
+│   ├── engine/                 # [NÚCLEO DE RESILIÊNCIA E ANTI-BAN]
 │   │   ├── bot.go              # Interface GameBot e struct AccountStatus
-│   │   ├── circuit_breaker.go  # Disjuntor anti-ban, detecção de anti-cheat e cálculo de taxa coletiva
-│   │   ├── manager.go          # Gerenciador concorrente (thread-safe) de contas
-│   │   └── supervisor.go       # Goroutine runner com backoff e proteção contra panic
+│   │   ├── circuit_breaker.go  # Disjuntor anti-ban, Half-Open (BeginRecovery/FinishRecovery) e taxa coletiva em party
+│   │   ├── overlay.go          # ⭐ StateOverlay (RawEstado): preservação de schema, ContractEnvelope e ReconcileStaleSave
+│   │   ├── stamina.go          # ⭐ StaminaController: auditoria de fadiga/stamina com guardas de inicialização
+│   │   ├── pacing.go           # ⭐ AdaptiveSpeedTuner, AntiWipeTracker, RankingStealthController e CircularPatrolPosition
+│   │   ├── manager.go          # Gerenciador concorrente (thread-safe) de contas ativas com validação de IDs
+│   │   └── supervisor.go       # Goroutine runner com backoff exponencial, estabilidade de 1 min e context cancellation
 │   │
-│   ├── network/                # [NÃO MODIFICAR A MENOS QUE NECESSÁRIO]
-│   │   ├── socket.go           # Cliente WebSocket resiliente, thread-safe (writeMu), keepalive
-│   │   └── http_client.go      # Cliente HTTP com headers de browser moderno e helpers JSON
+│   ├── network/                # [NETWORKING RESILIENTE DE ALTA PERFORMANCE]
+│   │   ├── http_client.go      # Cliente HTTP com Multi-IP (bindIP), fila MaxConcurrent, sharding dinâmico e retries
+│   │   ├── signer.go           # ⭐ RequestSigner (HMAC-SHA256 + Idempotency-Key), DJB2 Sharding e Device Fingerprint
+│   │   └── socket.go           # Cliente WebSocket com keepalive ping/pong, Multi-IP, roteador On e binário
 │   │
-│   ├── auth/                   # [USAR SE O JOGO EXIGIR CLOUDFLARE/TURNSTILE]
-│   │   └── cdp_ticket.go       # CDP launcher temporário local para resolver desafios/tickets
+│   ├── protocol/               # [PARSERS E CONSTRUTORES DE PROTOCOLOS]
+│   │   ├── binary.go           # ProtoReader e ProtoWriter sem schema (.proto) + ParseFatigueState
+│   │   ├── socketio.go         # Engine.IO v4 / Socket.IO v4 (0, 2/3, 40, 42<ack>, 43<ack>) + DiscoverClientRelease
+│   │   ├── colyseus.go         # Colyseus v0.16 binário (OpJoinRoom=10 ACK, OpRoomData=13 msgpack framing)
+│   │   └── trpc.go             # Envelopamento e desenvelopamento tRPC v10 Batch (?batch=1)
 │   │
-│   ├── server/                 # [NÃO MODIFICAR]
-│   │   ├── server.go           # Servidor HTTP leve para /api/status, /api/action, /api/ticket
-│   │   └── index.html          # Web Dashboard Cyberpunk/Dark embutido (//go:embed)
+│   ├── auth/                   # [BYPASS DE TURNSTILE E CAMUFLAGEM CDP]
+│   │   ├── cdp.go              # Extrator de sessão/cookies via Chrome DevTools Protocol
+│   │   └── stealth_hook.go     # StealthInitScript, TurnstileInterceptScript (DummyWebSocket) e BuildCleanAntiBotLaudo
 │   │
-│   └── game/                   # ⭐ [AQUI FICA TODA A LÓGICA DO NOVO JOGO] ⭐
-│       ├── types.go            # Structs de pacotes, configurações e dados do jogo
-│       ├── catalog.go          # Catálogo de monstros, rotas, itens ou mapas
-│       └── bot.go              # Implementação concreta da interface engine.GameBot
+│   ├── subsystem/              # [OS SUBSISTEMAS PLUG-AND-PLAY]
+│   │   ├── solver.go           # RouteSolver: benchmark empírico de EXP/h, SimulateCombat (TTK/Sustain) e matriz Pokémon 18x18
+│   │   ├── inventory.go        # InventoryManager: auto-sell de lixo no NPC, protected items e monitor de peso
+│   │   ├── dailies.go          # DailyManager: detector de reset à meia-noite e resgate de streaks
+│   │   ├── potions.go          # PotionManager: cálculo da melhor poção sem desperdício e auto-restock
+│   │   ├── promotion.go        # PromotionManager: compra de classe em marcos de nível e bênçãos (Bless 1-5)
+│   │   ├── party.go            # PartyCoordinator: sincronia pelo menor nível, bestiário compartilhado e LockHunt
+│   │   ├── bosses.go           # BossScheduler: monitoramento de portais e chefes mundiais
+│   │   └── lurker.go           # Stream Lurker: payloads de presença e resgate de drops para Twitch GQL/IRC e Kick WS
+│   │
+│   ├── logger/                 # [LOGGING ESTRUTURADO slog]
+│   │   └── logger.go           # Logger limpo com tags coloridas por conta e zero overhead
+│   │
+│   ├── server/                 # [DASHBOARD EMBUTIDO]
+│   │   ├── server.go           # Servidor HTTP para /api/status, /api/action, /api/ticket com shutdown gracioso
+│   │   └── index.html          # Web Dashboard Dark embutido via //go:embed
+│   │
+│   └── game/                   # Implementação de referência (PokeTrue / PokeIdle)
+│       ├── types.go            # Modelos de pacotes e estado
+│       ├── catalog.go          # Catálogo de dados (hunts, dex, loot) com //go:embed
+│       ├── api.go              # Cliente HTTP/WS da API
+│       └── bot.go              # Implementação de engine.GameBot
 ```
 
 ---
 
-## 🛠️ PASSO A PASSO PARA A IA CRIAR UM NOVO BOT
+## 🚀 PASSO A PASSO PARA A IA CRIAR UM NOVO BOT EM MINUTOS
 
-Sempre que o **dj** pedir para criar um bot para um jogo novo, siga esta esteira de engenharia rigorosa:
+Sempre que o usuário pedir para criar um bot para um jogo novo, a IA DEVE seguir este roteiro:
 
-### Passo 1: Reconhecimento do Jogo (Engenharia Reversa)
-1. **Inspecione a aba Network (DevTools) do jogo:**
-   - O jogo se comunica via **WebSocket (`ws://` ou `wss://`)** ou **HTTP Polling (`GET/POST`)**?
-   - Como é feito o Login? (Cookie de sessão, Bearer Token JWT ou envio de e-mail/senha em endpoint REST?)
-   - Há proteção Cloudflare / Turnstile? (Se houver ticket efêmero, use a estratégia CDP do `pkg/auth/cdp_ticket.go`).
-2. **Mapeie os Pacotes Principais:**
-   - Pacote de handshake/autenticação inicial (ex: `{ type: "auth", token: "..." }`).
-   - Pacote de dados do personagem (HP, Mana, Level, Ouro, Inventário).
-   - Pacote de ação de caça/combate/movimento (ex: `start_hunt`, `attack`, `travel`).
-   - Pacote de finalização de caça ou recompensas (`ended`, `loot`).
-3. **Auditoria Obrigatória de Stamina / Fadiga (CRÍTICO):**
-   - Inspecione se o jogo limita a caça por tempo, cansaço ou vigor:
-     - Chaves comuns: `stamina`, `stamina_hours`, `fatigue_milli`, `FatigueState`, `online_kpm`, `window_farm_ms`, `farm_available_ms`, `energy`, `vigor`.
-   - Verifique se a EXP/drop cai drasticamente após determinado tempo de caça contínua (ex: penalidade de 50% ou 0% de EXP). Caçar com fadiga alta desperdiça a VPS e aciona anti-cheat!
-4. **Mineração Exaustiva do Código JavaScript (Ler Tudo do Jogo):**
-   - Baixe ou inspecione o arquivo JS principal do client (`main.js`, `bundle.js`, `app.js`).
-   - Procure por rotas de API, comandos de WebSocket, dicionários de monstros, tabelas de missões, bosses e mecânicas secundárias.
-   - O bot NUNCA deve ser desenvolvido no escuro ou por suposição. Toda automação deve espelhar exatamente as funções encontradas no client JS oficial.
+### Passo 1: Executar o Scaffolder do Template
+Não crie arquivos manualmente do zero. Use o comando nativo:
+```bash
+go run ./cmd/scaffold -game "Nome do Jogo" -protocol "websocket" -pkg "nomedojogo"
+```
+Isso gera instantaneamente em `pkg/<nomedojogo>/`:
+- `types.go`: Configurações de conta e modelo de pacotes.
+- `catalog.go`: Catálogo com `//go:embed data/areas.json`.
+- `data/areas.json`: Arquivo inicial de áreas de caça.
+- `api.go`: Cliente de comunicação com Circuit Breaker e Multi-IP injetados.
+- `bot.go`: Estrutura completa de `engine.GameBot` com todos os 13 subsistemas pré-conectados.
+- `bot_test.go`: Teste unitário compilável e executável.
 
-### Passo 2: Implementar a Pasta `pkg/game/`
-Mantenha `pkg/engine/`, `pkg/network/` e `pkg/server/` intactos. Concentre **100% do código específico** dentro de `pkg/game/`:
+### Passo 2: Reconhecimento e Engenharia Reversa (DevTools)
+1. **Network (WS vs REST):**
+   - Inspecione se os pacotes trafegam por WebSocket (`wss://`) ou REST Polling (`GET/PUT`).
+   - Se for binário (frames ilegíveis na aba WS), use `pkg/protocol.NewProtoReader` para decodificar varints e tags.
+2. **Autenticação:**
+   - Como o jogo autentica? Header `Authorization: Bearer <token>`, cookie de sessão ou pacote de login `{t: "login"}`?
+3. **Auditoria de Fadiga / Stamina (CRÍTICO):**
+   - O jogo tem limitador de caça? Configure `engine.NewStaminaController(cfg)` no bot:
+     - `StaminaTypeIncreasingFatigue`: Fadiga 0% a 100% (parar em $\ge 80\%$, descanso mínimo 5 min).
+     - `StaminaTypeDecreasing`: Stamina decrescente (parar ao atingir limite crítico, ex: $\le 14\text{h}$).
+4. **Extração dos Dados do Jogo (Mineração JS):**
+   - Baixe o bundle client-side (`main.js`, `bundle.js`, etc.) e extraia todas as áreas, monstros, fraquezas e itens para `pkg/<jogo>/data/areas.json` e `pkg/<jogo>/data/items.json`.
 
-1. **`pkg/game/types.go`:**
-   - Modele as structs Go com as tags `json:"..."` correspondentes aos pacotes reais interceptados.
-   - Ajuste `AccountConfig` e `GameSettings` com as opções do jogo (ex: `HuntTarget`, `AutoHeal`, `Lure`).
-2. **`pkg/game/catalog.go` (Se houver mapas/monstros):**
-   - Extraia o JSON de catálogo do client do jogo e embuta com `//go:embed catalog.json`.
-3. **`pkg/game/bot.go` (Implementar `engine.GameBot`):**
-   - **`Init(ctx)`:** Valida cookies/tokens ou realiza o login HTTP inicial.
-   - **`Run(ctx)`:** Conecta ao WebSocket via `network.NewSocketClient` ou inicia o loop de ações. Registre os handlers de mensagens recebidas.
-   - **`GetStatus()`:** Garanta leitura sob `sync.RWMutex` e preencha HP, Mana, Level, Gold, Kills e EXP/h.
-   - **`ExecuteAction(action, payload)`:** Trate ações manuais vindas do Web Dashboard (ex: forçar cura, mudar área, vender inventário).
+### Passo 3: Implementar os Handlers no `bot.go`
+Utilize os módulos do `pkg/subsystem/`:
+- **Rota Ótima:** Use `b.solver.FindOptimalRoute(crit)` para transicionar automaticamente para a melhor área conforme o personagem sobe de nível.
+- **Auto-Sell:** Ao atingir $>80\%$ de inventário, filtre com `b.inventory.GetSellableBatch(stash)` e venda apenas o lixo seguro no NPC.
+- **Preservação de Schema (`RawEstado`):** Sempre que salvar progresso, faça overlay com `b.overlay.Set(...)` ou `b.overlay.Merge(...)` e envie `b.overlay.Envelope("estado")` para prevenir erro de "save malformado".
+- **Dailies e Streak:** Use `b.dailies.CanClaimRewards()` no tick para resgatar bônus diários.
+- **Promoção e Bênçãos:** Use `b.promotion.CheckEligiblePromotion(...)` para comprar rank up de classe e manter Bless 1 a 5 sempre ativas.
 
-### Passo 3: Configurar e Testar Localmente
-1. Atualize `accounts.example.json` com campos amigáveis e documentados.
-2. Compile o código:
-   ```bash
-   go mod tidy
-   go build .
-   ```
-3. Garanta que o terminal exiba o monitor limpo a cada 4 segundos com memória RAM e goroutines.
-
-### Passo 4: Preparar Deploy para Linux / VPS
-1. O executável deve ser cross-compilado para Linux x86_64:
-   ```cmd
-   cmd /c "set GOOS=linux&& set GOARCH=amd64&& go build -ldflags=\"-s -w\" -o bot-app-linux ."
-   ```
-2. Configure a porta web única no `main.go` ou via variável de ambiente `PORT` (ex: 3001, 3002).
-3. Entregue o arquivo `.service` para o systemd.
-
----
-
-## 🧠 REGRAS DE OURO DA IA: GAMEPLAY & ARQUITETURA AUTÔNOMA
-
-Sempre que construir um novo bot usando este template, a IA deve projetar e codificar os **10 Pilares da Eficiência Máxima** aprendidos com o ecossistema real de bots do projeto:
-
-### 1. Algoritmo de Melhor Rota de EXP/h (Dynamic Route Solver)
-- **Mineração do Catálogo do Jogo:** A IA deve analisar o código JavaScript/bundle do jogo e extrair todos os monstros, mapas, fraquezas elementais, dano base e requisitos de nível para um catálogo estático ou dinâmico (`pkg/game/catalog.go`).
-- **Cálculo da Rota Ótima:**
-  - **Fator Nível:** $\text{Nível da Área} \le \text{Nível do Personagem}$ (evitar penalidades ou bloqueios).
-  - **Multiplicador Elemental / Fraqueza:** Se o jogo tiver sistema de fraquezas elementais ou tipos (ex: 4.0x no Poke Idle World), o algoritmo deve priorizar alvos onde o dano do bot seja maximizado para matar monstros em 1 ou 2 turnos (aumentando *kills por minuto*).
-  - **Risco Defensivo:** Evitar monstros que causem dano super efetivo ou possam nocautear o jogador, eliminando o tempo morto de morte/revive.
-  - **Reavaliação Contínua:** Ao subir de nível (Level Up) ou trocar de equipamento, o bot deve recalcular instantaneamente e transitar para a nova melhor rota.
-
-### 2. Auto-Sell Inteligente (Gestão de Inventário)
-- Monitorar a capacidade da mochila/inventário.
-- Manter uma lista de itens protegidos (itens equipados, itens de tier alto, consumíveis raros).
-- Vender automaticamente o lixo/loot acumulado assim que o inventário atingir o limite ou a cada intervalo programado, convertendo em ouro sem travar a caça.
-
-### 3. Auto-Equip e Auto-Upgrade
-- Sempre que dropar um equipamento superior ao atual (maior ataque, maior defesa, melhor tier), o bot deve equipar automaticamente.
-- Se o jogo tiver sistema de pontos de atributos (força, agilidade, talentos), distribuir automaticamente conforme a vocação/classe configurada.
-
-### 4. Extração Contínua de Informações (Engenharia Reversa Ativa)
-- **A IA deve "ler o jogo":** Inspecionar pacotes de rede, analisar o código-fonte client-side (JS/Wasm) e salvar o maior número de tabelas de dados possíveis (`hunts.json`, `items.json`, `monsters.json`).
-- Toda informação descoberta deve ser persistida para enriquecer o algoritmo e tornar o bot 100% autônomo sem necessidade de intervenção humana.
-
-### 5. Isolamento Multi-IP para Múltiplas Contas (Anti-Ban)
-- Quando o usuário configurar mais de uma conta no mesmo jogo, a IA deve verificar se o jogo bloqueia múltiplos logins no mesmo endereço IP.
-- **Implementação:** Suportar o campo `"bindIP": "10.0.0.X"` no `accounts.json`.
-- O cliente HTTP e o `websocket.Dialer` devem fazer bind no IP local configurado usando `net.Dialer{LocalAddr: &net.TCPAddr{IP: net.ParseIP(bindIP)}}` (como usado com sucesso no Pokemon Sigma e Baiak Idle).
-
-### 6. Suporte a Protocolos Binários (Protobuf / Colyseus / MessagePack)
-- Nem todo jogo se comunica com JSON em texto simples. Se a inspeção da aba Network revelar pacotes binários:
-  - **Protobuf 3:** Usar `google.golang.org/protobuf/encoding/protowire` para ler tags e decodificar campos binários de alta velocidade sem precisar compilar arquivos `.proto` pesados (como no Leveling Idle 2D).
-  - **Colyseus / State Sync:** Tratar frames binários (`websocket.BinaryMessage`) lendo schema offsets ou action bytes iniciais.
-
-### 7. Bônus Externos & Lurker Integrado (Twitch & Kick Drops)
-- Se o jogo oferecer bônus de EXP/Ouro (+15% a +25%) por assistir streamers ou canais parceiros (como no PokeIdle.io):
-  - A IA deve implementar um módulo concorrente em Goroutine que autentica na API da plataforma de streaming (Twitch/Kick) e mantém a presença ativa em background, garantindo o bônus máximo 24/7 sem abrir navegadores pesados.
-
-### 8. Gestão Inteligente de Stamina / Vigor & Modos de Descanso (Fatigue & Vigor Protocol)
-Antes de colocar o bot para caçar indefinidamente, a IA DEVE auditar e implementar os **3 Mandamentos da Gestão de Stamina**:
-
-1. **Diagnóstico do Tipo de Limitador:**
-   - **Stamina Decrescente (ex: Tibidle, Huntera, Baiak):** O personagem começa com 42h e vai gastando conforme caça.
-   - **Fadiga Crescente (ex: Leveling Idle, Protobuf `FatigueState`):** O contador de fadiga sobe de 0 a 1000 milli (`fatigue_milli` 0% a 100%), reduzindo o KPM (`online_kpm`) e esgotando o farm disponível (`farm_available_ms`).
-   - **Energia / Vigor Fixo:** Pontos de ação diários que se esgotam por combate.
-
-2. **Limiar de Operação Segura (Até quando o bot deve ir):**
-   - **Fadiga Crescente:** Entrar em modo descanso ao atingir $\ge 80\%$ de fadiga (`fatigue_milli >= 800`) OU quando restar menos de 2 minutos de farm disponível (`farm_available_ms < 120000`).
-   - **Stamina Decrescente:** Interromper a caçada ao atingir a stamina laranja crítica ($\le 14\text{h}$), evitando queimar tempo em zonas onde o ganho de EXP despenca para a metade ou zera.
-   - **Histerese Anti-Thrashing:** NUNCA alternar entre caçar e descansar a cada minuto. O bot só deve retomar a caçada após atingir nível seguro ($< 30\%$ de fadiga ou $> 10$ minutos de farm disponível) E cumprir um **tempo mínimo de descanso de 5 a 15 minutos**.
-
-3. **Mecanismos de Recuperação de Stamina / Fadiga:**
-   - **LeaveHunt & Safe Zone:** Enviar pacote de saída da caçada (`LeaveHunt` / desmarcar `AutoHunt`) e recuar para a Cidade, Templo, Fonte ou Pátio seguro com status `"resting"`.
-   - **Treino Ativo (Dummies):** Em jogos com Target Dummies (ex: Lux Idle, Tibidle), treinar habilidades enquanto a stamina/fadiga regenera, garantindo evolução ininterrupta.
-   - **Compra Automática de Refil com Ouro:** Se o jogo oferecer refil ou poções de stamina por ouro e o farm acumulado cobrir os custos com lucro (`staminaRefillCost`), efetuar a recarga automaticamente.
-   - **Telemetria Mandatória (`status.Extra`):** Reportar `fatiguePercent`, `farmAvailableMin`, `onlineKpm`, `staminaHours` e `isResting` no endpoint `/api/status` para monitoramento no Dashboard Central.
-
-### 9. Cooperação em Grupo (Party & Sinergia de Classes)
-- Se o jogo tiver mecânicas de grupo/party (como o Leveling Idle 2D):
-  - A IA deve implementar lógica de líder e membros: a Conta 1 cria a sala/party e as outras contas entram na mesma sessão.
-  - Sincronizar papéis (ex: Tanker puxa os monstros, Dps causa dano à distância e Healer cura o time), garantindo o bônus de EXP compartilhada.
-
-### 10. Contrato de Telemetria com o VPS Command Center
-Todo bot criado deve expor um endpoint HTTP leve em sua porta designada (`GET /api/status`) retornando JSON padronizado para integração nativa com o **Bot Hub**, o **Watchdog** e os **Alertas do Telegram**:
-```json
-{
-  "online": true,
-  "uptime": "14h20m",
-  "ramAllocMB": 3.2,
-  "goroutines": 12,
-  "accounts": [
-    {
-      "id": "acc1",
-      "name": "NickDoChar",
-      "level": 150,
-      "gold": 87000000,
-      "kills": 4200,
-      "currentArea": "Glooth Bandit",
-      "expPerHour": 1450000
-    }
-  ]
-}
+### Passo 4: Testar e Validar
+Execute o suite de testes:
+```bash
+go test -v ./pkg/<nomedojogo>/...
+go build .
 ```
 
-### 12. Padrão de Validação Estrita de Schema, Anti-Tampering e WebSocket Híbrido (Lições do LoL Idle)
-
-Jogos com sistemas de save avançados em nuvem e multiplayer híbrido (como o LoL Idle / Runeterra) possuem defesas sofisticadas contra bots que quebram implementações ingênuas. Sempre que enfrentar um jogo com essas características, siga estes padrões obrigatórios:
-
-#### A. O Padrão Dynamic Overlay (`RawEstado map[string]any`) — Prevenção de "Save Malformado"
-* **O Problema:** A maioria dos bots em Go define uma struct tipada com 10 a 15 campos (`Level`, `Gold`, `Hp`, etc.). No entanto, servidores modernos validam **dezenas de chaves obrigatórias** no schema do JSON (ex: `conquistas`, `skins`, `skin`, `gemas`, `rotina`, `auto`, `autoHab`, `espolios`, `montaria`, `itens`, `mochila`, etc.). Quando a struct Go serializa o JSON no `PUT /api/save`, ela omite os campos desconhecidos. O servidor detecta o schema incompleto e rejeita o progresso com erro silencioso de `"save malformado"`.
-* **A Solução:** Nunca envie um JSON derivado apenas de uma struct estática.
-  1. No `GET /api/eu`, armazene o JSON bruto do estado em um `RawEstado map[string]any`.
-  2. Mantenha os campos de combate tipados para lógica de jogo interna (`Level`, `Exp`, `Gold`).
-  3. No momento de salvar (`salvarSave`), faça o **overlay** apenas das propriedades alteradas sobre o `RawEstado` original e envie `{ "estado": raw }`. Isso garante preservação de 100% dos campos que o servidor espera, independentemente de atualizações futuras.
-
-#### B. Isolamento de Instâncias e Headers de Origem (`X-Instancia` e `outraAba`)
-* **O Problema:** Para impedir que duas abas ou dois aparelhos salvem ao mesmo tempo gerando conflitos de concorrência, o servidor gera ou exige um identificador único de instância da página (`X-Instancia`).
-* **A Regra:** Gere uma string aleatória única na inicialização da conta (`X-Instancia: Math.random() + Date.now()`) e envie esse mesmo header em **todas** as requisições (`GET /api/eu`, `PUT /api/save`, etc.). Mudar de instância entre um GET e um PUT fará o servidor responder com `outraAba: true`, desativando o salvamento.
-* **Headers de Fingerprint:** Requisições de save via HTTP REST em jogos web frequentemente exigem cabeçalhos de navegador autênticos: `Origin: https://dominio.com` e `Referer: https://dominio.com/jogar`. Omiti-los pode disparar recusas silenciosas ou bloqueios WAF.
-
-#### C. Controle Otimista de Concorrência (`rev` Tracking)
-* O servidor mantém uma chave de revisão atômica no banco de dados (`rev`).
-* Toda resposta de `GET /api/eu` ou de `PUT /api/save` bem-sucedido retorna a nova `rev`.
-* **Regra:** O bot deve atualizar o campo `rev` imediatamente na memória local. Enviar um save com `rev` antiga resulta em `409 Conflict: Progresso desatualizado`.
-
-#### D. Invariantes Matemáticas e Orçamento de Atributos (Anti-Tampering)
-Servidores com validação heurística checam a coerência lógica e matemática do save:
-1. **Orçamento Rígido de Atributos:** Os pontos de atributo distribuídos somados aos pontos livres devem respeitar rigorosamente a fórmula matemática:  
-   $$\sum \text{atrib} + \text{pontosAtrib} \le \text{PONTOS\_POR\_NIVEL} \times (\text{nível} - 1)$$  
-   Se você injetar pontos ou se a simulação acumular além desse teto, o servidor rejeita com `"pontos de atributo demais"`.
-2. **Requisitos de Nível em Habilidades:** As habilidades devem respeitar os caps da classe (ex: Ultimate *R* desbloqueada apenas nos níveis 6, 11, 16... e habilidades comuns limitadas a `(nível + 1) / 2`).
-3. **Monotonicidade Estrita (Contadores que Não Voltam para Trás):**
-   * $\Delta(\text{totais.abates}) \ge 0$
-   * $\Delta(\text{totais.ouro}) \ge 0$
-   * $\Delta(\text{tempoJogo}) \ge 0$
-   * $\Delta(\text{relogio}) \ge 0$  
-   Se qualquer um desses valores for inferior ao registrado no banco, o servidor aborta com `"contadores voltaram para trás"` ou `"relógio do jogo inválido"`.
-4. **Coerência Econômica:** O ouro possuído nunca pode exceder o total histórico ganho somado ao nível (`totais.ouro - gasto <= ouro`), impedindo injeções mágicas de moedas (`"ouro demais"`).
-
-#### E. Arquitetura Híbrida: REST para Saves + WebSocket para Presença e Party
-Em jogos onde o mundo aberto possui modo cooperativo (party/grupo):
-* **Separação de Camadas:** A persistência definitiva ocorre via REST (`PUT /api/save`), enquanto a presença em tempo real, visualização de aliados e buffs de grupo ocorrem no WebSocket.
-* **Pré-requisito de Localização:** Para que convites de grupo (`{t: "grupo", acao: "convidar"}`) sejam aceitos, ambos os personagens devem estar fisicamente no mapa multiplayer correspondente (`local: "arena"` / Runeterra) e transmitindo frames de posição (`{t: "pos"}`) a ~10 Hz. Convites enviados para personagens no modo offline/Rift retornam `"{nome} não pode entrar no grupo agora"`.
-* **Distribuição de EXP em Grupo:** Quando em grupo, cada monstro abatido deve transmitir o frame de abate (`{t: "abateGrupo", id: monstro.id}`) via WebSocket para que o servidor oficial calcule e credite a parcela de EXP compartilhada aos membros próximos (+45% de bônus).
-
-#### F. Regra de Concorrência de Conta Única
-* O servidor derruba sessões com `401 Unauthorized` se houver múltiplas conexões simultâneas na mesma conta.
-* Para formar uma party de 4 jogadores, utilize **4 contas distintas cadastradas**, preferencialmente isoladas por IPs privados/secundários da VPS (`bindIP: 10.0.0.X`) para máxima discrição.
-
-#### G. Padrão Circuit Breaker de Anti-Cheat (Lição Crítica de Prevenção de Ban)
-* **O Gatilho da Suspensão:** Servidores com anti-cheat server-side rastreiam a taxa de erros heurísticos (ex: `"experiência rápida demais para este personagem"`). Se um bot continuar caçando e insistir em múltiplos `PUT /api/save` enquanto o servidor estiver recusando o progresso, o sistema automatizado de segurança detecta a discrepância acumulada e aplica suspensão temporária de 7 dias com o motivo `"uso de programas de terceiros"`.
-* **A Regra do Disjuntor (Circuit Breaker):**
-  1. Ao receber qualquer resposta com `recusado: true` ou erro de taxa/limite, o bot deve **desarmar o combate imediatamente** (`AutoHunt = false`).
-  2. Forçar recuo para zona segura/Fonte (`local: "fonte"`).
-  3. Resfriamento obrigatório: **pausar novos saves por 15 a 30 minutos** até o relógio real do servidor avançar e absorver a margem temporal.
-  4. Recarregar o estado canônico exclusivamente via `GET /api/eu`.
-* **Cálculo da Taxa Coletiva em Party (Collective Throttling):**
-  Em grupos onde cada abate compartilha EXP (+45% de bônus via frames de WebSocket), a soma das mortes de todos os integrantes canaliza XP em massa para cada membro. A taxa individual deve ser rigorosamente balanceada para que a soma nunca ultrapasse a produtividade de um jogador solo:
-  $$\text{KillRate}_{\text{individual}} \le \frac{\text{KillRate}_{\text{solo\_seguro}}}{N_{\text{membros}} \times (1 + \text{BônusGrupo})}$$
-  Exemplo: se o teto humano solo for 40 monstros/minuto, em um grupo de 4 com bônus de 45%, cada bot deve matar no máximo $40 / (4 \times 1.45) \approx 7\text{ monstros/minuto}$. Taxas superiores acumulam XP mais rápido do que o relógio físico permite salvar.
-
 ---
 
-### 13. O Bot Super Completo: Automação Total de Todos os Subsistemas do Jogo (Pilar 13)
+## 🧠 REGRAS DE OURO DE ENGENHARIA EM GO
 
-Um bot de alta performance NUNCA é apenas um loop de combate ("bater e esperar"). Para ser considerado completo pela engenharia do projeto, a IA DEVE conferir e implementar todos os seguintes subsistemas:
-
-1. **Gestão de Presas (Preys / Bounties):**
-   - Rastrear slots de presas ativas.
-   - Selecionar automaticamente monstros da área de caça com bônus de EXP (+40%) ou Dano (+25%).
-   - Usar rerolls gratuitos diários ou cartas de presa acumuladas.
-2. **Coleta de Recompensas Diárias (Daily Rewards / Login Streak):**
-   - Resgatar baús diários, recompensas por dias consecutivos de login e bônus de passe no instante em que o bot conecta ou no reset diário.
-3. **Missões e Tarefas (Quests / Tasks / Battle Pass):**
-   - Consultar tarefas ativas (ex: matar 200 Cyclops, coletar 50 itens).
-   - Entregar tarefas completas automaticamente para resgatar EXP e tokens de quest.
-4. **Promoção de Vocação e Ascensão (Class Promotion / Rank Up):**
-   - Checar se o personagem atingiu o nível necessário (ex: Nível 20 para Elite Knight, Master Sorcerer, Elder Druid, Royal Paladin).
-   - Se possuir o ouro ou requisito, executar a compra/promoção imediatamente para obter os multiplicadores de dano e regeneração.
-5. **Proteção contra Morte (Bênçãos / Blessings):**
-   - Comprar bênçãos ativas (Bless 1 a 5) para reduzir penalidade de morte a zero.
-6. **Chefes Mundiais e Dungeons (World Bosses & Raids):**
-   - Ingressar em chefes diários ou eventos temporários quando o servidor anunciar ou nos horários programados.
-7. **Forja, Gemas e Aprimoramento de Equipamentos:**
-   - Equipar gemas correspondentes ao tipo de dano da vocação.
-   - Refinar ou aprimorar armas e armaduras principais quando houver materiais disponíveis.
-8. **Target Dummies (Treino Ativo e Regeneração de Stamina):**
-   - Durante períodos de fadiga/descanso ou quando não houver recursos para caçar, transitar para treino nos dummies para subir skills de ataque/defesa.
-9. **Poções, Elixires e Consumíveis de EXP:**
-   - Monitorar estoque de poções (HP/Mana) e comprar lotes automaticamente na loja antes de zerar.
-   - Utilizar elixires de bônus de EXP (+20% ou +50%) quando disponíveis no inventário durante a caçada.
-10. **Auto-Sell e Gestão de Mochila (Inventory Flow):**
-    - Vender itens comuns automaticamente nos NPCs mercadores.
-    - Guardar itens lendários/raros no baú/depot.
-    - Nunca permitir que a caça trave por falta de slots na mochila.
-
----
-
-## ⚠️ ARMADILHAS COMUNS QUE A IA DEVE EVITAR
-- ❌ **NÃO crie dependências de CGO:** Mantenha `CGO_ENABLED=0` para que o binário rode em qualquer distro Linux sem exigir bibliotecas glibc externas.
-- ❌ **NÃO faça escrita concorrente no WebSocket:** Sempre use o método `s.SendJSON()` ou `s.SendText()` do `pkg/network/socket.go` porque ele já protege contra concorrência com mutex (`writeMu`).
-- ❌ **NÃO deixe loops sem select em `ctx.Done()`:** Todo loop `for` com ticker deve escutar `case <-ctx.Done(): return` para permitir encerramento limpo via SIGTERM.
-
-
+1. **Contexto Sempre:** Todo loop com ticker DEVE verificar `case <-ctx.Done(): return nil` para permitir encerramento limpo via SIGTERM.
+2. **Escrita Concorrente em WebSocket:** NUNCA chame métodos de escrita no WebSocket sem mutex. O cliente `pkg/network.SocketClient` já gerencia isso nativamente com `writeMu`.
+3. **Multi-IP (VPS Anti-Ban):** Ao rodar mais de uma conta no mesmo jogo, configure `"bindIP": "10.0.0.X"` no `accounts.json`. O `pkg/network` faz o bind automaticamente no socket do sistema operacional.
+4. **Zero CGO:** Mantenha `CGO_ENABLED=0` para que o binário compile de forma estática e rode em qualquer VPS Linux sem depender de glibc externa.
+5. **Memória Abaixo de 15 MB:** Evite alocações excessivas dentro de loops de combate. Reutilize buffers e evite deserializar structs gigantes quando puder ler campos pontuais.

@@ -1,11 +1,13 @@
 package server
 
 import (
+	"context"
 	_ "embed"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"runtime"
+	"sync"
 	"time"
 
 	"bot-template-go/pkg/engine"
@@ -15,9 +17,11 @@ import (
 var indexHTML []byte
 
 type Server struct {
-	port    int
-	manager *engine.BotManager
-	startAt time.Time
+	port       int
+	manager    *engine.BotManager
+	startAt    time.Time
+	httpServer *http.Server
+	mu         sync.Mutex
 }
 
 func NewServer(port int, manager *engine.BotManager) *Server {
@@ -36,7 +40,30 @@ func (s *Server) Start() error {
 	mux.HandleFunc("/api/ticket", s.handleAPITicket)
 
 	addr := fmt.Sprintf(":%d", s.port)
-	return http.ListenAndServe(addr, mux)
+	srv := &http.Server{
+		Addr:              addr,
+		Handler:           mux,
+		ReadHeaderTimeout: 5 * time.Second,
+		IdleTimeout:       60 * time.Second,
+	}
+
+	s.mu.Lock()
+	s.httpServer = srv
+	s.mu.Unlock()
+
+	return srv.ListenAndServe()
+}
+
+// Stop desliga o servidor HTTP graciosamente
+func (s *Server) Stop(ctx context.Context) error {
+	s.mu.Lock()
+	srv := s.httpServer
+	s.mu.Unlock()
+
+	if srv != nil {
+		return srv.Shutdown(ctx)
+	}
+	return nil
 }
 
 func (s *Server) handleDashboard(w http.ResponseWriter, r *http.Request) {
@@ -49,6 +76,7 @@ func (s *Server) handleAPIStatus(w http.ResponseWriter, r *http.Request) {
 	runtime.ReadMemStats(&m)
 
 	data := map[string]any{
+		"online":     true,
 		"uptime":     time.Since(s.startAt).Round(time.Second).String(),
 		"goroutines": runtime.NumGoroutine(),
 		"ramAllocMB": float64(m.Alloc) / 1024.0 / 1024.0,

@@ -166,21 +166,16 @@ func TestIsAntiCheatRejection(t *testing.T) {
 }
 
 func TestCalculatePartyMaxKillRate(t *testing.T) {
-	// Solo: deve retornar a taxa solo original
 	soloRate := CalculatePartyMaxKillRate(40.0, 1, 45.0)
 	if soloRate != 40.0 {
 		t.Fatalf("esperava 40.0 para party de 1, obteve %f", soloRate)
 	}
 
-	// 4 players com +45% de bonus
-	// Total factor = 4 * 1.45 = 5.8
-	// Rate individual = 40.0 / 5.8 ~= 6.8965
 	partyRate := CalculatePartyMaxKillRate(40.0, 4, 45.0)
 	if partyRate < 6.89 || partyRate > 6.90 {
 		t.Fatalf("esperava rate por volta de 6.896, obteve %f", partyRate)
 	}
 
-	// Verifica se a taxa combinada não estoura o solo seguro
 	combinedExpMultiplier := partyRate * 4.0 * 1.45
 	if combinedExpMultiplier > 40.01 || combinedExpMultiplier < 39.99 {
 		t.Fatalf("invariante violada: taxa combinada deveria ser exatamente igual a solo (40.0), obteve %f", combinedExpMultiplier)
