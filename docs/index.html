@@ -180,7 +180,7 @@
       <div class="vps-card">
         <div class="vps-label">Uptime & Conexão</div>
         <div class="vps-val" style="color: var(--gold); font-size: 1.15rem;">OCI Ashburn</div>
-        <div class="vps-sub" id="lastUpdatedSub">há 7m32s</div>
+        <div class="vps-sub" id="lastUpdatedSub">há 8m27s</div>
       </div>
     </div>
 
@@ -990,7 +990,7 @@
                 
                 <div class="stat-row">
                   <span style="color: #facc15; font-weight: 800;">⭐ 1.1k pontos</span>
-                  <span style="color: #38bdf8; font-weight: 700;">🔴 1 canais ao vivo</span>
+                  <span style="color: #38bdf8; font-weight: 700;">🔴 1 canal ao vivo</span>
                 </div>
                 
               </div>
@@ -1346,7 +1346,7 @@
                 if (a.currentArea) {
                   s += '<div class="stat-row" style="padding: 4px 8px; border-radius: 6px; margin-bottom: 4px; background: rgba(255,255,255,0.05); font-weight: 700;">📡 ' + a.currentArea + '</div>';
                 }
-                s += '<div class="stat-row"><span style="color: #facc15; font-weight: 800;">⭐ ' + (a.gold || 0).toLocaleString() + ' pontos</span><span style="color: #38bdf8; font-weight: 700;">🔴 ' + (a.kills || 0) + ' canais ao vivo</span></div>';
+                s += '<div class="stat-row"><span style="color: #facc15; font-weight: 800;">⭐ ' + (a.gold || 0).toLocaleString() + ' pontos</span><span style="color: #38bdf8; font-weight: 700;">🔴 ' + (a.kills || 0) + ' ' + ((a.kills === 1) ? 'canal ao vivo' : 'canais ao vivo') + '</span></div>';
               } else {
                 s += '<div class="acc-item-header"><span>' + (a.name || 'Conta') + ' (Nv. ' + (a.level || 1) + ')</span><span>' + (a.vocation || '') + '</span></div>';
                 if (a.currentArea) {
