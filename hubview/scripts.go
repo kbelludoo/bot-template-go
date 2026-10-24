@@ -42,22 +42,22 @@ const hubScripts = `
       return fallback || '24/7 Ativo';
     }
 
-    // Catálogo de GIFs animados temáticos dos personagens por jogo
+    // Catálogo de GIFs animados temáticos locais dos personagens por jogo
     var gameCelebrationGifs = {
-      'pokelegacy': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif',
-      'pokeidle': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/6.gif',
-      'pokeidleworld': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/9.gif',
-      'pokepixel': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/94.gif',
-      'poketrue': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/150.gif',
-      'huntera': 'https://media.tenor.com/C12p5U_e7rEAAAAi/pixel-knight.gif',
-      'tibidle': 'https://media.tenor.com/C12p5U_e7rEAAAAi/pixel-knight.gif',
-      'baiak': 'https://media.tenor.com/C12p5U_e7rEAAAAi/pixel-knight.gif',
-      'luxidle': 'https://media.tenor.com/N6E3y9Ew_sEAAAAi/poro-lol.gif',
-      'lolidle': 'https://media.tenor.com/N6E3y9Ew_sEAAAAi/poro-lol.gif',
-      'leveling': 'https://media.tenor.com/b9UaHjK9pSIAAAAi/chibi-anime.gif',
-      'sigma': 'https://media.tenor.com/b9UaHjK9pSIAAAAi/chibi-anime.gif',
-      'farmricochet': 'https://media.tenor.com/vHqJbK3qYQMAAAAi/pixel-chicken.gif',
-      'default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif'
+      'pokelegacy': 'assets/gifs/pokelegacy.gif',
+      'pokeidle': 'assets/gifs/pokeidle.gif',
+      'pokeidleworld': 'assets/gifs/pokeidleworld.gif',
+      'pokepixel': 'assets/gifs/pokepixel.gif',
+      'poketrue': 'assets/gifs/poketrue.gif',
+      'huntera': 'assets/gifs/huntera.gif',
+      'tibidle': 'assets/gifs/tibidle.gif',
+      'baiak': 'assets/gifs/baiak.gif',
+      'luxidle': 'assets/gifs/luxidle.gif',
+      'lolidle': 'assets/gifs/lolidle.gif',
+      'leveling': 'assets/gifs/leveling.gif',
+      'sigma': 'assets/gifs/sigma.gif',
+      'farmricochet': 'assets/gifs/farmricochet.gif',
+      'default': 'assets/gifs/pokelegacy.gif'
     };
 
     // Fullscreen Level Up Spotlight System
@@ -111,30 +111,36 @@ const hubScripts = `
       setTimeout(function() { showNextLevelUp(); }, 400);
     }
 
-    var testGames = ['pokelegacy', 'huntera', 'luxidle', 'pokepixel', 'tibidle', 'farmricochet', 'leveling', 'poketrue'];
+    var testGames = ['pokelegacy', 'huntera', 'tibidle', 'luxidle', 'pokepixel', 'baiak', 'farmricochet', 'leveling', 'poketrue', 'pokeidle', 'pokeidleworld', 'lolidle', 'sigma'];
+    var testMeta = {
+      'pokelegacy': { c: 'Charizard Flamethrower', v: 'Fire Dragon', a: 'Cinnabar Volcano' },
+      'huntera': { c: 'Sir Lancelot', v: 'Paladin Knight', a: 'Dungeon of Valor' },
+      'tibidle': { c: 'Archmage Gandalf', v: 'Elder Sorcerer', a: 'Carlin Magic Academy' },
+      'luxidle': { c: 'Sylveon Fairy Spark', v: 'Fairy Sorceress', a: 'Demacia Woods' },
+      'pokepixel': { c: 'Gengar Shadow', v: 'Ghost Shadow', a: 'Lavender Ghost Tower' },
+      'baiak': { c: 'Demon Slayer', v: 'Elite Knight', a: 'Annihilator Pit' },
+      'farmricochet': { c: 'Torchic Farm', v: 'Golden Rooster', a: 'Bouncing Cornfields' },
+      'leveling': { c: 'Shadow Monarch Jin-Woo', v: 'Solo Hunter', a: 'Rank-S Red Gate' },
+      'poketrue': { c: 'Mewtwo Psystrike', v: 'Psychic Legend', a: 'Cerulean Unknown Cave' },
+      'pokeidle': { c: 'Pikachu Volt Tackle', v: 'Electric Mouse', a: 'Power Plant' },
+      'pokeidleworld': { c: 'Blastoise Hydro Pump', v: 'Water Fortress', a: 'Seafoam Islands' },
+      'lolidle': { c: 'Lucario Aura Sphere', v: 'Aura Champion', a: 'Summoner Rift' },
+      'sigma': { c: 'Deoxys Cyber Speed', v: 'Cosmic Alien', a: 'Space Observatory' }
+    };
     var testIdx = 0;
     function testLevelUp() {
       var k = testGames[testIdx % testGames.length];
+      var m = testMeta[k] || { c: 'Herói', v: 'Aventureiro', a: 'Mundo Aberto' };
       testIdx++;
-      var names = {
-        'pokelegacy': 'Pikachu (Nv. ' + (30 + testIdx) + ')',
-        'huntera': 'Warrior Huntera (Nv. ' + (100 + testIdx) + ')',
-        'luxidle': 'Lux Mage (Nv. ' + (20 + testIdx) + ')',
-        'pokepixel': 'Gengar (Nv. ' + (55 + testIdx) + ')',
-        'tibidle': 'Knight Tibidle (Nv. ' + (80 + testIdx) + ')',
-        'farmricochet': 'Farm Chicken (Nv. ' + (15 + testIdx) + ')',
-        'leveling': 'Jin-Woo Hunter (Nv. ' + (90 + testIdx) + ')',
-        'poketrue': 'Mewtwo (Nv. ' + (70 + testIdx) + ')'
-      };
       triggerLevelUpModal({
         botKey: k,
-        icon: k.startsWith('poke') ? '🐉' : (k === 'luxidle' ? '✨' : '⚔️'),
-        gameName: k.toUpperCase() + ' (Demonstração)',
-        charName: names[k] || 'Personagem #' + testIdx,
-        vocation: k.startsWith('poke') ? 'Pokémon' : (k === 'luxidle' ? 'Elementalista' : 'Elite Knight'),
-        area: 'Área Épica de Caça',
-        oldLevel: 99 + testIdx,
-        newLevel: 100 + testIdx,
+        icon: k.startsWith('poke') ? '🐉' : (k === 'luxidle' ? '✨' : (k === 'farmricochet' ? '🌾' : '⚔️')),
+        gameName: k.toUpperCase(),
+        charName: m.c + ' (Nv. ' + (80 + testIdx) + ')',
+        vocation: m.v,
+        area: m.a,
+        oldLevel: 79 + testIdx,
+        newLevel: 80 + testIdx,
         gif: gameCelebrationGifs[k]
       });
     }
