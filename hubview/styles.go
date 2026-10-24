@@ -259,7 +259,98 @@ const hubStyles = `
     }
     .stream-ticker-track:hover { animation-play-state: paused; }
 
+    /* Fullscreen Level Up Spotlight Modal (4s duration) */
+    .levelup-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: radial-gradient(circle at center, rgba(15, 23, 42, 0.94) 0%, rgba(5, 7, 14, 0.98) 100%);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      z-index: 99999;
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px; opacity: 0; pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+    .levelup-overlay.active {
+      opacity: 1; pointer-events: auto;
+    }
+    .levelup-modal {
+      background: rgba(15, 23, 42, 0.95);
+      border: 2px solid var(--gold); border-radius: 24px;
+      box-shadow: 0 0 60px rgba(245, 158, 11, 0.45), 0 25px 60px -15px rgba(0, 0, 0, 0.9);
+      max-width: 560px; width: 100%; padding: 36px 32px; text-align: center;
+      position: relative; overflow: hidden;
+      transform: scale(0.85); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .levelup-overlay.active .levelup-modal {
+      transform: scale(1);
+    }
+    .levelup-modal::before {
+      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, transparent 60%);
+      animation: rotateRays 14s linear infinite; pointer-events: none;
+    }
+    .levelup-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(234, 179, 8, 0.15));
+      border: 1px solid var(--gold); color: #fef08a;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 800;
+      padding: 6px 16px; border-radius: 999px; margin-bottom: 16px;
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.35); letter-spacing: 0.08em;
+    }
+    .levelup-title {
+      font-size: 2.2rem; font-weight: 900; letter-spacing: -0.02em; margin-bottom: 6px;
+      background: linear-gradient(135deg, #ffffff, #fef08a, #f59e0b);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 30px rgba(245, 158, 11, 0.5);
+    }
+    .levelup-game-name {
+      font-size: 1.15rem; font-weight: 700; color: #e2e8f0; margin-bottom: 20px;
+    }
+    .levelup-level-row {
+      display: flex; align-items: center; justify-content: center; gap: 16px; margin: 22px 0;
+    }
+    .levelup-level-box {
+      background: rgba(0, 0, 0, 0.55); border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px; padding: 12px 22px; font-family: 'JetBrains Mono', monospace;
+    }
+    .levelup-level-box.new-level {
+      border-color: var(--gold); background: rgba(245, 158, 11, 0.16);
+      box-shadow: 0 0 25px rgba(245, 158, 11, 0.4); transform: scale(1.08);
+    }
+    .levelup-level-lbl { font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 4px; }
+    .levelup-level-num { font-size: 1.7rem; font-weight: 800; color: #fff; }
+    .levelup-level-box.new-level .levelup-level-num { color: #fef08a; }
+    .levelup-arrow { font-size: 1.6rem; color: var(--gold); }
+    .levelup-info-box {
+      background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px; padding: 12px 18px; margin-bottom: 22px; font-size: 0.85rem;
+      display: flex; justify-content: space-around;
+    }
+    .levelup-timer-bar {
+      width: 100%; height: 5px; background: rgba(255, 255, 255, 0.1); border-radius: 999px; overflow: hidden;
+    }
+    .levelup-timer-fill {
+      height: 100%; background: linear-gradient(90deg, var(--gold), #00f0ff); width: 100%;
+    }
+    .levelup-close-btn {
+      position: absolute; top: 16px; right: 18px;
+      background: rgba(255, 255, 255, 0.08); border: none; color: var(--text-muted);
+      width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .levelup-close-btn:hover {
+      background: rgba(255, 255, 255, 0.2); color: #fff; transform: scale(1.1);
+    }
+
     /* Keyframes */
+    @keyframes shrinkTimer {
+      from { width: 100%; }
+      to { width: 0%; }
+    }
+    @keyframes rotateRays {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
     @keyframes radarPing {
       0% { transform: scale(0.8); opacity: 0.9; }
       75%, 100% { transform: scale(2.6); opacity: 0; }
