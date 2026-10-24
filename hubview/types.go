@@ -43,6 +43,28 @@ type BotData struct {
 	Status       BotStatusData `json:"status"`
 }
 
+// FlexibleString unmarshals both numbers and strings seamlessly
+type FlexibleString string
+
+func (fs *FlexibleString) UnmarshalJSON(b []byte) error {
+	var n float64
+	if err := json.Unmarshal(b, &n); err == nil {
+		*fs = FlexibleString(fmt.Sprintf("%d%%", int(n)))
+		return nil
+	}
+	var s string
+	if err := json.Unmarshal(b, &s); err == nil {
+		*fs = FlexibleString(s)
+		return nil
+	}
+	*fs = ""
+	return nil
+}
+
+func (fs FlexibleString) String() string {
+	return string(fs)
+}
+
 // KickStreamerEntry represents individual streamer channel monitored in Kick Miner
 type KickStreamerEntry struct {
 	Streamer  string `json:"streamer"`
@@ -67,6 +89,12 @@ type BaiakBotEntry struct {
 	Status    BaiakBotStatus `json:"status"`
 }
 
+// BaiakRatesInfo holds live exp and gold rates
+type BaiakRatesInfo struct {
+	GoldPerHour float64 `json:"goldPerHour"`
+	XpPerHour   float64 `json:"xpPerHour"`
+}
+
 // BaiakBotStatus represents inner state of a Baiak character
 type BaiakBotStatus struct {
 	CurrentArea string             `json:"currentArea"`
@@ -77,8 +105,10 @@ type BaiakBotStatus struct {
 	Status      string             `json:"status"`
 	Treino      bool               `json:"treino"`
 	Vocation    string             `json:"vocation"`
+	UptimeSec   int                `json:"uptimeSec"`
 	Hunt        BaiakHuntInfo      `json:"hunt"`
 	Telemetry   BaiakTelemetryInfo `json:"telemetry"`
+	Rates       BaiakRatesInfo     `json:"rates"`
 }
 
 // BaiakHuntInfo represents hunt target in Baiak
@@ -89,10 +119,10 @@ type BaiakHuntInfo struct {
 
 // BaiakTelemetryInfo represents telemetry metrics in Baiak
 type BaiakTelemetryInfo struct {
-	Gold    int64  `json:"gold"`
-	Kills   int    `json:"kills"`
-	Level   int    `json:"level"`
-	Stamina string `json:"stamina"`
+	Gold    int64          `json:"gold"`
+	Kills   int            `json:"kills"`
+	Level   int            `json:"level"`
+	Stamina FlexibleString `json:"stamina"`
 }
 
 // TwitchStatusEntry represents a miner account in Twitch Miner
@@ -141,7 +171,8 @@ type AccountData struct {
 	Status      string         `json:"status"`
 	DurationSec int            `json:"durationSec"`
 	ExpPerHour  float64        `json:"expPerHour"`
-	Stamina     string         `json:"stamina,omitempty"`
+	GoldPerHour float64        `json:"goldPerHour,omitempty"`
+	Stamina     FlexibleString `json:"stamina,omitempty"`
 	IsStream    bool           `json:"isStream,omitempty"`
 	Extra       map[string]any `json:"extra,omitempty"`
 }
@@ -219,7 +250,7 @@ func (s BotStatusData) GetUnifiedAccounts() []AccountData {
 			}
 		}
 
-		// Standard slice []AccountData
+		// Standard slice []AccountData (with FlexibleString for stamina like in Lux Idle)
 		var list []AccountData
 		if err := json.Unmarshal(s.Accounts, &list); err == nil && len(list) > 0 {
 			return list
@@ -291,6 +322,9 @@ func (s BotStatusData) GetUnifiedAccounts() []AccountData {
 				CurrentArea: area,
 				Status:      statusStr,
 				Stamina:     stamina,
+				DurationSec: b.Status.UptimeSec,
+				ExpPerHour:  b.Status.Rates.XpPerHour,
+				GoldPerHour: b.Status.Rates.GoldPerHour,
 			})
 		}
 		return res
@@ -343,6 +377,21 @@ func (s BotStatusData) GetUnifiedAccounts() []AccountData {
 			})
 		}
 		return res
+	}
+
+	// 4. Standby process fallback (e.g. lolidle or daemon awaiting match/session)
+	if s.Uptime != "" || s.RAMSysMB > 0 || s.Goroutines > 0 {
+		return []AccountData{
+			{
+				ID:          "standby-1",
+				Name:        "Sessão Conectada",
+				Level:       1,
+				Vocation:    "Operação Contínua",
+				CurrentArea: "Monitorando em Standby",
+				Status:      "Standby",
+				DurationSec: 0,
+			},
+		}
 	}
 
 	return nil

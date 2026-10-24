@@ -168,6 +168,23 @@ func BuildHTML(data HubData) (string, error) {
 		"css": func(s string) template.CSS {
 			return template.CSS(s)
 		},
+		"formatRate": func(n float64) string {
+			if n <= 0 {
+				return "Calculando..."
+			}
+			return "+" + formatNumber(int64(n)) + "/h"
+		},
+		"formatUptime": func(sec int, fallback string) string {
+			if sec > 0 {
+				h := sec / 3600
+				m := (sec % 3600) / 60
+				return fmt.Sprintf("%dh %02dm", h, m)
+			}
+			if fallback != "" {
+				return fallback
+			}
+			return "24/7 Ativo"
+		},
 	}).Parse(hubTemplate)
 	if err != nil {
 		return "", fmt.Errorf("falha ao analisar template do hub: %w", err)

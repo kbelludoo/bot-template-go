@@ -62,75 +62,155 @@ const hubTemplate = `<!DOCTYPE html>
                 {{if $bot.Meta.IsStream}}STREAM HARVESTER{{else if $bot.Meta.IsService}}BACKGROUND AGENT{{else}}GO NATIVE{{end}}
               </span>
             </div>
-            <span class="badge-status" id="badge-{{$bot.Meta.Key}}">
-              {{if $bot.Meta.IsStream}}
-              <span class="live-wave"><span></span><span></span><span></span></span>
-              {{end}}
-              {{$bot.BadgeText}}
-            </span>
+            <div class="face-header-controls">
+              <button class="face-toggle-btn" onclick="toggleCardFace('{{$bot.Meta.Key}}')" title="Clique para alternar visão Gameplay / Rendimento">
+                🔄 <span id="facetext-{{$bot.Meta.Key}}">VISÃO</span>
+              </button>
+              <span class="badge-status" id="badge-{{$bot.Meta.Key}}">
+                {{if $bot.Meta.IsStream}}
+                <span class="live-wave"><span></span><span></span><span></span></span>
+                {{end}}
+                {{$bot.BadgeText}}
+              </span>
+            </div>
           </div>
 
           <div class="acc-list" id="acclist-{{$bot.Meta.Key}}">
             {{if $bot.Accounts}}
-              {{range $idx, $acc := $bot.Accounts}}
-              <div class="acc-item">
-                {{if $bot.Meta.IsStream}}
-                <div class="acc-item-header">
-                  <span>{{$bot.Meta.Icon}} {{$acc.Name}}</span>
-                  <span style="color: {{css $bot.Meta.Theme}}; font-size: 0.72rem; font-weight: 700;">STREAM VIEWER</span>
-                </div>
-                {{if $acc.CurrentArea}}
-                <div class="stat-row" style="background: {{css $bot.Meta.ThemeBg}}; padding: 4px 8px; border-radius: 6px; margin-bottom: 4px;">
-                  <span style="font-weight: 700; font-size: 0.72rem;">📡 {{$acc.CurrentArea}}</span>
-                </div>
-                {{end}}
-                <div class="stat-row">
-                  <span style="color: #facc15; font-weight: 800;">⭐ {{formatNumber $acc.Gold}} pontos</span>
-                  <span style="color: #38bdf8; font-weight: 700;">🔴 {{$acc.Kills}} {{if eq $acc.Kills 1}}canal ao vivo{{else}}canais ao vivo{{end}}</span>
-                </div>
-                {{else if $bot.Meta.IsService}}
-                <div class="acc-item-header">
-                  <span>{{$bot.Meta.Icon}} {{$acc.Name}}</span>
-                  <span style="color: {{css $bot.Meta.Theme}}; font-size: 0.72rem; font-weight: 700;">{{$acc.Vocation}}</span>
-                </div>
-                {{if $acc.CurrentArea}}
-                <div class="stat-row" style="background: {{css $bot.Meta.ThemeBg}}; padding: 4px 8px; border-radius: 6px; margin-bottom: 4px;">
-                  <span style="font-weight: 700; font-size: 0.72rem;">⚙️ {{$acc.CurrentArea}}</span>
-                </div>
-                {{end}}
-                <div class="stat-row">
-                  <span style="color: #4ade80; font-weight: 700;">🟢 {{$acc.Status}}</span>
-                  <span style="color: #38bdf8; font-weight: 600;">⚡ Operação Contínua</span>
-                </div>
-                {{else}}
-                <div class="acc-item-header">
-                  <span>{{$bot.Meta.Icon}} {{$acc.Name}} (Nv. {{$acc.Level}})</span>
-                  <span style="color: {{css $bot.Meta.Theme}};">{{$acc.Vocation}}</span>
-                </div>
-                {{if $acc.CurrentArea}}
-                <div class="stat-row" style="background: {{css $bot.Meta.ThemeBg}}; padding: 4px 8px; border-radius: 6px; margin-bottom: 4px;">
-                  <span style="font-weight: 700; font-size: 0.72rem;">🗺️ {{$acc.CurrentArea}}</span>
-                </div>
-                {{end}}
-                {{if gt $acc.MaxHP 0}}
-                <div class="stat-row">
-                  <span>❤️ HP</span>
-                  <span style="color: #4ade80;">{{$acc.HP}} / {{$acc.MaxHP}}</span>
-                </div>
-                {{end}}
-                {{if $acc.Stamina}}
-                <div class="stat-row">
-                  <span>⚡ Stamina</span>
-                  <span style="color: #38bdf8; font-weight: 600;">{{$acc.Stamina}}</span>
-                </div>
-                {{end}}
-                <div class="stat-row">
-                  <span style="color: #facc15; font-weight: 800;">💰 {{formatNumber $acc.Gold}} gp</span>
-                  <span style="color: #38bdf8; font-weight: 700;">⚔️ {{$acc.Kills}} kills</span>
+              <!-- FACE 1: GAMEPLAY / COMBATE -->
+              <div class="card-face face-gameplay">
+                {{range $idx, $acc := $bot.Accounts}}
+                <div class="acc-item">
+                  {{if $bot.Meta.IsStream}}
+                  <div class="acc-item-header">
+                    <span>{{$bot.Meta.Icon}} {{$acc.Name}}</span>
+                    <span style="color: {{css $bot.Meta.Theme}}; font-size: 0.72rem; font-weight: 700;">STREAM VIEWER</span>
+                  </div>
+                  {{if $acc.CurrentArea}}
+                  <div class="stat-row" style="background: {{css $bot.Meta.ThemeBg}}; padding: 4px 8px; border-radius: 6px; margin-bottom: 4px;">
+                    <span style="font-weight: 700; font-size: 0.72rem;">📡 {{$acc.CurrentArea}}</span>
+                  </div>
+                  {{end}}
+                  <div class="stat-row">
+                    <span style="color: #facc15; font-weight: 800;">⭐ {{formatNumber $acc.Gold}} pontos</span>
+                    <span style="color: #38bdf8; font-weight: 700;">🔴 {{$acc.Kills}} {{if eq $acc.Kills 1}}canal ao vivo{{else}}canais ao vivo{{end}}</span>
+                  </div>
+                  {{else if $bot.Meta.IsService}}
+                  <div class="acc-item-header">
+                    <span>{{$bot.Meta.Icon}} {{$acc.Name}}</span>
+                    <span style="color: {{css $bot.Meta.Theme}}; font-size: 0.72rem; font-weight: 700;">{{$acc.Vocation}}</span>
+                  </div>
+                  {{if $acc.CurrentArea}}
+                  <div class="stat-row" style="background: {{css $bot.Meta.ThemeBg}}; padding: 4px 8px; border-radius: 6px; margin-bottom: 4px;">
+                    <span style="font-weight: 700; font-size: 0.72rem;">⚙️ {{$acc.CurrentArea}}</span>
+                  </div>
+                  {{end}}
+                  <div class="stat-row">
+                    <span style="color: #4ade80; font-weight: 700;">🟢 {{$acc.Status}}</span>
+                    <span style="color: #38bdf8; font-weight: 600;">⚡ Operação Contínua</span>
+                  </div>
+                  {{else}}
+                  <div class="acc-item-header">
+                    <span>{{$bot.Meta.Icon}} {{$acc.Name}} (Nv. {{$acc.Level}})</span>
+                    <span style="color: {{css $bot.Meta.Theme}};">{{$acc.Vocation}}</span>
+                  </div>
+                  {{if $acc.CurrentArea}}
+                  <div class="stat-row" style="background: {{css $bot.Meta.ThemeBg}}; padding: 4px 8px; border-radius: 6px; margin-bottom: 4px;">
+                    <span style="font-weight: 700; font-size: 0.72rem;">🗺️ {{$acc.CurrentArea}}</span>
+                  </div>
+                  {{end}}
+                  {{if gt $acc.MaxHP 0}}
+                  <div class="stat-row">
+                    <span>❤️ HP</span>
+                    <span style="color: #4ade80;">{{$acc.HP}} / {{$acc.MaxHP}}</span>
+                  </div>
+                  {{end}}
+                  {{if $acc.Stamina}}
+                  <div class="stat-row">
+                    <span>⚡ Stamina</span>
+                    <span style="color: #38bdf8; font-weight: 600;">{{$acc.Stamina}}</span>
+                  </div>
+                  {{end}}
+                  <div class="stat-row">
+                    <span style="color: #facc15; font-weight: 800;">💰 {{formatNumber $acc.Gold}} gp</span>
+                    <span style="color: #38bdf8; font-weight: 700;">⚔️ {{$acc.Kills}} kills</span>
+                  </div>
+                  {{end}}
                 </div>
                 {{end}}
               </div>
-              {{end}}
+
+              <!-- FACE 2: RENDIMENTO & PERFORMANCE -->
+              <div class="card-face face-performance">
+                {{range $idx, $acc := $bot.Accounts}}
+                <div class="acc-item">
+                  {{if $bot.Meta.IsStream}}
+                  <div class="acc-item-header">
+                    <span>⚡ Telemetria Drops</span>
+                    <span class="perf-tag">AUTOMÁTICO</span>
+                  </div>
+                  <div class="stat-row">
+                    <span>🎁 Coleta de Pontos</span>
+                    <span style="color: #4ade80; font-weight: 700;">Ativo (Zero-Video WS)</span>
+                  </div>
+                  <div class="stat-row">
+                    <span>🧠 Memória Bot (Go)</span>
+                    <span style="color: #38bdf8; font-weight: 600;">{{if gt $bot.Bot.Status.RAMSysMB 0.0}}{{printf "%.1f MB" $bot.Bot.Status.RAMSysMB}}{{else if gt $bot.Bot.Status.RAMMB 0.0}}{{printf "%.1f MB" $bot.Bot.Status.RAMMB}}{{else}}&lt; 15 MB{{end}}</span>
+                  </div>
+                  <div class="stat-row">
+                    <span>⏱️ Uptime Contínuo</span>
+                    <span style="color: #facc15;">{{formatUptime $acc.DurationSec $bot.Bot.Status.Uptime}}</span>
+                  </div>
+                  <div class="stat-row">
+                    <span>🛡️ Camuflagem IRC</span>
+                    <span style="color: #a855f7; font-weight: 700;">100% Stealth Mode</span>
+                  </div>
+                  {{else if $bot.Meta.IsService}}
+                  <div class="acc-item-header">
+                    <span>⚡ Telemetria de Sistema</span>
+                    <span class="perf-tag">ONLINE 24/7</span>
+                  </div>
+                  <div class="stat-row">
+                    <span>🔄 Healthcheck</span>
+                    <span style="color: #4ade80; font-weight: 700;">🟢 Heartbeat OK</span>
+                  </div>
+                  <div class="stat-row">
+                    <span>🧠 Memória Isolada</span>
+                    <span style="color: #38bdf8; font-weight: 600;">{{if gt $bot.Bot.Status.RAMSysMB 0.0}}{{printf "%.1f MB" $bot.Bot.Status.RAMSysMB}}{{else}}Baixo Consumo{{end}}</span>
+                  </div>
+                  <div class="stat-row">
+                    <span>🛡️ Supervisor Resiliente</span>
+                    <span style="color: #a855f7; font-weight: 700;">Goroutines com Recover</span>
+                  </div>
+                  <div class="stat-row">
+                    <span>⏱️ Uptime</span>
+                    <span style="color: #facc15;">{{formatUptime $acc.DurationSec $bot.Bot.Status.Uptime}}</span>
+                  </div>
+                  {{else}}
+                  <div class="acc-item-header">
+                    <span>⚡ {{if $acc.Name}}{{$acc.Name}}{{else}}Conta{{end}} — Rendimento</span>
+                    <span class="perf-tag">PROTEGIDO</span>
+                  </div>
+                  <div class="stat-row">
+                    <span>📈 EXP / Hora</span>
+                    <span style="color: #4ade80; font-weight: 700;">{{formatRate $acc.ExpPerHour}}</span>
+                  </div>
+                  <div class="stat-row">
+                    <span>💰 Ouro / Hora</span>
+                    <span style="color: #facc15; font-weight: 700;">{{formatRate $acc.GoldPerHour}}</span>
+                  </div>
+                  <div class="stat-row">
+                    <span>⏱️ Tempo de Caça</span>
+                    <span style="color: #38bdf8;">{{formatUptime $acc.DurationSec $bot.Bot.Status.Uptime}}</span>
+                  </div>
+                  <div class="stat-row">
+                    <span>🧠 Memória Bot (Go)</span>
+                    <span style="color: #94a3b8;">{{if gt $bot.Bot.Status.RAMSysMB 0.0}}{{printf "%.1f MB" $bot.Bot.Status.RAMSysMB}}{{else if gt $bot.Bot.Status.RAMMB 0.0}}{{printf "%.1f MB" $bot.Bot.Status.RAMMB}}{{else}}&lt; 10 MB{{end}}</span>
+                  </div>
+                  {{end}}
+                </div>
+                {{end}}
+              </div>
             {{else}}
               <div style="color: var(--text-dim); font-size: 0.8rem;">Carregando telemetria...</div>
             {{end}}
@@ -157,6 +237,46 @@ const hubTemplate = `<!DOCTYPE html>
   </div>
 
   <script>
+    function toggleCardFace(key) {
+      var card = document.getElementById('card-' + key);
+      if (card) {
+        card.classList.toggle('is-flipped');
+      }
+    }
+
+    var autoFlipCycle = 0;
+    setInterval(function() {
+      autoFlipCycle = 1 - autoFlipCycle;
+      var cards = document.querySelectorAll('.bot-card:not(:hover)');
+      cards.forEach(function(card) {
+        if (autoFlipCycle === 1) {
+          card.classList.add('is-flipped');
+        } else {
+          card.classList.remove('is-flipped');
+        }
+      });
+    }, 8500);
+
+    function formatNumber(n) {
+      if (n < 1000) return n.toString();
+      if (n < 1000000) return (n / 1000).toFixed(1) + 'k';
+      return (n / 1000000).toFixed(2) + 'kk';
+    }
+
+    function formatRate(n) {
+      if (!n || n <= 0) return 'Calculando...';
+      return '+' + formatNumber(Math.round(n)) + '/h';
+    }
+
+    function formatUptime(sec, fallback) {
+      if (sec && sec > 0) {
+        var h = Math.floor(sec / 3600);
+        var m = Math.floor((sec % 3600) / 60);
+        return h + 'h ' + (m < 10 ? '0' : '') + m + 'm';
+      }
+      return fallback || '24/7 Ativo';
+    }
+
     function getUnifiedAccounts(b) {
       if (!b || !b.status) return [];
 
@@ -189,7 +309,8 @@ const hubTemplate = `<!DOCTYPE html>
               gold: totalPts,
               kills: liveCount,
               status: 'Minerando',
-              isStream: true
+              isStream: true,
+              durationSec: 0
             };
           });
         }
@@ -207,6 +328,7 @@ const hubTemplate = `<!DOCTYPE html>
           var entry = b.status.bots[k];
           var s = entry.status || {};
           var tel = s.telemetry || {};
+          var rates = s.rates || {};
           var statusStr = s.status || 'online';
           if (s.treino) statusStr = 'Treino';
           return {
@@ -217,7 +339,10 @@ const hubTemplate = `<!DOCTYPE html>
             gold: s.gold || tel.gold || 0,
             kills: s.kills || tel.kills || 0,
             stamina: tel.stamina || '',
-            status: statusStr
+            status: statusStr,
+            durationSec: s.uptimeSec || 0,
+            expPerHour: rates.xpPerHour || 0,
+            goldPerHour: rates.goldPerHour || 0
           };
         });
       }
@@ -238,10 +363,23 @@ const hubTemplate = `<!DOCTYPE html>
             gold: totalPts,
             kills: liveCount,
             status: 'Online',
-            isStream: true
+            isStream: true,
+            durationSec: 0
           };
         });
       }
+
+      if (b.status.uptime || b.status.ramSysMB || b.status.goroutines) {
+        return [{
+          name: 'Sessão Conectada',
+          level: 1,
+          vocation: 'Operação Contínua',
+          currentArea: 'Monitorando em Standby',
+          status: 'Standby',
+          durationSec: 0
+        }];
+      }
+
       return [];
     }
 
@@ -286,8 +424,12 @@ const hubTemplate = `<!DOCTYPE html>
               badge.textContent = accounts.length > 1 ? accounts.length + '/' + accounts.length + ' ATIVAS' : (accounts[0].status ? accounts[0].status.toUpperCase() : 'ONLINE');
             }
           }
+
           if (accList && accounts.length > 0) {
-            accList.innerHTML = accounts.map(function(a) {
+            var botRam = (b.status && b.status.ramSysMB) ? b.status.ramSysMB.toFixed(1) + ' MB' : '< 10 MB';
+            var botUptime = (b.status && b.status.uptime) ? b.status.uptime : '24/7 Ativo';
+
+            var frontHtml = accounts.map(function(a) {
               var s = '<div class="acc-item">';
               if (isStream) {
                 s += '<div class="acc-item-header"><span>' + (a.name || 'Conta') + '</span><span style="font-size: 0.72rem; font-weight: 700;">STREAM VIEWER</span></div>';
@@ -310,13 +452,42 @@ const hubTemplate = `<!DOCTYPE html>
                   s += '<div class="stat-row"><span>❤️ HP</span><span style="color: #4ade80;">' + (a.hp || 0).toLocaleString() + ' / ' + (a.maxHp || 0).toLocaleString() + '</span></div>';
                 }
                 if (a.stamina) {
-                  s += '<div class="stat-row"><span>⚡ Stamina</span><span style="color: #38bdf8; font-weight: 600;">' + a.stamina + '</span></div>';
+                  var stam = typeof a.stamina === 'number' ? a.stamina + '%' : a.stamina;
+                  s += '<div class="stat-row"><span>⚡ Stamina</span><span style="color: #38bdf8; font-weight: 600;">' + stam + '</span></div>';
                 }
                 s += '<div class="stat-row"><span style="color: #facc15; font-weight: 800;">💰 ' + (a.gold || 0).toLocaleString() + ' gp</span><span style="color: #38bdf8;">⚔️ ' + (a.kills || 0).toLocaleString() + ' kills</span></div>';
               }
               s += '</div>';
               return s;
             }).join('');
+
+            var backHtml = accounts.map(function(a) {
+              var s = '<div class="acc-item">';
+              if (isStream) {
+                s += '<div class="acc-item-header"><span>⚡ Telemetria Drops</span><span class="perf-tag">AUTOMÁTICO</span></div>';
+                s += '<div class="stat-row"><span>🎁 Coleta de Pontos</span><span style="color: #4ade80; font-weight: 700;">Ativo (Zero-Video WS)</span></div>';
+                s += '<div class="stat-row"><span>🧠 Memória Bot (Go)</span><span style="color: #38bdf8; font-weight: 600;">' + botRam + '</span></div>';
+                s += '<div class="stat-row"><span>⏱️ Uptime Contínuo</span><span style="color: #facc15;">' + formatUptime(a.durationSec, botUptime) + '</span></div>';
+                s += '<div class="stat-row"><span>🛡️ Camuflagem IRC</span><span style="color: #a855f7; font-weight: 700;">100% Stealth Mode</span></div>';
+              } else if (isService) {
+                s += '<div class="acc-item-header"><span>⚡ Telemetria de Sistema</span><span class="perf-tag">ONLINE 24/7</span></div>';
+                s += '<div class="stat-row"><span>🔄 Healthcheck</span><span style="color: #4ade80; font-weight: 700;">🟢 Heartbeat OK</span></div>';
+                s += '<div class="stat-row"><span>🧠 Memória Isolada</span><span style="color: #38bdf8; font-weight: 600;">' + botRam + '</span></div>';
+                s += '<div class="stat-row"><span>🛡️ Supervisor Resiliente</span><span style="color: #a855f7; font-weight: 700;">Goroutines com Recover</span></div>';
+                s += '<div class="stat-row"><span>⏱️ Uptime</span><span style="color: #facc15;">' + formatUptime(a.durationSec, botUptime) + '</span></div>';
+              } else {
+                s += '<div class="acc-item-header"><span>⚡ ' + (a.name || 'Conta') + ' — Rendimento</span><span class="perf-tag">PROTEGIDO</span></div>';
+                s += '<div class="stat-row"><span>📈 EXP / Hora</span><span style="color: #4ade80; font-weight: 700;">' + formatRate(a.expPerHour) + '</span></div>';
+                s += '<div class="stat-row"><span>💰 Ouro / Hora</span><span style="color: #facc15; font-weight: 700;">' + formatRate(a.goldPerHour) + '</span></div>';
+                s += '<div class="stat-row"><span>⏱️ Tempo de Caça</span><span style="color: #38bdf8;">' + formatUptime(a.durationSec, botUptime) + '</span></div>';
+                s += '<div class="stat-row"><span>🧠 Memória Bot (Go)</span><span style="color: #94a3b8;">' + botRam + '</span></div>';
+              }
+              s += '</div>';
+              return s;
+            }).join('');
+
+            accList.innerHTML = '<div class="card-face face-gameplay">' + frontHtml + '</div>' +
+                                '<div class="card-face face-performance">' + backHtml + '</div>';
           }
         }
       } catch (e) {

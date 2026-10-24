@@ -149,6 +149,42 @@ const hubStyles = `
       font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; padding: 2px 8px;
       border-radius: 6px; background: rgba(255, 255, 255, 0.05); color: var(--text-muted);
     }
+    
+    /* Dual Face Controls & Views */
+    .face-header-controls { display: flex; align-items: center; gap: 8px; }
+    .face-toggle-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--theme-border, var(--card-border));
+      border-radius: 6px;
+      color: var(--theme, var(--text-muted));
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem; font-weight: 700; padding: 3px 8px;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 4px;
+      transition: all 0.2s ease; user-select: none;
+    }
+    .face-toggle-btn:hover {
+      background: var(--theme-bg, rgba(255,255,255,0.12));
+      filter: brightness(1.2); transform: scale(1.05);
+    }
+    .card-face {
+      transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+    .face-performance {
+      display: none; opacity: 0; transform: translateY(6px);
+    }
+    .bot-card.is-flipped .face-gameplay {
+      display: none; opacity: 0;
+    }
+    .bot-card.is-flipped .face-performance {
+      display: block; opacity: 1; transform: translateY(0);
+    }
+    .perf-tag {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 700;
+      padding: 2px 6px; border-radius: 4px;
+      background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: var(--green);
+    }
+
     .badge-status {
       font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 700;
       padding: 3px 10px; border-radius: 999px; border: 1px solid var(--theme-border, var(--card-border));
@@ -186,8 +222,7 @@ const hubStyles = `
       will-change: transform;
     }
     .btn-link:hover {
-      transform: scale(1.04);
-      filter: brightness(1.25);
+      transform: scale(1.04); filter: brightness(1.25);
     }
 
     /* Live Audio Wave Equalizer */
