@@ -318,6 +318,12 @@
       --theme-border: rgba(245, 158, 11, 0.45);
       --theme-glow: rgba(245, 158, 11, 0.25);
     }
+    #cardFarmbot {
+      --theme: #9bd26a;
+      --theme-bg: rgba(155, 210, 106, 0.12);
+      --theme-border: rgba(155, 210, 106, 0.45);
+      --theme-glow: rgba(155, 210, 106, 0.25);
+    }
 
     .bot-card {
       background: var(--card-bg);
@@ -1492,6 +1498,30 @@
           </a>
         </div>
       </div>
+
+      <!-- Farm Ricochet Card -->
+      <div class="bot-card" id="cardFarmbot">
+        <div>
+          <div class="bot-header">
+            <div class="bot-name-group">
+              <h3 style="color: #9bd26a;">🌾 Farm Ricochet</h3>
+              <span class="bot-port" style="color: #9bd26a; background: rgba(155, 210, 106, 0.12); border: 1px solid rgba(155, 210, 106, 0.25);">PORTA 3013 • WEB CANVAS & HARVEST AUTO</span>
+            </div>
+            <span class="badge-status badge-online" id="farmbotBadge" style="background: rgba(155, 210, 106, 0.15); color: #9bd26a; border-color: #9bd26a;">ONLINE</span>
+          </div>
+
+          <div class="acc-list" id="farmbotAccList">
+            <div style="color: var(--text-muted); font-size: 0.8rem;">Carregando fazendeiro...</div>
+          </div>
+        </div>
+
+        <div class="bot-footer">
+          <span style="font-size: 0.72rem; color: var(--text-dim);" id="farmbotSummary">🌾 Farm & Colheita 24/7</span>
+          <a href="https://kbelludoo.github.io/farmricochet-bot/" target="_blank" class="btn-link" style="color: #9bd26a; border-color: rgba(155, 210, 106, 0.3); background: rgba(155, 210, 106, 0.08);">
+            Abrir Dashboard Farm ↗
+          </a>
+        </div>
+      </div>
     </div>
 
     <!-- LIVE ACTIVITY TICKER (RODAPÉ DO MODO STREAM) -->
@@ -1501,7 +1531,7 @@
         <span class="ticker-item" style="color: #00f0ff; font-weight: 800;">📡 RESTREAM GO: TRANSMITINDO AO VIVO NA TWITCH, KICK E YOUTUBE</span>
         <span class="ticker-item" style="color: #fbbf24; font-weight: 800;">📖 ESTRATÉGIA ATIVA: FARM DE BESTIÁRIO & POKÉDEX 24/7 EM TODOS OS JOGOS</span>
         <span class="ticker-item">⚡ VPS CLUSTER ONLINE • 11 BOTS NATIVOS EM GO • ZERO NODE.JS</span>
-        <span class="ticker-item">🎮 HUNTERA • TIBIDLE • SIGMA • LEVELING • BAIAK • POKEIDLE • KICK • TWITCH • LOL IDLE • LUX IDLE</span>
+        <span class="ticker-item">🎮 HUNTERA • TIBIDLE • SIGMA • LEVELING • BAIAK • POKEIDLE • KICK • TWITCH • LOL IDLE • LUX IDLE • FARM RICOCHET</span>
         <span class="ticker-item" style="color: #fbbf24; font-weight: 800;">⚔️ LUX IDLE: 5 VOCAÇÕES EM PARTY (+125% BÔNUS EXP)</span>
         <span class="ticker-item">💎 AUTO HUNT INTELIGENTE • RECONEXÃO AUTOMÁTICA • HIGH PERFORMANCE</span>
       </div>
@@ -2481,6 +2511,74 @@
           }
         } else {
           ptAccList.innerHTML = `<div style="color: var(--text-muted); font-size: 0.8rem;">Carregando estado...</div>`;
+        }
+      }
+
+      // 14. Farm Ricochet Bot (Port 3013)
+      const farmbot = bots.farmricochet || {};
+      const fbStatus = farmbot.status || {};
+      const fbAccounts = fbStatus.accounts || [];
+      const fbAccList = document.getElementById('farmbotAccList');
+
+      if (fbAccList) {
+        if (fbAccounts.length > 0) {
+          let fbTotalGold = 0;
+          let fbTotalWheat = 0;
+          let fbTotalWood = 0;
+          let fbTotalGems = 0;
+
+          fbAccList.innerHTML = fbAccounts.map((acc, idx) => {
+            fbTotalGold += (acc.gold || 0);
+            const extra = acc.extra || {};
+            fbTotalWheat += (extra.wheat || 0);
+            fbTotalWood += (extra.wood || 0);
+            fbTotalGems += (extra.gems || 0);
+            const hpPct = acc.maxHp ? Math.min(100, Math.round((acc.hp / acc.maxHp) * 100)) : 100;
+            const area = acc.currentArea || 'Fase 4: Ato 1';
+            const voc = acc.vocation ? acc.vocation.toUpperCase() : 'KNIGHT';
+            const name = `Fazendeiro #${idx + 1}`;
+
+            checkLevelUp('Farm Ricochet', `🌾 ${name} (${voc})`, acc.level, 'cardFarmbot');
+
+            return `
+              <div class="acc-item">
+                <div class="acc-item-header">
+                  <span class="acc-name">🌾 ${name} (${voc})</span>
+                  <span class="acc-level" style="color: #9bd26a; border-color: rgba(155, 210, 106, 0.4);">Nv. ${acc.level || 1}</span>
+                </div>
+                <div class="stat-row" style="background: rgba(155, 210, 106, 0.12); border-color: rgba(155, 210, 106, 0.35); padding: 4px 8px; border-radius: 6px; margin-bottom: 4px;">
+                  <span style="color: #a3e635; font-weight: 700; font-size: 0.72rem;">🗺️ ${area}</span>
+                  <span style="color: #facc15; font-weight: 800; font-size: 0.72rem;">💎 ${extra.gems || 0}</span>
+                </div>
+                <div class="stat-row">
+                  <span>❤️ HP (${hpPct}%)</span>
+                  <span style="color: #4ade80;">${(acc.hp || 0).toLocaleString('pt-BR')} / ${(acc.maxHp || 0).toLocaleString('pt-BR')}</span>
+                </div>
+                <div class="bar-slim"><div class="progress-fill fill-hp" style="width: ${hpPct}%"></div></div>
+                <div class="stat-row">
+                  <span style="color: #facc15; font-weight: 800;">💰 ${(acc.gold || 0).toLocaleString('pt-BR')} gp</span>
+                  <span style="color: #38bdf8; font-weight: 800;">🌾 ${(extra.wheat || 0).toLocaleString('pt-BR')} | 🪵 ${(extra.wood || 0).toLocaleString('pt-BR')}</span>
+                </div>
+                <div class="stat-row" style="margin-top: 4px;">
+                  <span style="color: var(--text-dim); font-size: 0.72rem;">Status: ${acc.status || 'ativo'}</span>
+                  <span style="color: #9bd26a; font-size: 0.72rem;">⚡ ${extra.onlinePlayers || 0} online</span>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          const ramFb = fbStatus.ramSysMB ? Number(fbStatus.ramSysMB).toFixed(1) + ' MB' : '~13 MB';
+          if (document.getElementById('farmbotSummary')) {
+            document.getElementById('farmbotSummary').textContent = `💰 ${fbTotalGold.toLocaleString('pt-BR')} gp • 🌾 ${fbTotalWheat.toLocaleString('pt-BR')} • 🪵 ${fbTotalWood.toLocaleString('pt-BR')} • RAM: ${ramFb}`;
+          }
+          if (document.getElementById('farmbotBadge')) {
+            document.getElementById('farmbotBadge').textContent = fbAccounts[0]?.status ? fbAccounts[0].status.toUpperCase() : 'ONLINE';
+            document.getElementById('farmbotBadge').style.background = 'rgba(155, 210, 106, 0.15)';
+            document.getElementById('farmbotBadge').style.color = '#9bd26a';
+            document.getElementById('farmbotBadge').style.borderColor = '#9bd26a';
+          }
+        } else {
+          fbAccList.innerHTML = `<div style="color: var(--text-muted); font-size: 0.8rem;">Carregando estado...</div>`;
         }
       }
 
