@@ -362,6 +362,7 @@ func syncIndividual() {
 		{repo: "luxidle-bot", port: 3012, label: "Personagem"},
 		{repo: "farmricochet-bot", port: 3013, label: "Fazendeiro"},
 		{repo: "pokepixel-bot", port: 3015, label: "Treinador"},
+		{repo: "lichess-bot", port: 3016, label: "Lichess Bot"},
 	}
 
 	for _, tgt := range targets {

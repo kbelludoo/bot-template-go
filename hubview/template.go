@@ -62,7 +62,7 @@ const hubTemplate = `<!DOCTYPE html>
               <h3>{{$bot.Meta.Icon}} {{$bot.Meta.Name}}</h3>
               <span class="bot-port">
                 {{if gt $bot.Meta.Port 0}}PORTA {{$bot.Meta.Port}} • {{end}}
-                {{if $bot.Meta.IsStream}}STREAM HARVESTER{{else if $bot.Meta.IsService}}BACKGROUND AGENT{{else}}GO NATIVE{{end}}
+                {{if $bot.Meta.IsStream}}STREAM HARVESTER{{else if $bot.Meta.IsChess}}CHESS AI ENGINE{{else if $bot.Meta.IsService}}BACKGROUND AGENT{{else}}GO NATIVE{{end}}
               </span>
             </div>
             <div class="face-header-controls">
@@ -84,7 +84,25 @@ const hubTemplate = `<!DOCTYPE html>
               <div class="card-face face-gameplay">
                 {{range $idx, $acc := $bot.Accounts}}
                 <div class="acc-item">
-                  {{if $bot.Meta.IsStream}}
+                  {{if $bot.Meta.IsChess}}
+                  <div class="acc-item-header">
+                    <span>{{$bot.Meta.Icon}} {{$acc.Name}}</span>
+                    <span style="color: #ffd700; font-size: 0.72rem; font-weight: 700;">{{$acc.Vocation}}</span>
+                  </div>
+                  {{if $acc.CurrentArea}}
+                  <div class="stat-row" style="background: rgba(255, 215, 0, 0.1); padding: 4px 8px; border-radius: 6px; margin-bottom: 4px;">
+                    <span style="font-weight: 700; font-size: 0.72rem; color: #ffd700;">♟️ {{$acc.CurrentArea}}</span>
+                  </div>
+                  {{end}}
+                  <div class="stat-row">
+                    <span style="color: #4ade80; font-weight: 700;">🟢 {{$acc.Status}}</span>
+                    <span style="color: #38bdf8; font-weight: 700;">⚔️ {{$acc.Kills}} vitórias</span>
+                  </div>
+                  <div class="stat-row">
+                    <span style="color: #facc15; font-weight: 700;">🏆 {{$acc.Level}} partidas</span>
+                    <span style="color: #c084fc; font-weight: 600;">🧠 {{formatNumber $acc.Gold}} lances</span>
+                  </div>
+                  {{else if $bot.Meta.IsStream}}
                   <div class="acc-item-header">
                     <span>{{$bot.Meta.Icon}} {{$acc.Name}}</span>
                     <span style="color: {{css $bot.Meta.Theme}}; font-size: 0.72rem; font-weight: 700;">STREAM VIEWER</span>
@@ -147,7 +165,28 @@ const hubTemplate = `<!DOCTYPE html>
               <div class="card-face face-performance">
                 {{range $idx, $acc := $bot.Accounts}}
                 <div class="acc-item">
-                  {{if $bot.Meta.IsStream}}
+                  {{if $bot.Meta.IsChess}}
+                  <div class="acc-item-header">
+                    <span>⚡ Stockfish 19 NNUE + MBVM-DB</span>
+                    <span class="perf-tag" style="background: rgba(255, 215, 0, 0.15); color: #ffd700; border: 1px solid rgba(255, 215, 0, 0.4);">ZERO LATENCY</span>
+                  </div>
+                  <div class="stat-row">
+                    <span>🧠 Grafo MBVM-DB</span>
+                    <span style="color: #ffd700; font-weight: 700;">3.954 Símbolos &amp; Aberturas</span>
+                  </div>
+                  <div class="stat-row">
+                    <span>⚡ Motor Local</span>
+                    <span style="color: #4ade80; font-weight: 700;">Stockfish 19 NNUE</span>
+                  </div>
+                  <div class="stat-row">
+                    <span>🛡️ Estilo Tático</span>
+                    <span style="color: #f055ff; font-weight: 700;">Berserk / Mikhail Tal / Ala do Rei</span>
+                  </div>
+                  <div class="stat-row">
+                    <span>⏱️ Operação Contínua</span>
+                    <span style="color: #38bdf8;">24/7 Ativo</span>
+                  </div>
+                  {{else if $bot.Meta.IsStream}}
                   <div class="acc-item-header">
                     <span>⚡ Telemetria Drops</span>
                     <span class="perf-tag">AUTOMÁTICO</span>

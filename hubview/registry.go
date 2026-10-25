@@ -20,6 +20,7 @@ type BotMeta struct {
 	Order        int
 	IsStream     bool
 	IsService    bool
+	IsChess      bool
 }
 
 var knownMetas = map[string]BotMeta{
@@ -138,11 +139,11 @@ var knownMetas = map[string]BotMeta{
 		IsService: true,
 	},
 	"lichess": {
-		Key: "lichess", Icon: "♟️", Name: "Lichess Bot (Berserk)", Game: "Lichess.org • Go + Stockfish NNUE",
-		Port: 3016, Theme: "#ffffff", ThemeBg: "rgba(255, 255, 255, 0.12)",
-		ThemeBorder: "rgba(255, 255, 255, 0.45)", ThemeGlow: "rgba(255, 255, 255, 0.25)",
+		Key: "lichess", Icon: "♟️", Name: "Chess AI Co-Pilot & Bot", Game: "Lichess & Chess.com • Stockfish 19 NNUE",
+		Port: 3016, Theme: "#ffd700", ThemeBg: "rgba(255, 215, 0, 0.12)",
+		ThemeBorder: "rgba(255, 215, 0, 0.45)", ThemeGlow: "rgba(255, 215, 0, 0.25)",
 		DashboardURL: "https://lichess.org/@/kbelludoo", Order: 19,
-		IsService: true,
+		IsChess: true,
 	},
 }
 

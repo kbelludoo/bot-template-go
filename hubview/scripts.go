@@ -282,6 +282,7 @@ const hubScripts = `
           var accounts = getUnifiedAccounts(b);
           var isStream = (k === 'kickminer' || k === 'twitchminer');
           var isService = (k === 'pocketweb' || k === 'aigobrowser' || k === 'kaggle' || k === 'telegram');
+          var isChess = (k === 'lichess' || k === 'chess');
 
           // Verificação de Level Up com chave única por conta e sem repetição
           for (var ai = 0; ai < accounts.length; ai++) {
@@ -312,6 +313,8 @@ const hubScripts = `
             if (isStream) {
               var wave = '<span class="live-wave"><span></span><span></span><span></span></span>';
               badge.innerHTML = wave + (accounts[0].kills > 0 ? accounts[0].kills + ' AO VIVO' : 'MINERANDO');
+            } else if (isChess) {
+              badge.textContent = accounts[0].status ? accounts[0].status.toUpperCase() : 'ONLINE';
             } else if (isService) {
               badge.textContent = accounts[0].status ? accounts[0].status.toUpperCase() : 'ONLINE';
             } else {
@@ -325,7 +328,14 @@ const hubScripts = `
 
             var frontHtml = accounts.map(function(a) {
               var s = '<div class="acc-item">';
-              if (isStream) {
+              if (isChess) {
+                s += '<div class="acc-item-header"><span>' + (a.name || 'Chess AI') + '</span><span style="color: #ffd700; font-size: 0.72rem; font-weight: 700;">' + (a.vocation || 'Stockfish 19 NNUE') + '</span></div>';
+                if (a.currentArea) {
+                  s += '<div class="stat-row" style="background: rgba(255, 215, 0, 0.1); padding: 4px 8px; border-radius: 6px; margin-bottom: 4px;"><span style="font-weight: 700; font-size: 0.72rem; color: #ffd700;">♟️ ' + a.currentArea + '</span></div>';
+                }
+                s += '<div class="stat-row"><span style="color: #4ade80; font-weight: 700;">🟢 ' + (a.status || 'Online') + '</span><span style="color: #38bdf8; font-weight: 700;">⚔️ ' + (a.kills || 0) + ' vitórias</span></div>';
+                s += '<div class="stat-row"><span style="color: #facc15; font-weight: 700;">🏆 ' + (a.level || 0) + ' partidas</span><span style="color: #c084fc; font-weight: 600;">🧠 ' + (a.gold || 0).toLocaleString() + ' lances</span></div>';
+              } else if (isStream) {
                 s += '<div class="acc-item-header"><span>' + (a.name || 'Conta') + '</span><span style="font-size: 0.72rem; font-weight: 700;">STREAM VIEWER</span></div>';
                 if (a.currentArea) {
                   s += '<div class="stat-row" style="padding: 4px 8px; border-radius: 6px; margin-bottom: 4px; background: rgba(255,255,255,0.05); font-weight: 700;">📡 ' + a.currentArea + '</div>';
@@ -357,7 +367,13 @@ const hubScripts = `
 
             var backHtml = accounts.map(function(a) {
               var s = '<div class="acc-item">';
-              if (isStream) {
+              if (isChess) {
+                s += '<div class="acc-item-header"><span>⚡ Stockfish 19 NNUE + MBVM-DB</span><span class="perf-tag" style="background: rgba(255, 215, 0, 0.15); color: #ffd700; border: 1px solid rgba(255, 215, 0, 0.4);">ZERO LATENCY</span></div>';
+                s += '<div class="stat-row"><span>🧠 Grafo MBVM-DB</span><span style="color: #ffd700; font-weight: 700;">3.954 Símbolos &amp; Aberturas</span></div>';
+                s += '<div class="stat-row"><span>⚡ Motor Local</span><span style="color: #4ade80; font-weight: 700;">Stockfish 19 NNUE</span></div>';
+                s += '<div class="stat-row"><span>🛡️ Estilo Tático</span><span style="color: #f055ff; font-weight: 700;">Berserk / Mikhail Tal / Ala do Rei</span></div>';
+                s += '<div class="stat-row"><span>⏱️ Uptime Engine</span><span style="color: #38bdf8;">' + formatUptime(a.durationSec, botUptime) + '</span></div>';
+              } else if (isStream) {
                 s += '<div class="acc-item-header"><span>⚡ Telemetria Drops</span><span class="perf-tag">AUTOMÁTICO</span></div>';
                 s += '<div class="stat-row"><span>🎁 Coleta de Pontos</span><span style="color: #4ade80; font-weight: 700;">Ativo (Zero-Video WS)</span></div>';
                 s += '<div class="stat-row"><span>🧠 Memória Bot (Go)</span><span style="color: #38bdf8; font-weight: 600;">' + botRam + '</span></div>';

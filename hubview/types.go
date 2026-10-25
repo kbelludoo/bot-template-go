@@ -153,6 +153,23 @@ type BotStatusData struct {
 	Accounts      json.RawMessage              `json:"accounts"`
 	Bots          map[string]BaiakBotEntry     `json:"bots"`
 	Statuses      map[string]TwitchStatusEntry `json:"statuses"`
+
+	// Chess / Lichess bot telemetry
+	Key         string `json:"key"`
+	ActiveGames int    `json:"active_games"`
+	BotUser     string `json:"bot_user"`
+	DBSymbols   int    `json:"db_symbols"`
+	GamesPlayed int    `json:"games_played"`
+	LastEval    string `json:"last_eval"`
+	LastMove    string `json:"last_move"`
+	LastOpp     string `json:"last_opp"`
+	Losses      int    `json:"losses"`
+	Mode        string `json:"mode"`
+	MovesPlayed int    `json:"moves_played"`
+	Online      bool   `json:"online"`
+	Title       string `json:"title"`
+	UptimeSec   int    `json:"uptime_sec"`
+	Wins        int    `json:"wins"`
 }
 
 // AccountData represents a single character runner or stream harvester
@@ -174,6 +191,7 @@ type AccountData struct {
 	GoldPerHour float64        `json:"goldPerHour,omitempty"`
 	Stamina     FlexibleString `json:"stamina,omitempty"`
 	IsStream    bool           `json:"isStream,omitempty"`
+	IsChess     bool           `json:"isChess,omitempty"`
 	Extra       map[string]any `json:"extra,omitempty"`
 }
 
@@ -379,7 +397,49 @@ func (s BotStatusData) GetUnifiedAccounts() []AccountData {
 		return res
 	}
 
-	// 4. Standby process fallback (daemon awaiting match/session)
+	// 4. Lichess / Chess bot check
+	if s.Key == "lichess" || s.DBSymbols > 0 || s.Mode != "" || s.BotUser != "" || s.GamesPlayed > 0 {
+		botName := s.BotUser
+		if botName == "" || botName == "anonimo" {
+			botName = "kbelludoo"
+		}
+		modeLabel := strings.ToUpper(s.Mode)
+		if modeLabel == "" {
+			modeLabel = "BERSERK"
+		}
+
+		statusStr := "Aguardando Partida"
+		if s.ActiveGames > 0 {
+			statusStr = fmt.Sprintf("Em Partida (%d ativa)", s.ActiveGames)
+		} else if s.Online {
+			statusStr = "Online • Buscando Bots"
+		}
+
+		areaText := fmt.Sprintf("MBVM-DB (%d nós) • Modo %s", s.DBSymbols, modeLabel)
+		if s.LastMove != "" {
+			areaText = fmt.Sprintf("Último lance: %s (%s)", s.LastMove, s.LastEval)
+		}
+
+		games := s.GamesPlayed
+		wins := s.Wins
+
+		return []AccountData{
+			{
+				ID:          "chess-ai-1",
+				Name:        fmt.Sprintf("♟️ %s (BOT)", botName),
+				Level:       games,
+				Gold:        int64(s.MovesPlayed),
+				Kills:       wins,
+				Vocation:    fmt.Sprintf("Stockfish 19 NNUE • %s", modeLabel),
+				CurrentArea: areaText,
+				Status:      statusStr,
+				DurationSec: s.UptimeSec,
+				IsChess:     true,
+			},
+		}
+	}
+
+	// 5. Standby process fallback (daemon awaiting match/session)
 	if s.Uptime != "" || s.RAMSysMB > 0 || s.Goroutines > 0 {
 		return []AccountData{
 			{
