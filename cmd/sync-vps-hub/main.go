@@ -71,6 +71,8 @@ func fetchAll() map[string]map[string]any {
 		"baiak":         "http://127.0.0.1:8090/api/fleet",
 		"twitchminer":   "http://127.0.0.1:3010/api/status",
 		"poketrue":      "http://127.0.0.1:3014/api/status",
+		"pokepixel":     "http://127.0.0.1:3015/api/status",
+		"lichess":       "http://127.0.0.1:3016/api/status",
 	}
 	results := make(map[string]map[string]any, len(urls))
 	var mu sync.Mutex
@@ -372,6 +374,22 @@ func buildBots(results map[string]map[string]any) map[string]any {
 			"port":         3014,
 			"dashboardUrl": "https://kbelludoo.github.io/bot-template-go/?v=force1",
 			"status":       results["poketrue"],
+		},
+		"pokepixel": map[string]any{
+			"name":         "PokePixel Multi-Bot",
+			"game":         "PokePixel",
+			"engine":       "Go Native Engine (Auto-Catch)",
+			"port":         3015,
+			"dashboardUrl": "https://kbelludoo.github.io/pokepixel-bot/",
+			"status":       results["pokepixel"],
+		},
+		"lichess": map[string]any{
+			"name":         "Lichess Bot (Berserk)",
+			"game":         "Lichess.org",
+			"engine":       "Go 1.27 + Stockfish 17.1 NNUE",
+			"port":         3016,
+			"dashboardUrl": "https://lichess.org/@/kbelludoo",
+			"status":       results["lichess"],
 		},
 	}
 }

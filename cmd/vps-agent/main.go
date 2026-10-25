@@ -572,6 +572,7 @@ func syncHub() {
 		"pocketweb":     {"AI-Go-Browser (Navegador)", "AI-Go-Browser", "Go Native Browser Engine (<75 MB RAM)", 8888, "https://kbelludoo.github.io/ai-go-browser/", nil},
 		"kaggle":        {"Kaggle Training Watcher", "Kaggle", "Go Native Agent (24/7 Watcher)", 0, "https://kbelludoo.github.io/agent-go/", nil},
 		"telegram":      {"Telegram Relay Agent", "Telegram", "Go Native Agent (Bot Command)", 0, "https://kbelludoo.github.io/agent-go/", nil},
+		"lichess":       {"Lichess Bot (Berserk)", "Lichess.org", "Go 1.27 + Stockfish 17.1 NNUE", 3016, "https://lichess.org/@/kbelludoo", nil},
 	}
 
 	var wg sync.WaitGroup

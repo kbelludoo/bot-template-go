@@ -137,6 +137,13 @@ var knownMetas = map[string]BotMeta{
 		DashboardURL: "https://kbelludoo.github.io/agent-go/", Order: 18,
 		IsService: true,
 	},
+	"lichess": {
+		Key: "lichess", Icon: "♟️", Name: "Lichess Bot (Berserk)", Game: "Lichess.org • Go + Stockfish NNUE",
+		Port: 3016, Theme: "#ffffff", ThemeBg: "rgba(255, 255, 255, 0.12)",
+		ThemeBorder: "rgba(255, 255, 255, 0.45)", ThemeGlow: "rgba(255, 255, 255, 0.25)",
+		DashboardURL: "https://lichess.org/@/kbelludoo", Order: 19,
+		IsService: true,
+	},
 }
 
 // GetMeta returns known metadata or automatically generates default presentation for new bots
