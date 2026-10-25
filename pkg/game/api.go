@@ -6,11 +6,13 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"bot-template-go/pkg/engine"
@@ -23,7 +25,12 @@ type PokeTrueClient struct {
 	windowID   string
 	httpClient *http.Client
 	cb         *engine.CircuitBreaker
+	tokenMu    sync.RWMutex
+	requests   chan struct{}
 }
+
+var ErrCircuitOpen = errors.New("circuit breaker bloqueado; aguardando cooldown e leitura canônica")
+var ErrAntiCheat = errors.New("requisição recusada pela proteção do servidor")
 
 // Gera um ID de janela único como no navegador (x-janela)
 func generateWindowID() string {
@@ -34,6 +41,9 @@ func generateWindowID() string {
 
 // NewPokeTrueClient cria o cliente com headers de browser moderno e suporte a multi-IP
 func NewPokeTrueClient(token string, bindIP string, cb *engine.CircuitBreaker) *PokeTrueClient {
+	if cb == nil {
+		cb = engine.NewCircuitBreaker("api", engine.DefaultCircuitBreakerConfig())
+	}
 	dialer := &net.Dialer{
 		Timeout:   15 * time.Second,
 		KeepAlive: 30 * time.Second,
@@ -60,24 +70,58 @@ func NewPokeTrueClient(token string, bindIP string, cb *engine.CircuitBreaker) *
 			Transport: transport,
 			Timeout:   20 * time.Second,
 		},
-		cb: cb,
+		cb:       cb,
+		requests: make(chan struct{}, 1),
 	}
 }
 
 func (c *PokeTrueClient) SetToken(t string) {
+	c.tokenMu.Lock()
+	defer c.tokenMu.Unlock()
 	c.token = t
 }
 
 func (c *PokeTrueClient) GetToken() string {
+	c.tokenMu.RLock()
+	defer c.tokenMu.RUnlock()
 	return c.token
 }
 
 // DoRequest executa a requisição HTTP com validação no Circuit Breaker
-func (c *PokeTrueClient) DoRequest(ctx context.Context, method, endpoint string, body any, target any) error {
-	if c.cb != nil && !c.cb.AllowAction() {
-		return fmt.Errorf("circuit breaker desarmado (resfriamento anti-cheat ativo)")
+func (c *PokeTrueClient) DoRequest(ctx context.Context, method, endpoint string, body any, target any) (err error) {
+	// Serializar por conta impede que ações já enfileiradas ultrapassem um Trip.
+	select {
+	case c.requests <- struct{}{}:
+		defer func() { <-c.requests }()
+	case <-ctx.Done():
+		return ctx.Err()
 	}
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	endpoint = strings.TrimPrefix(endpoint, "/")
+	if !c.cb.AllowAction() {
+		stateTarget, canonical := target.(*PokeTrueState)
+		if method != http.MethodGet || endpoint != "state" || body != nil || !canonical || stateTarget == nil {
+			return ErrCircuitOpen
+		}
+		generation, allowed := c.cb.BeginRecovery()
+		if !allowed {
+			return ErrCircuitOpen
+		}
+		defer func() { c.cb.FinishRecovery(generation, err) }()
+	}
+	err = c.doRequest(ctx, method, endpoint, body, target)
+	if errors.Is(err, ErrAntiCheat) && endpoint != "hunt/stop" {
+		// Uma única tentativa de saída, sem enviar progresso e sem retry.
+		stopCtx, cancel := context.WithTimeout(context.WithoutCancel(ctx), 5*time.Second)
+		defer cancel()
+		_ = c.doRequest(stopCtx, http.MethodPost, "hunt/stop", map[string]any{}, nil)
+	}
+	return err
+}
 
+func (c *PokeTrueClient) doRequest(ctx context.Context, method, endpoint string, body any, target any) error {
 	var bodyReader io.Reader
 	var rawBody []byte
 	if body != nil {
@@ -100,11 +144,12 @@ func (c *PokeTrueClient) DoRequest(ctx context.Context, method, endpoint string,
 	req.Header.Set("Accept-Language", "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7")
 	req.Header.Set("Origin", "https://poketrue.net")
 	req.Header.Set("Referer", "https://poketrue.net/play")
+	req.Header.Set("X-Instancia", c.windowID)
 	// Não enviar x-janela aleatório: o servidor do PokeTrue vincula a sessão à janela do login
 	// Enviar x-janela divergente disparava HTTP 401 "sessao_substituida". Omitindo, o servidor aceita.
 
-	if c.token != "" {
-		req.Header.Set("Authorization", "Bearer "+c.token)
+	if token := c.GetToken(); token != "" {
+		req.Header.Set("Authorization", "Bearer "+token)
 	}
 	if body != nil {
 		req.Header.Set("Content-Type", "application/json")
@@ -116,39 +161,55 @@ func (c *PokeTrueClient) DoRequest(ctx context.Context, method, endpoint string,
 	}
 	defer resp.Body.Close()
 
-	respBytes, err := io.ReadAll(resp.Body)
+	if rejected, reason := engine.IsAntiCheatRejection(resp.StatusCode, ""); rejected {
+		c.cb.Trip(reason)
+		return fmt.Errorf("%w: %s", ErrAntiCheat, reason)
+	}
+	const maxResponseBytes = 8 << 20
+	respBytes, err := io.ReadAll(io.LimitReader(resp.Body, maxResponseBytes+1))
 	if err != nil {
 		return fmt.Errorf("erro lendo resposta: %w", err)
+	}
+	if len(respBytes) > maxResponseBytes {
+		return fmt.Errorf("resposta excede o limite de %d bytes", maxResponseBytes)
 	}
 
 	// Verificação anti-cheat obrigatória
 	if c.cb != nil {
 		if isRej, reason := engine.IsAntiCheatRejection(resp.StatusCode, string(respBytes)); isRej {
 			c.cb.Trip(fmt.Sprintf("%s (endpoint: %s)", reason, endpoint))
-			return fmt.Errorf("anti-cheat disparado: %s", reason)
+			return fmt.Errorf("%w: %s", ErrAntiCheat, reason)
 		}
-	}
-
-	if resp.StatusCode == http.StatusTooManyRequests {
-		if c.cb != nil {
-			c.cb.Trip("Rate limit (HTTP 429)")
-		}
-		return fmt.Errorf("HTTP 429: rate limit atingido")
 	}
 
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		return fmt.Errorf("HTTP %d em %s: %s", resp.StatusCode, endpoint, string(respBytes))
 	}
 
-	if c.cb != nil {
-		c.cb.RecordSuccess()
+	if len(respBytes) > 0 {
+		var responseError struct {
+			Erro  string `json:"erro"`
+			Error string `json:"error"`
+		}
+		if err := json.Unmarshal(respBytes, &responseError); err != nil {
+			return fmt.Errorf("resposta JSON inválida (%s): %w", endpoint, err)
+		}
+		if responseError.Erro != "" || responseError.Error != "" {
+			return fmt.Errorf("erro da API em %s: %s%s", endpoint, responseError.Erro, responseError.Error)
+		}
 	}
-
 	if target != nil && len(respBytes) > 0 {
 		if err := json.Unmarshal(respBytes, target); err != nil {
 			return fmt.Errorf("falha ao interpretar JSON (%s): %w", endpoint, err)
 		}
 	}
+	if method == http.MethodGet && endpoint == "state" {
+		state, ok := target.(*PokeTrueState)
+		if !ok || state == nil || len(respBytes) == 0 || state.Nivel <= 0 {
+			return fmt.Errorf("estado canônico ausente ou inválido")
+		}
+	}
+	c.cb.RecordSuccess()
 
 	return nil
 }
@@ -177,7 +238,7 @@ func (c *PokeTrueClient) Login(ctx context.Context, user, pass, captchaToken str
 		return nil, err
 	}
 	if resp.Token != "" {
-		c.token = resp.Token
+		c.SetToken(resp.Token)
 	}
 	return &resp, nil
 }
@@ -209,7 +270,7 @@ func (c *PokeTrueClient) EscolherPersonagem(ctx context.Context, pjID int) (*Esc
 		return nil, err
 	}
 	if resp.Token != "" {
-		c.token = resp.Token
+		c.SetToken(resp.Token)
 	}
 	return &resp, nil
 }

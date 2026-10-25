@@ -18,35 +18,36 @@ type GameCredentials struct {
 }
 
 type GameSettings struct {
-	HuntTarget string `json:"huntTarget"` // "auto" para resolver automaticamente a melhor área ou slug específico
-	AutoHunt   bool   `json:"autoHunt"`
-	AutoSell   bool   `json:"autoSell"`
-	AutoHeal   bool   `json:"autoHeal"`
-	AutoDaily  bool   `json:"autoDaily"`
-	AutoEquip  bool   `json:"autoEquip"`
-	AutoTreino bool   `json:"autoTreino"`
-	AutoCatch  bool   `json:"autoCatch"`
-	BallType   string `json:"ballType"` // "auto", "pokeball", "greatball", "superball", "ultraball"
+	HuntTarget    string  `json:"huntTarget"` // "auto" para resolver automaticamente a melhor área ou slug específico
+	AutoHunt      bool    `json:"autoHunt"`
+	AutoSell      bool    `json:"autoSell"`
+	AutoHeal      bool    `json:"autoHeal"`
+	AutoDaily     bool    `json:"autoDaily"`
+	AutoEquip     bool    `json:"autoEquip"`
+	AutoTreino    bool    `json:"autoTreino"`
+	AutoCatch     bool    `json:"autoCatch"`
+	BallType      string  `json:"ballType"`      // "auto", "pokeball", "greatball", "superball", "ultraball"
 	HealThreshold float64 `json:"healThreshold"` // ex: 0.5 (cura quando HP < 50%)
 	MinGoldKeep   int64   `json:"minGoldKeep"`   // reserva de ouro mantida
 }
 
-// PokeTrueState representa o estado canônico completo retornado pela API (/api/state)
+// PokeTrueState expõe os campos conhecidos e preserva o JSON completo em RawEstado.
 type PokeTrueState struct {
-	Gold          int64            `json:"gold"`
-	Nivel         int              `json:"nivel"`
-	NivelXp       int              `json:"nivelXp"`
-	Pokemon       []PokemonState   `json:"pokemon"`
-	Hunt          HuntState        `json:"hunt"`
-	Itens         map[string]int   `json:"itens"`
-	Vip           bool             `json:"vip"`
-	GM            bool             `json:"gm"`
-	Cla           *ClanState       `json:"cla,omitempty"`
-	LiderGin      *LiderState      `json:"liderGin,omitempty"`
-	InsigniasGin  *InsigniasState  `json:"insigniasGin,omitempty"`
+	RawEstado     map[string]any      `json:"-"`
+	Gold          int64               `json:"gold"`
+	Nivel         int                 `json:"nivel"`
+	NivelXp       int                 `json:"nivelXp"`
+	Pokemon       []PokemonState      `json:"pokemon"`
+	Hunt          HuntState           `json:"hunt"`
+	Itens         map[string]int      `json:"itens"`
+	Vip           bool                `json:"vip"`
+	GM            bool                `json:"gm"`
+	Cla           *ClanState          `json:"cla,omitempty"`
+	LiderGin      *LiderState         `json:"liderGin,omitempty"`
+	InsigniasGin  *InsigniasState     `json:"insigniasGin,omitempty"`
 	PokelogPontos int                 `json:"pokelogPontos"`
 	Dex           map[string]DexEntry `json:"dex,omitempty"`
-	Erro          string           `json:"erro,omitempty"`
+	Erro          string              `json:"erro,omitempty"`
 }
 
 type PokemonState struct {
@@ -74,9 +75,9 @@ type HeldState struct {
 }
 
 type HuntState struct {
-	Mapa    string        `json:"mapa"`
-	AtivoID int           `json:"ativoId"`
-	Fila    []FilaMonster `json:"fila"`
+	Mapa    string         `json:"mapa"`
+	AtivoID int            `json:"ativoId"`
+	Fila    []FilaMonster  `json:"fila"`
 	Auto    map[string]any `json:"auto,omitempty"`
 }
 
@@ -108,23 +109,23 @@ type InsigniasState struct {
 
 // KillResponse retornado por /api/hunt/kill
 type KillResponse struct {
-	Delta      *DeltaState     `json:"delta"`
-	State      *PokeTrueState  `json:"state,omitempty"`
-	Capturado  *CapturadoInfo  `json:"capturado,omitempty"`
-	Substituto *PokemonState   `json:"substituto,omitempty"`
-	Erro       string          `json:"erro,omitempty"`
+	Delta      *DeltaState    `json:"delta"`
+	State      *PokeTrueState `json:"state,omitempty"`
+	Capturado  *CapturadoInfo `json:"capturado,omitempty"`
+	Substituto *PokemonState  `json:"substituto,omitempty"`
+	Erro       string         `json:"erro,omitempty"`
 }
 
 type DeltaState struct {
-	Kills     int            `json:"kills"`
-	Xp        int            `json:"xp"`
-	XpPoke    int            `json:"xpPoke"`
-	Gold      int64          `json:"gold"`
-	Loot      map[string]int `json:"loot"`
+	Kills     int             `json:"kills"`
+	Xp        int             `json:"xp"`
+	XpPoke    int             `json:"xpPoke"`
+	Gold      int64           `json:"gold"`
+	Loot      map[string]int  `json:"loot"`
 	Capturas  []CapturadoInfo `json:"capturas,omitempty"`
 	Treinador *TreinadorDelta `json:"treinador,omitempty"`
-	Poke      *PokeDelta     `json:"poke,omitempty"`
-	ExpShare  *ExpShareDelta `json:"expShare,omitempty"`
+	Poke      *PokeDelta      `json:"poke,omitempty"`
+	ExpShare  *ExpShareDelta  `json:"expShare,omitempty"`
 }
 
 type TreinadorDelta struct {
@@ -150,10 +151,10 @@ type CapturadoInfo struct {
 
 // HeldsResponse retornado por /api/helds
 type HeldsResponse struct {
-	Mochila []HeldDetail `json:"mochila"`
+	Mochila   []HeldDetail `json:"mochila"`
 	Equipados []HeldDetail `json:"equipados"`
-	Tokens   int          `json:"devotedTokens,omitempty"`
-	Erro     string       `json:"erro,omitempty"`
+	Tokens    int          `json:"devotedTokens,omitempty"`
+	Erro      string       `json:"erro,omitempty"`
 }
 
 type HeldDetail struct {
@@ -170,12 +171,12 @@ type TreinoResponse struct {
 }
 
 type TreinoSlot struct {
-	Slot      int     `json:"slot"`
-	PokemonID *int    `json:"pokemonId"`
-	Stat      string  `json:"stat"`
-	Cargas    int     `json:"cargas"`
-	MaxCargas int     `json:"maxCargas"`
-	GastoOuro int64   `json:"gastoOuro,omitempty"`
+	Slot      int    `json:"slot"`
+	PokemonID *int   `json:"pokemonId"`
+	Stat      string `json:"stat"`
+	Cargas    int    `json:"cargas"`
+	MaxCargas int    `json:"maxCargas"`
+	GastoOuro int64  `json:"gastoOuro,omitempty"`
 }
 
 // JennyResponse retornado por /api/jenny
@@ -204,10 +205,10 @@ type TarefasResponse struct {
 }
 
 type TarefaItem struct {
-	ID       string `json:"id"`
-	Titulo   string `json:"titulo"`
-	Pronto   bool   `json:"pronto"`
-	Concluido bool  `json:"concluido"`
+	ID        string `json:"id"`
+	Titulo    string `json:"titulo"`
+	Pronto    bool   `json:"pronto"`
+	Concluido bool   `json:"concluido"`
 }
 
 // GroupState retornado por /api/grupo

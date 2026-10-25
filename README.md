@@ -1,6 +1,6 @@
 # ⚡ Game Bot Starter Kit & VPS Command Center (Go Native Engine)
 
-Template padronizado de altíssima performance desenvolvido em **Go (Golang)** para criação rápida de bots autônomos para qualquer jogo de navegador / idle, além de um **Command Center Central** no GitHub Pages monitorando todos os bots em execução na VPS em tempo real.
+Template padronizado de altíssima performance desenvolvido em **Go (Golang)** para criação rápida de bots autônomos para qualquer jogo de navegador / idle (PokeIdle, PokeIdleWorld, LoL Idle, Baiak, Tibia Idle, Sigma, Leveling Idle, Lux Idle, PokeLegacy, Farm Ricochet, etc.), acompanhado de um ecossistema completo de anti-ban, disjuntor heurístico, gestão de fadiga e automação dos 13 subsistemas de jogos idle.
 
 🌐 **Dashboard Central (GitHub Pages):** [https://kbelludoo.github.io/bot-template-go/](https://kbelludoo.github.io/bot-template-go/)
 
@@ -8,12 +8,34 @@ Template padronizado de altíssima performance desenvolvido em **Go (Golang)** p
 
 ## 🌟 Recursos Principais
 
-- 📊 **VPS Command Center Integrado:** Acompanhe a saúde da VPS (CPU load, memória RAM, uptime) e todos os 9 bots rodando simultaneamente (Huntera, Tibidle, Pokemon Sigma, Leveling Idle 2D, Baiak Idle, PokeIdle.io, Poke Idle World, Kick Miner Go e Twitch Miner Go) em uma única interface Cyberpunk / Dark — agora 100% nativos em Go (zero Node/Bun).
-- 🪶 **Ultra-leve:** Consumo típico entre **2 e 5 MB de RAM** por processo.
-- 🛡️ **Supervisão Contínua:** Múltiplas contas em Goroutines isoladas com auto-reconexão e recuperação contra panic via `engine.RunWithSupervisor`.
-- 🌐 **Web Dashboard Embutido:** Servidor HTTP local independente (`/api/status` e `/api/action`).
-- 📺 **Console Ticker no Terminal:** Estatísticas de CPU/RAM, Kills, Ouro e Contas ativas limpas a cada 4 segundos.
-- 🚀 **Pronto para VPS:** Zero navegadores na VPS. Script de compilação cruzada para Linux e template de serviço systemd incluídos.
+- ⚡ **Bot Scaffolder Integrado (`cmd/scaffold`):** Gere o esqueleto 100% completo, compilável e testado para qualquer jogo idle com um único comando (`go run ./cmd/scaffold -game "Novo Jogo"`).
+- 🛡️ **Anti-Ban Circuit Breaker (`pkg/engine`):** Disjuntor automático que detecta erros 429, 403 e recusas heurísticas do servidor (`experiência rápida demais`, `save malformado`, `outraAba: true`). Desarma o combate, recua para zona segura e aguarda cooldown de 15 a 30 minutos para prevenir suspensões de 7 dias.
+- 💤 **Auditoria de Stamina & Fadiga (`pkg/engine`):** Controlador com suporte a stamina decrescente (42h $\to$ 0h) e fadiga crescente (0% a 100%), histerese anti-thrashing (mínimo 5 a 15 min de descanso) e transição para dummies de treino.
+- 🧩 **Preservação de Schema Bruto (`pkg/engine/overlay`):** `StateOverlay` preserva 100% dos campos desconhecidos do servidor (`conquistas`, `skins`, `gemas`, `montaria`), enviando sempre envelopes de progresso íntegros e prevenindo o erro de "save malformado".
+- 🌐 **Networking Resiliente (`pkg/network`):**
+  - **Multi-IP VPS:** Suporte a IP secundário (`bindIP`) em HTTP e WebSockets usando `net.Dialer{LocalAddr: ...}` para isolamento de contas na mesma VPS.
+  - **WebSocket Keepalive:** Heartbeat ping/pong em segundo plano, reconexão automática com backoff exponencial e roteador tipado de mensagens (`client.On("action", ...)`).
+  - **Stealth Headers:** Impersonação fiel de navegadores modernos (`sec-ch-ua`, `User-Agent`, cookies de sessão).
+- 📦 **Suíte Multi-Protocolo (`pkg/protocol`):**
+  - `binary.go`: Leitor e Construtor (`ProtoReader` / `ProtoWriter`) de mensagens Protobuf, Varint, Zigzag e `ParseFatigueState` com zero-alocação.
+  - `socketio.go`: Parser e formatador Engine.IO v4 / Socket.IO v4 (`0`, `2`/`3`, `40`, `42<id>`, `43<id>`) e extrator de SHA-1 `DiscoverClientRelease`.
+  - `colyseus.go`: Opcodes binários do Colyseus v0.16 (`OpJoinRoom=10` com ACK imediato e `OpRoomData=13` com cabeçalho MsgPack).
+  - `trpc.go`: Envelopamento e leitura de lotes tRPC v10 (`?batch=1`).
+- ⏱️ **Controladores de Ritmo e Stealth (`pkg/engine/pacing.go` & `pkg/network/signer.go`):**
+  - `AdaptiveSpeedTuner`: Auto-ajuste dinâmico de cadência por taxa de sucesso e HTTP 429.
+  - `AntiWipeTracker`: Cooldown automático e rebaixamento de área após mortes seguidas.
+  - `RankingStealthController`: Desaceleração automática ao entrar no Top 3 do ranking público para evitar denúncias manuais.
+  - `RequestSigner` & `ComputeDJB2ShardPath`: Assinatura HMAC-SHA256 por requisição com `Idempotency-Key` UUIDv4, sharding DJB2 de 32 bits e `GenerateDeviceFingerprint`.
+- 🧩 **Os 13 Subsistemas Plug-and-Play (`pkg/subsystem`):**
+  1. `RouteSolver`: Cálculo matemático da melhor rota de caça por nível, fraquezas elementais, kills/h e bestiário.
+  2. `InventoryManager`: Auto-sell inteligente de lixo em NPCs, itens protegidos e controle de capacidade da mochila (>80%).
+  3. `DailyManager`: Detecção de virada de dia à meia-noite (UTC) e resgate de streaks de login e recompensas diárias.
+  4. `PotionManager`: Otimizador de consumo de poções de HP/Mana sem desperdício de cura e auto-recompra.
+  5. `PromotionManager`: Aquisição automática de promoções de classe em marcos de nível e manutenção de 100% de bênçãos (Bless 1 a 5).
+  6. `PartyCoordinator`: Coordenação de frota multi-contas na mesma VPS com cálculo da taxa coletiva proporcional.
+  7. `BossScheduler`: Agendador de spawn de chefes mundiais e dungeons temporárias.
+- 🪶 **Ultra-Leve & Zero CGO:** Consumo típico entre **2 e 5 MB de RAM** por processo, compilação estática (`CGO_ENABLED=0`) compatível com qualquer distribuição Linux.
+- 📺 **Console Ticker no Terminal:** Estatísticas em tempo real de CPU/RAM, Kills, Ouro e Contas a cada 4 segundos.
 
 ---
 
@@ -21,68 +43,88 @@ Template padronizado de altíssima performance desenvolvido em **Go (Golang)** p
 
 ```text
 bot-template-go/
-├── AI_INSTRUCTIONS.md          # 🤖 MANUAL COMPLETO PARA QUALQUER IA LER E GERAR NOVOS BOTS
-├── accounts.example.json       # Modelo de configuração de contas
-├── accounts.json               # Suas credenciais reais (ignorado pelo git)
-├── main.go                     # Ponto de entrada universal
-├── go.mod / go.sum             # Módulo Go nativo
-│
-├── docs/                       # 🌐 GITHUB PAGES (COMMAND CENTER AO VIVO)
-│   ├── index.html              # Dashboard Cyberpunk agregador
-│   └── status.json             # Telemetria em tempo real da VPS e bots
-│
-├── pkg/
-│   ├── engine/                 # Motor: ciclo de vida, supervisor e gerenciador
-│   ├── network/                # Conexões: WebSocket thread-safe e cliente HTTP
-│   ├── auth/                   # Autenticação e CDP bridge para Cloudflare
-│   ├── server/                 # Servidor HTTP e Dashboard embutido local
-│   ├── stealth/                # Scrub de anonimização (nicks, e-mails, IPs)
-│   ├── ghsync/                 # Wrappers da GitHub API via gh CLI
-│   ├── vpsmetrics/             # Métricas nativas da VPS (/proc)
-│   ├── scan/                   # Scanner de padrões de vazamento
-│   └── game/                   # 🎮 AQUI ENTRA A LÓGICA DO NOVO JOGO
+├── main.go                     # Entrypoint universal (carrega JSON, inicia bots, web server e console ticker)
+├── accounts.example.json       # Exemplo limpo para o usuário
+├── accounts.json               # Credenciais reais (ignorado pelo git)
+├── AGENTS.md                   # 🛡️ Diretrizes universais de IA e anti-ban
+├── AI_INSTRUCTIONS.md          # 🤖 Manual de engenharia para desenvolvimento de novos bots
+├── go.mod / go.sum             # Módulo Go nativo (dependência única: gorilla/websocket)
 │
 ├── cmd/
-│   ├── sync-vps-hub/           # Agregador de telemetria da VPS (hub 9 bots)
-│   ├── sync-stealth/           # Telemetria individual anonimizada por repo
-│   ├── sync-pages/             # Sync por bot (sigma/tibidle/leveling/generic)
-│   ├── watchdog/               # Monitor de saúde + auto-cura + alertas Telegram
-│   ├── huntera-web/            # Dashboard web leve com /api/status anônimo
-│   ├── audit/                  # Auditoria de vazamentos (anon/verify/live/docs/...)
-│   ├── deploy/                 # Aplicação de patches stealth na VPS
-│   ├── fix-history/            # Scrub de token/IP no histórico git
+│   ├── scaffold/               # ⚡ GERADOR AUTOMÁTICO DE NOVOS BOTS PARA A IA
 │   ├── build/                  # Cross-compile para Linux/Windows
-│   └── telegram-agent/         # Agente Telegram
+│   ├── watchdog/               # Monitor de saúde + auto-cura + alertas Telegram
+│   ├── sync-vps-hub/           # Agregador de telemetria da VPS (hub multi-bots)
+│   ├── audit/                  # Auditoria de integridade e vazamentos
+│   └── telegram-agent/         # Agente de alertas no Telegram
 │
-└── scripts/
-    ├── bot.service             # Template para systemd na VPS Ubuntu
-    └── telegram-chat.service   # Template systemd do agente Telegram
+├── pkg/
+│   ├── engine/                 # Motor: GameBot, CircuitBreaker, StaminaController, StateOverlay, Supervisor
+│   ├── network/                # HTTPClient (Multi-IP, Cookies, Retries) e SocketClient (Keepalive, On Router)
+│   ├── protocol/               # Binary Protobuf Wire & Varint Reader (Zero-Alloc)
+│   ├── subsystem/              # Os 13 Subsistemas: Solver, Inventory, Dailies, Potions, Promotion, Party, Bosses
+│   ├── logger/                 # Logging estruturado nativo com log/slog e tags por conta
+│   ├── server/                 # Servidor HTTP e Web Dashboard Cyberpunk/Dark embutido (//go:embed)
+│   ├── auth/                   # CDP bridge para desafios Cloudflare / Turnstile
+│   └── game/                   # Implementação de referência completa (PokeTrue / PokeIdle)
 ```
 
 ---
 
 ## 🚀 Como Criar um Bot para um Novo Jogo
 
-1. **Copie esta pasta:** Duplique a pasta `bot-template-go` e renomeie para o nome do jogo (ex: `meu-novo-bot`).
-2. **Abra com a IA:** Peça para a IA ler o arquivo `AI_INSTRUCTIONS.md`. Ela já saberá exatamente a estrutura, os métodos e como codificar a pasta `pkg/game/`.
-3. **Configure suas contas:** Copie `accounts.example.json` para `accounts.json` e adicione seus logins.
-4. **Execute localmente:**
-   ```bash
-   go run .
-   ```
-5. **Acesse o Dashboard Local:** Abra `http://localhost:3001` (ou a porta configurada) no navegador.
+### 1. Usando o Bot Scaffolder (Recomendado)
+Execute no terminal:
+```bash
+go run ./cmd/scaffold -game "Meu Jogo Idle" -protocol "websocket" -pkg "meujogo"
+```
+Isso gera instantaneamente a pasta `pkg/meujogo/` com:
+- `types.go`: Configurações de conta e modelo de dados.
+- `catalog.go` e `data/areas.json`: Catálogo de áreas e monstros embutido.
+- `api.go`: Cliente HTTP/WS com Circuit Breaker e Multi-IP injetados.
+- `bot.go`: Implementação de `engine.GameBot` com todos os 13 subsistemas conectados.
+- `bot_test.go`: Testes unitários prontos e compiláveis.
+
+### 2. Configure suas contas
+Copie `accounts.example.json` para `accounts.json` e adicione seus logins:
+```json
+[
+  {
+    "id": "acc-1",
+    "name": "Personagem 1",
+    "enabled": true,
+    "credentials": {
+      "token": "seu-token-aqui"
+    },
+    "settings": {
+      "huntTarget": "auto",
+      "autoHunt": true,
+      "autoSell": true,
+      "autoDaily": true
+    }
+  }
+]
+```
+
+### 3. Execute localmente
+```bash
+go run .
+```
+
+### 4. Acesse o Dashboard Local
+Abra `http://localhost:3001` no navegador para acompanhar o status e executar comandos manuais (curar, mudar área, vender inventário).
 
 ---
 
 ## 📦 Como Compilar para VPS Linux
 
-No Windows ou Linux (cmd Go nativo):
-```cmd
+Cross-compile nativo (sem CGO, compatível com qualquer distro Linux x86_64):
+```bash
+# Via script nativo:
 go run ./cmd/build linux
-```
-Ou manualmente no terminal:
-```cmd
-cmd /c "set GOOS=linux&& set GOARCH=amd64&& go build -ldflags=\"-s -w\" -o bot-app-linux ."
+
+# Ou manualmente via terminal:
+cmd /c "set GOOS=linux&& set GOARCH=amd64&& set CGO_ENABLED=0&& go build -ldflags=\"-s -w\" -o bot-app-linux ."
 ```
 
 Envie para a VPS:
@@ -92,31 +134,10 @@ scp bot-app-linux ubuntu@seu-servidor-ip:/home/ubuntu/meu-bot/
 
 ---
 
-## 🔄 Sincronização 24/7 com GitHub Pages
+## 🧪 Testes Automatizados
 
-Para manter o status da VPS e de todos os bots atualizado automaticamente no GitHub Pages a cada 2 minutos via cron:
-
+O template inclui testes unitários para todos os módulos:
 ```bash
-# Na VPS (binário Go nativo):
-go build -o sync-vps-hub ./cmd/sync-vps-hub
-crontab -e
-# Adicione a linha:
-*/2 * * * * /home/ubuntu/bot/sync-vps-hub --push >/dev/null 2>&1
+go test -v ./...
 ```
-
-### Outros cmds úteis (cron / manual)
-
-```bash
-# Telemetria individual anonimizada (sigma/tibidle/leveling/etc)
-go build -o sync-stealth ./cmd/sync-stealth
-
-# Watchdog de saúde dos 9 bots + auto-cura + alertas Telegram
-go build -o watchdog ./cmd/watchdog
-* * * * * /home/ubuntu/bot/watchdog >/dev/null 2>&1
-
-# Auditoria de vazamentos
-go build -o audit ./cmd/audit
-./audit anon -deep
-./audit verify
-./audit live
-```
+Todos os módulos (`pkg/engine`, `pkg/network`, `pkg/protocol`, `pkg/subsystem`, `pkg/logger`, `pkg/game`, `pkg/example`) passam com 100% de sucesso.

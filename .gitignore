@@ -20,8 +20,9 @@ secrets.json
 *.tok
 tokens.tok
 oci-manager
-data/
-bin/
+/data/
+/bin/
+!pkg/**/data/**
 
 # Logs e arquivos temporários
 *.log
@@ -31,3 +32,4 @@ temp/
 # OS artifacts
 .DS_Store
 Thumbs.db
+*.mbvmdb

@@ -52,13 +52,13 @@ type PokedexData struct {
 }
 
 type PokedexEntry struct {
-	Num         int            `json:"num"`
-	Tipos       []string       `json:"tipos"`
-	Base        BaseStats      `json:"base"`
-	Moves       []PokedexMove  `json:"moves"`
-	CaptureRate int            `json:"capture_rate"`
-	Exp         int            `json:"exp"`
-	NivelReq    int            `json:"nivel_req"`
+	Num         int           `json:"num"`
+	Tipos       []string      `json:"tipos"`
+	Base        BaseStats     `json:"base"`
+	Moves       []PokedexMove `json:"moves"`
+	CaptureRate int           `json:"capture_rate"`
+	Exp         int           `json:"exp"`
+	NivelReq    int           `json:"nivel_req"`
 }
 
 type BaseStats struct {
@@ -96,12 +96,13 @@ type SellItem struct {
 }
 
 var (
-	catalogOnce sync.Once
-	huntsList   []Hunt
-	huntsMap    map[string]Hunt
-	pokedex     PokedexData
-	lootPrices  map[string]int
-	evolucoesMap EvolucaoData
+	catalogOnce    sync.Once
+	huntsList      []Hunt
+	huntsMap       map[string]Hunt
+	pokedex        PokedexData
+	lootPrices     map[string]int
+	evolucoesMap   EvolucaoData
+	evolutionItems map[string]bool
 )
 
 func GetEvolucao(especie string) (EvolucaoEntry, bool) {
@@ -112,49 +113,49 @@ func GetEvolucao(especie string) (EvolucaoEntry, bool) {
 
 // Itens protegidos que NUNCA devem ser vendidos no auto-sell
 var ProtectedItems = map[string]bool{
-	"pokeball":             true,
-	"greatball":            true,
-	"superball":            true,
-	"ultraball":            true,
-	"premierball":          true,
-	"solariball":           true,
-	"potion":               true,
-	"great_potion":         true,
-	"ultra_potion":         true,
-	"hyper_potion":         true,
-	"full_restore":         true,
-	"revive":               true,
-	"max_revive":           true,
-	"medicine":             true,
-	"candy":                true,
-	"deluxe_candy":         true,
-	"devoted_token":        true,
-	"pvp_token":            true,
-	"leaf_stone":           true,
-	"fire_stone":           true,
-	"water_stone":          true,
-	"venom_stone":          true,
-	"thunder_stone":        true,
-	"rock_stone":           true,
-	"earth_stone":          true,
-	"coccon_stone":         true,
-	"crystal_stone":        true,
-	"darkness_stone":       true,
-	"enigma_stone":         true,
-	"heart_stone":          true,
-	"ice_stone":            true,
-	"metal_stone":          true,
-	"feather_stone":        true,
-	"held_ticket_t3":       true,
-	"held_ticket_t4":       true,
-	"held_ticket_t5":       true,
-	"held_ticket_t6":       true,
-	"held_ticket_t7":       true,
-	"boost_stone":          true,
-	"rough_gemstone":       true,
-	"elixir_of_knowledge":  true,
-	"fortune_elixir":       true,
-	"abobora_halloween":    true,
+	"pokeball":            true,
+	"greatball":           true,
+	"superball":           true,
+	"ultraball":           true,
+	"premierball":         true,
+	"solariball":          true,
+	"potion":              true,
+	"great_potion":        true,
+	"ultra_potion":        true,
+	"hyper_potion":        true,
+	"full_restore":        true,
+	"revive":              true,
+	"max_revive":          true,
+	"medicine":            true,
+	"candy":               true,
+	"deluxe_candy":        true,
+	"devoted_token":       true,
+	"pvp_token":           true,
+	"leaf_stone":          true,
+	"fire_stone":          true,
+	"water_stone":         true,
+	"venom_stone":         true,
+	"thunder_stone":       true,
+	"rock_stone":          true,
+	"earth_stone":         true,
+	"coccon_stone":        true,
+	"crystal_stone":       true,
+	"darkness_stone":      true,
+	"enigma_stone":        true,
+	"heart_stone":         true,
+	"ice_stone":           true,
+	"metal_stone":         true,
+	"feather_stone":       true,
+	"held_ticket_t3":      true,
+	"held_ticket_t4":      true,
+	"held_ticket_t5":      true,
+	"held_ticket_t6":      true,
+	"held_ticket_t7":      true,
+	"boost_stone":         true,
+	"rough_gemstone":      true,
+	"elixir_of_knowledge": true,
+	"fortune_elixir":      true,
+	"abobora_halloween":   true,
 }
 
 // InitCatalog inicializa o banco de dados em memória a partir dos JSONs embutidos
@@ -190,9 +191,17 @@ func InitCatalog() {
 		}
 
 		evolucoesMap = make(EvolucaoData)
+		evolutionItems = make(map[string]bool)
 		if err := json.Unmarshal(evolucoesJSON, &evolucoesMap); err != nil {
 			log.Printf("[Catálogo] Erro ao carregar evolucoes.json: %v", err)
 		} else {
+			for _, evolution := range evolucoesMap {
+				for _, option := range evolution.Opcoes {
+					for item := range option.Pedras {
+						evolutionItems[item] = true
+					}
+				}
+			}
 			log.Printf("[Catálogo] %d árvores de evolução carregadas.", len(evolucoesMap))
 		}
 	})
@@ -438,7 +447,7 @@ func GetSellableLoot(stash map[string]int) []SellItem {
 		if count <= 0 {
 			continue
 		}
-		if ProtectedItems[item] {
+		if ProtectedItems[item] || evolutionItems[item] {
 			continue
 		}
 		// Apenas itens cadastrados no loot com valor de venda

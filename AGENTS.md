@@ -1,138 +1,30 @@
-# 🛡️ REGRAS GLOBAIS DE ENGENHARIA E ANTI-BAN PARA BOTS EM GO
+# AGENTS.md — Go 1.27 Solo Agent & MBVM-DB Standard
 
-> **ESCOPO:** Esta regra se aplica a TODOS os bots de jogos desenvolvidos a partir deste template em Go (Golang) (PokeIdle, PokeIdleWorld, LoL Idle, Baiak, Tibia Idle, Sigma, Leveling Idle, Lux Idle, PokeLegacy, Farm Ricochet, etc.).
-> **IMPORTÂNCIA:** CRÍTICA / INVIOLÁVEL. Prevenção de suspensões, integridade de contas e completude máxima de gameplay.
+Universal configuration following the open `agents.md` specification.
+Canonical specification: `AGENTS.mbvm`.
 
----
+## Overview
+- **Language**: Go 1.27 (Solo autonomous agent execution, zero external orchestrators).
+- **Context Engine**: MBVM-DB Smart Slicing (99% token reduction over raw files).
+- **Rule of Thumb**: Prioritize `mbvm-db slice . <symbol> 2` before reading entire packages.
 
-## 1. 🚨 PADRÃO OBRIGATÓRIO: CIRCUIT BREAKER DE ANTI-CHEAT (`pkg/engine`)
+## Commands
+- **Context Slice**: `mbvm-db slice . <symbol> 2`
+- **Inspect Bytecode**: `mbvm-db inspect .`
+- **Test Suite**: `go test -race -count=1 -v ./...`
+- **Static Vet**: `go vet ./...`
+- **Security Audit**: `govulncheck ./...`
+- **Pre-commit Compile**: `go-tools mbvm .`
 
-Todo bot em Go DEVE utilizar o módulo padronizado `pkg/engine.CircuitBreaker`.
+## Architecture & Go Conventions
+- **Errors**: Always wrap with context using `%w` (`fmt.Errorf("context: %w", err)`). Never use `%v` for errors.
+- **Consumer-side Interfaces**: Define interfaces in the package that consumes them (*"accept interfaces, return structs"*).
+- **Goroutine Leak Prevention**: Every goroutine must have a deterministic exit path listening to `<-ctx.Done()`.
+- **Modern Stdlib**: Use `slog` for structured logging, `slices`/`maps`, `unique` for value interning, and `iter` for range-over-func.
+- **Modularity**: Strict 400 LOC ceiling per file. Refactor into cohesive submodules near the limit.
 
-### A. Gatilhos de Desarme Imediato (Trip)
-O bot deve registrar falha ou desarmar imediatamente (`cb.Trip(...)`) ao detectar qualquer um dos seguintes padrões:
-- **HTTP 429** (Too Many Requests / Rate limit)
-- **HTTP 403** (Cloudflare / WAF Challenge)
-- **Rejeição Heurística do Servidor:**
-  - `"experiência rápida demais para este personagem"` (ou qualquer variação)
-  - `"pontos de atributo demais"`
-  - `"contadores voltaram para trás"` / relógio inválido
-  - `"save malformado"`
-  - `"recusado": true`
-  - `"outraAba": true` (conflito de concorrência)
-  - `"banido": true` / aviso de suspensão
-- Use a função utilitária nativa: `engine.IsAntiCheatRejection(statusCode, body)`.
-
-### B. Ações Obrigatórias ao Desarmar (Trip):
-1. **Desarmar Combate:** Parar de bater ou matar monstros imediatamente (`AutoHunt = false`).
-2. **Recuo para Zona Segura:** Mover o personagem para a Fonte, Templo, Cidade ou Depot (`local: "fonte"`).
-3. **Pausa Absoluta de Saves (Cooldown de 15 a 30 minutos):** NUNCA insistir em novos `PUT /api/save` ou pacotes de progresso após uma recusa. A insistência é o que dispara o algoritmo de ban automático de 7 dias por "uso de programas de terceiros".
-4. **Recuperação em Half-Open:** Quando o cooldown expirar, recarregar o estado canônico exclusivamente via `GET /api/eu` (ou equivalente oficial) antes de testar qualquer nova ação.
-
----
-
-## 2. 👥 REGRA DA TAXA COLETIVA EM GRUPO (COLLECTIVE THROTTLING)
-
-Quando o bot operar em party/grupo cooperativo com compartilhamento de abates e bônus de EXP via WebSocket:
-- A taxa de monstros por minuto de CADA membro individual deve ser reduzida proporcionalmente.
-- **Fórmula Obrigatória:**
-  $$\text{KillRate}_{\text{individual}} \le \frac{\text{KillRate}_{\text{solo\_seguro}}}{N_{\text{membros}} \times (1 + \text{BônusGrupo})}$$
-- Use o helper nativo do template: `engine.CalculatePartyMaxKillRate(soloRate, partySize, bonusExpPercent)`.
-- **Exemplo Real:** Se o teto seguro solo for 40 kills/min, em grupo de 4 com bônus de 45%, cada bot deve matar no máximo ~6.89 monstros/minuto (~8.7 segundos por monstro).
-
----
-
-## 3. 🧩 PRESERVAÇÃO DE SCHEMA (`RawEstado map[string]any`)
-
-- Nunca envie saves derivados apenas de structs parciais de Go.
-- Guarde o JSON bruto recebido do servidor em `RawEstado map[string]any`.
-- Altere apenas os campos estritamente necessários (ouro, level, exp) e reenvie o envelope completo `{ "estado": raw }`.
-- Isso evita o erro de `"save malformado"` que ocorre quando o servidor espera dezenas de chaves adicionais (conquistas, gemas, skins, montaria, espolios, etc.).
-
----
-
-## 4. 🔒 ISOLAMENTO DE INSTÂNCIAS E SESSÕES
-
-- **`X-Instancia` Único:** Gere uma string única na inicialização (`Math.random() + Date.now()`) e envie em todas as requisições para evitar `outraAba: true`.
-- **Multi-Contas com Multi-IP:** Quando rodar múltiplas contas na mesma VPS, configure IPs secundários (`bindIP: "10.0.0.X"`) usando `net.Dialer{LocalAddr: ...}` no HTTP e WebSocket.
-- **Contas Distintas para Party:** Cada vaga no grupo deve ser uma conta cadastrada separada. Nunca conecte a mesma conta mais de uma vez.
-
----
-
-## 5. 🛡️ SEGURANÇA DE DADOS, STEALTH E ZERO HARDCODING
-
-1. **Zero Credenciais no Git:** NUNCA commite tokens, cookies, senhas, IPs de VPS ou arquivos `.key`. Use sempre `accounts.json` (no `.gitignore`) ou variáveis de ambiente.
-2. **Nomes Anônimos no Dashboard Público:** NUNCA publique o nome real do personagem no GitHub Pages ou status público. Exiba sempre vocação/classe, índice da conta (`Conta #1`) e métricas técnicas.
-3. **Consumo Leve na VPS:** Processo em Go puro, sem Chromium/Puppeteer na VPS, mantendo RAM abaixo de 15 MB por bot.
-4. **Resiliência Total:** Toda conta deve rodar dentro de `engine.RunWithSupervisor` com `recover()`.
-
----
-
-## 6. 💤 AUDITORIA OBRIGATÓRIA DE STAMINA / FADIGA (FATIGUE & VIGOR PROTOCOL)
-
-> **REGRA CRÍTICA PARA TODA IA:** Antes de criar ou autorizar o loop de caça contínua de qualquer bot, a IA DEVE auditar obrigatoriamente se o jogo possui limitadores de tempo de caça: **Stamina, Vigor, Energia ou Fadiga (Fatigue)**.
-> Caçar com stamina esgotada ou fadiga alta reduz o ganho de EXP para 50%, 20% ou 0%, além de desperdiçar recursos da VPS e elevar o score de suspeita do anti-cheat por comportamento anti-humano.
-
-### A. Os 3 Mandamentos Obrigatórios da Auditoria de Fadiga
-Toda IA deve mapear e responder a estas 3 perguntas antes de liberar a caça:
-1. **O jogo possui Stamina ou Fadiga?**
-   - Inspecione pacotes (REST, WebSocket, Protobuf), estado do personagem ou código-fonte client-side.
-   - Busque identificadores como: `stamina`, `stamina_hours`, `fatigue_milli`, `FatigueState`, `online_kpm`, `window_farm_ms`, `farm_available_ms`, `energy`, `vigor`, `cansaco`.
-   - Identifique se o contador é **decrescente** (ex: 42h $\to$ 0h) ou **crescente** (ex: 0 $\to$ 1000 milli = 0% $\to$ 100% de fadiga).
-2. **Até quando o bot deve ir? (Limiar de Operação Segura):**
-   - O bot NUNCA deve continuar caçando quando a EXP/drop estiver penalizada.
-   - **Fadiga Crescente (ex: `fatigue_milli` 0-1000):** Parar a caçada ao atingir $\ge 80\%$ de fadiga (`fatigue_milli >= 800`) OU quando o farm disponível for $< 2$ minutos (`farm_available_ms < 120000`).
-   - **Stamina Decrescente (ex: 42h):** Parar a caçada ao atingir o limiar de penalidade severa (geralmente $\le 14\text{h}$ de stamina, onde o ganho de EXP cai pela metade ou zera).
-   - **Histerese Anti-Thrashing (Obrigatória):** NUNCA alternar em ciclo rápido. Para retomar a caçada, o personagem deve estar abaixo de $30\%$ de fadiga (`fatigue_milli < 300`) E farm disponível $> 10$ minutos, respeitando um descanso mínimo de 5 a 15 minutos.
-3. **Como o bot recupera a Stamina / Fadiga?**
-   - **Recuo para Zona Segura / Desarmar Combate:** Sair da caçada (`LeaveHunt` / desativar `AutoHunt`), mover para Templo, Fonte, Cidade ou Depot e definir status `"resting"`.
-   - **Treino em Dummies / Regeneração Ativa:** Se o jogo permitir regenerar stamina enquanto treina (como no Lux Idle / Tibidle), mover para os *Target Dummies* para treinar skills enquanto a stamina recarrega.
-   - **Refil Automático por Ouro / Poções:** Se houver compra de refil de stamina in-game por ouro (`staminaRefillCost`) e o lucro da caçada cobrir o custo com folga, comprar e usar a recarga automaticamente.
-
-### B. Contrato de Telemetria no Dashboard Central (`status.Extra`)
-Todo bot deve reportar os indicadores de fadiga no mapa `status.Extra` para que o painel web e o Watchdog alertem se a conta estiver com ganho de EXP comprometido:
-```json
-"extra": {
-  "fatiguePercent": 14.8,
-  "farmAvailableMin": 42.5,
-  "onlineKpm": 31.0,
-  "isResting": false,
-  "staminaHours": 41.5
-}
-```
-
----
-
-## 7. 🔬 ENGENHARIA REVERSA PROFUNDA E EXAUSTIVA: O BOT DEVE SER 100% COMPLETO (PROIBIDO BOTS SUPERFICIAIS)
-
-> **REGRA DE OURO INVIOLÁVEL:** É ESTRITAMENTE PROIBIDO criar ou entregar bots superficiais ("barebones") que apenas batem em monstros e coletam ouro básico.
-> Jogos modernos de navegador (idle/RPG) possuem dezenas de subsistemas interligados que multiplicam em até 5x a 10x o ganho de EXP, ouro e sobrevivência. Um bot que ignora essas mecânicas torna o personagem fraco, estagnado e desperdiça o potencial da conta e da VPS.
-
-### A. O Mandamento da Leitura Integral do Jogo
-A IA encarregada de desenvolver ou atualizar qualquer bot DEVE:
-1. **Despejar e Ler os Scripts JavaScript do Jogo:** Baixar o bundle client-side (`main.js`, `bundle.js`, `app.js`, arquivos `.ts` ou `.wasm`) e inspecionar todas as funções, enums, chamadas de API, endpoints REST e eventos de WebSocket.
-2. **Mapear Todos os Handlers do Protocolo:** Mapear cada mensagem recebida do servidor e garantir que o bot processe e responda adequadamente a cada evento do jogo.
-3. **Persistir Catálogos de Dados (`pkg/game/`):** Extrair do client do jogo os catálogos completos (monstros, itens, equipamentos, fraquezas elementais, áreas, custos de treino e buffs) embutindo-os em arquivos JSON/Go para alimentar os algoritmos de decisão inteligente.
-
-### B. Checklist Obrigatório de Subsistemas do Jogo
-Todo bot DEVE auditar e automatizar obrigatoriamente os seguintes sistemas quando presentes no jogo:
-
-| Subsistema | Ação Obrigatória do Bot Go |
-| :--- | :--- |
-| 🎯 **Presas / Preys / Bounties** | Selecionar automaticamente alvos com bônus máximo de EXP/Dano; roletar slots gratuitos ou usar cartas/ouro com lucro. |
-| 🎁 **Recompensas Diárias / Login Streak** | Resgatar bônus diários automaticamente no login ou a cada virada de dia do servidor. |
-| 📜 **Missões / Tasks / Quests / Battle Pass** | Aceitar, acompanhar e resgatar recompensas de tarefas diárias, missões de caça e passes de temporada. |
-| 👑 **Promoção de Vocação / Rank Up / Ascensão** | Detectar requisitos de nível (ex: Nv. 20, 50, 100) e comprar/ativar a promoção de classe imediatamente para desbloquear multiplicadores. |
-| 🛡️ **Bênçãos / Blessings / Proteção contra Morte** | Comprar e manter ativas as proteções contra perda de EXP/itens (Bless 1 a 5). |
-| 👹 **Chefes / World Bosses / Raids / Portais** | Monitorar horários de surgimento e ingressar automaticamente em eventos de chefes para drops lendários. |
-| 🔮 **Forja / Refino / Upgrades / Gemas / Runas** | Equipar gemas com sinergia com a classe e aprimorar equipamentos principais quando os recursos permitirem. |
-| 🏋️ **Dummies de Treino / Sistema de Treino** | Transitar automaticamente para os *Target Dummies* durante descansos de stamina ou quando o farm estiver em cooldown. |
-| 🧪 **Poções / Consumíveis / Elixires / Buffs** | Monitorar estoque de poções (HP/Mana) e consumíveis de bônus de EXP; reabastecer e usar conforme necessidade. |
-| 📖 **Bestiário / Codex / Charms** | Registrar abates para completar o bestiário do jogo e desbloquear runas/charms passivos. |
-| 👥 **Party & Sinergia de Frota (Multi-Bot)** | Criar sala/party automaticamente, convidar outras contas da frota, aceitar convites e compartilhar bônus cooperativos. |
-| 🎒 **Auto-Sell, Auto-Loot & Gestão de Mochila** | Vender lixo automaticamente, guardar itens raros no Depot/Baú e nunca travar a caçada por inventário cheio. |
-
-### C. Auditoria Pré-Entrega (System Audit)
-Antes de considerar o desenvolvimento de um bot finalizado, a IA deve realizar um **System Audit** comparando:
-$$\text{Mecânicas Descobertas no Client JS} \quad \text{vs} \quad \text{Mecânicas Implementadas no Bot Go}$$
-Se houver qualquer subsistema do jogo sem tratamento correspondente no bot, **a implementação é considerada incompleta e deve ser complementada imediatamente.**
+## Never-Do List (Guardrails)
+- Never omit `-race` or `-count=1` when validating tests.
+- Never use `time.Sleep` for concurrency synchronization in tests.
+- Never introduce `interface{}` or `any` without strict codec justification.
+- Never commit with `--no-verify`; the global pre-commit hook must validate AST integrity.

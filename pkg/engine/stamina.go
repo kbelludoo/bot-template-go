@@ -41,8 +41,8 @@ type StaminaConfig struct {
 func DefaultStaminaConfig(t StaminaType) StaminaConfig {
 	return StaminaConfig{
 		Type:                  t,
-		MaxFatiguePercent:    80.0,
-		ResumeFatiguePercent: 30.0,
+		MaxFatiguePercent:     80.0,
+		ResumeFatiguePercent:  30.0,
 		MinFarmAvailableMs:    120000, // 2 min
 		ResumeFarmAvailableMs: 600000, // 10 min
 		MinStaminaHours:       14.0,   // limite onde a EXP cai para 50% ou 0%
@@ -62,6 +62,8 @@ type StaminaController struct {
 	farmAvailableMs uint64
 	staminaHours    float64
 	onlineKpm       float64
+	hasFatigue      bool
+	hasStamina      bool
 }
 
 // NewStaminaController inicializa um controlador thread-safe
@@ -78,13 +80,15 @@ func (s *StaminaController) UpdateFatigue(milli uint32, farmAvailMs uint64, kpm 
 	s.fatigueMilli = milli
 	s.farmAvailableMs = farmAvailMs
 	s.onlineKpm = kpm
+	s.hasFatigue = true
 }
 
-// UpdateStaminaHours atualiza métrica de horas de stamina (estilo Tibia/Huntera)
+// UpdateStaminaHours atualiza métrica de horas de stamina (estilo Tibia/Huntera/Baiak)
 func (s *StaminaController) UpdateStaminaHours(hours float64) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	s.staminaHours = hours
+	s.hasStamina = true
 }
 
 // ShouldRest avalia se a conta deve parar imediatamente de caçar
@@ -98,19 +102,27 @@ func (s *StaminaController) ShouldRest() (bool, string) {
 
 	switch s.cfg.Type {
 	case StaminaTypeIncreasingFatigue:
+		if !s.hasFatigue {
+			return true, "Aguardando métricas de fadiga do servidor"
+		}
 		fatiguePct := float64(s.fatigueMilli) / 10.0
 		if fatiguePct >= s.cfg.MaxFatiguePercent {
 			return true, fmt.Sprintf("Fadiga crítica atingida: %.1f%% (limite: %.1f%%)", fatiguePct, s.cfg.MaxFatiguePercent)
 		}
-		if s.farmAvailableMs > 0 && s.farmAvailableMs < s.cfg.MinFarmAvailableMs {
+		if s.farmAvailableMs < s.cfg.MinFarmAvailableMs {
 			availMin := float64(s.farmAvailableMs) / 60000.0
 			return true, fmt.Sprintf("Tempo de farm esgotando: %.1f min restantes", availMin)
 		}
 
 	case StaminaTypeDecreasing:
-		if s.staminaHours > 0 && s.staminaHours <= s.cfg.MinStaminaHours {
+		if !s.hasStamina || math.IsNaN(s.staminaHours) || math.IsInf(s.staminaHours, 0) {
+			return true, "Aguardando métricas válidas de stamina do servidor"
+		}
+		if s.staminaHours <= s.cfg.MinStaminaHours {
 			return true, fmt.Sprintf("Stamina crítica atingida: %.1fh (limite: %.1fh)", s.staminaHours, s.cfg.MinStaminaHours)
 		}
+	default:
+		return true, "Tipo de stamina desconhecido"
 	}
 
 	return false, ""
@@ -134,8 +146,8 @@ func (s *StaminaController) CanResume() (bool, string) {
 	switch s.cfg.Type {
 	case StaminaTypeIncreasingFatigue:
 		fatiguePct := float64(s.fatigueMilli) / 10.0
-		farmRecovered := s.farmAvailableMs == 0 || s.farmAvailableMs >= s.cfg.ResumeFarmAvailableMs
-		fatigueRecovered := fatiguePct <= s.cfg.ResumeFatiguePercent
+		farmRecovered := s.hasFatigue && s.farmAvailableMs > s.cfg.ResumeFarmAvailableMs
+		fatigueRecovered := s.hasFatigue && fatiguePct < s.cfg.ResumeFatiguePercent
 
 		if fatigueRecovered && farmRecovered {
 			return true, fmt.Sprintf("Fadiga recuperada: %.1f%% | Farm disponível: %.1f min", fatiguePct, float64(s.farmAvailableMs)/60000.0)
@@ -143,19 +155,22 @@ func (s *StaminaController) CanResume() (bool, string) {
 		return false, fmt.Sprintf("Ainda recuperando (Fadiga: %.1f%% / Farm: %.1f min)", fatiguePct, float64(s.farmAvailableMs)/60000.0)
 
 	case StaminaTypeDecreasing:
-		if s.staminaHours >= s.cfg.ResumeStaminaHours {
+		if s.hasStamina && !math.IsNaN(s.staminaHours) && !math.IsInf(s.staminaHours, 0) && s.staminaHours >= s.cfg.ResumeStaminaHours {
 			return true, fmt.Sprintf("Stamina verde recuperada: %.1fh", s.staminaHours)
 		}
 		return false, fmt.Sprintf("Ainda recuperando stamina (%.1fh / meta: %.1fh)", s.staminaHours, s.cfg.ResumeStaminaHours)
 	}
 
-	return true, "Descanso concluído"
+	return false, "Tipo de stamina desconhecido"
 }
 
 // EnterRest sinaliza a transição para modo de descanso / zona segura
 func (s *StaminaController) EnterRest() {
 	s.mu.Lock()
 	defer s.mu.Unlock()
+	if s.isResting {
+		return
+	}
 	s.isResting = true
 	s.restStartTime = time.Now()
 }

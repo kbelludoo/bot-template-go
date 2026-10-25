@@ -5,7 +5,7 @@ import (
 	_ "embed"
 	"encoding/json"
 	"fmt"
-	"log"
+	"log/slog"
 	"os"
 	"os/signal"
 	"runtime"
@@ -15,6 +15,7 @@ import (
 
 	"bot-template-go/pkg/engine"
 	"bot-template-go/pkg/game"
+	"bot-template-go/pkg/logger"
 	"bot-template-go/pkg/server"
 )
 
@@ -32,22 +33,25 @@ func formatNumber(n int64) string {
 }
 
 func main() {
-	log.Println("================================================================================")
-	log.Println("       ⚡ NATIVE GO MULTI-BOT ENGINE (ULTRA-LEVE & ALTA PERFORMANCE) ⚡        ")
-	log.Println("================================================================================")
+	logger.InitLogger(slog.LevelInfo)
+
+	fmt.Println("================================================================================")
+	fmt.Println("       ⚡ NATIVE GO MULTI-BOT ENGINE (ULTRA-LEVE & ALTA PERFORMANCE) ⚡        ")
+	fmt.Println("================================================================================")
 
 	// 1. Carregar contas do accounts.json (cria a partir do template se não existir)
 	configFile := "accounts.json"
 	content, err := os.ReadFile(configFile)
 	if err != nil {
-		log.Printf("Aviso: %s não encontrado. Criando arquivo a partir do template...", configFile)
+		slog.Warn("Arquivo accounts.json não encontrado. Criando template padrão...")
 		_ = os.WriteFile(configFile, defaultAccountsJSON, 0644)
 		content = defaultAccountsJSON
 	}
 
 	var accountConfigs []game.AccountConfig
 	if err := json.Unmarshal(content, &accountConfigs); err != nil {
-		log.Fatalf("Falha ao analisar %s: %v", configFile, err)
+		slog.Error("Falha crítica ao analisar accounts.json", "erro", err)
+		os.Exit(1)
 	}
 
 	targetAcc := os.Getenv("ACCOUNT")
@@ -64,19 +68,27 @@ func main() {
 	}
 
 	if len(activeConfigs) == 0 {
-		log.Println("⚠️ Nenhuma conta com 'enabled: true' encontrada em accounts.json.")
-		log.Println("Edite accounts.json e habilite sua conta para iniciar.")
+		slog.Warn("Nenhuma conta com 'enabled: true' encontrada em accounts.json")
+		slog.Info("Edite accounts.json e habilite sua conta para iniciar.")
+	}
+	if err := game.ValidateActiveAccounts(activeConfigs); err != nil {
+		slog.Error("Configuração de contas inválida", "erro", err)
+		os.Exit(1)
 	}
 
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
+	// Context com graceful shutdown nativo
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
 
 	manager := engine.NewBotManager()
 
-	log.Printf("Iniciando %d conta(s) em Goroutines isoladas com supervisor…\n", len(activeConfigs))
+	slog.Info("Iniciando contas em Goroutines isoladas com supervisor", "total", len(activeConfigs))
 	for _, cfg := range activeConfigs {
 		b := game.NewBot(cfg)
-		manager.Register(b)
+		if err := manager.Register(b); err != nil {
+			slog.Error("Conta ignorada por erro de registro", "id", cfg.ID, "erro", err)
+			continue
+		}
 		go engine.RunWithSupervisor(ctx, b)
 	}
 
@@ -90,9 +102,9 @@ func main() {
 
 	srv := server.NewServer(webPort, manager)
 	go func() {
-		log.Printf("[Web Server] Dashboard online em http://localhost:%d\n", webPort)
-		if err := srv.Start(); err != nil {
-			log.Printf("[Web Server] Encerrado: %v", err)
+		slog.Info("Dashboard online", "url", fmt.Sprintf("http://localhost:%d", webPort))
+		if err := srv.Start(); err != nil && err.Error() != "http: Server closed" {
+			slog.Warn("Web Server encerrado", "erro", err)
 		}
 	}()
 
@@ -153,13 +165,13 @@ func main() {
 		}
 	}()
 
-	// 4. Capturar sinais para desligamento limpo
-	sigChan := make(chan os.Signal, 1)
-	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
+	// 4. Bloquear até receber sinal SIGINT/SIGTERM
+	<-ctx.Done()
+	slog.Info("Sinal de encerramento recebido. Desligando graciosamente...")
 
-	<-sigChan
-	log.Println("\nSinal de encerramento recebido. Desligando bots...")
-	cancel()
-	time.Sleep(1 * time.Second)
-	log.Println("Bot encerrado com sucesso.")
+	shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer shutdownCancel()
+	_ = srv.Stop(shutdownCtx)
+
+	slog.Info("Todos os bots e serviços foram desligados com sucesso.")
 }

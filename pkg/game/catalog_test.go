@@ -100,3 +100,21 @@ func TestPotionSelector(t *testing.T) {
 		t.Errorf("Esperava ultra_potion, obteve: %s", p2)
 	}
 }
+
+func TestAutoSellPreservesEveryEvolutionMaterial(t *testing.T) {
+	InitCatalog()
+	stash := make(map[string]int)
+	for _, evolution := range evolucoesMap {
+		for _, option := range evolution.Opcoes {
+			for item := range option.Pedras {
+				stash[item] = 1
+			}
+		}
+	}
+	if len(stash) == 0 {
+		t.Fatal("catálogo de materiais de evolução vazio")
+	}
+	if items := GetSellableLoot(stash); len(items) != 0 {
+		t.Fatalf("materiais de evolução vendidos: %+v", items)
+	}
+}
