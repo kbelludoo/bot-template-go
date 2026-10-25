@@ -84,7 +84,7 @@ var allBots = []BotProbe{
 	{ID: "farmricochet", Name: "🌾 Farm Ricochet", Port: 3013, URL: "http://127.0.0.1:3013/api/status", RestartCmd: "sudo systemctl restart farmbot.service", Type: "systemd"},
 	{ID: "poketrue", Name: "🔥 PokeTrue Multi-Bot", Port: 3014, URL: "http://127.0.0.1:3014/api/status", RestartCmd: "sudo systemctl restart poketrue.service", Type: "systemd"},
 	{ID: "pokepixel", Name: "👾 PokePixel Multi-Bot", Port: 3015, URL: "http://127.0.0.1:3015/api/status", RestartCmd: "sudo systemctl restart pokepixel.service", Type: "systemd"},
-	{ID: "pocketweb", Name: "🌐 PocketWeb Server", Port: 8888, URL: "http://127.0.0.1:8888/", RestartCmd: "sudo systemctl restart floppy-server.service", Type: "systemd"},
+	{ID: "pocketweb", Name: "🌐 AI-Go-Browser", Port: 8888, URL: "http://127.0.0.1:8888/", RestartCmd: "sudo systemctl restart floppy-server.service", Type: "systemd"},
 }
 
 // -------------------------------------------------------------
@@ -481,9 +481,9 @@ func probeService(key string, d botItem) interface{} {
 				"ramSysMB": 8.5,
 				"accounts": []interface{}{
 					map[string]interface{}{
-						"name":        "PocketWeb Hub",
-						"vocation":    "Offline Web Mesh",
-						"currentArea": "Navegador & Cache P2P",
+						"name":        "AI-Go-Browser Core",
+						"vocation":    "Navegador de IA (Go Puro)",
+						"currentArea": "Navegação Semântica & CDP (<75 MB RAM)",
 						"status":      "Online",
 						"gold":        int64(0),
 						"kills":       0,
@@ -572,7 +572,7 @@ func syncHub() {
 		"farmricochet":  {"Farm Ricochet Bot", "Farm Ricochet", "Go Native Engine (Circuit Breaker)", 3013, "https://kbelludoo.github.io/farmricochet-bot/", nil},
 		"poketrue":      {"PokeTrue Multi-Bot", "PokeTrue", "Go Native Engine (Weakness Solver)", 3014, "https://kbelludoo.github.io/bot-template-go/?v=force1", nil},
 		"pokepixel":     {"PokePixel Multi-Bot", "PokePixel Online", "Go Native Engine (Auto-Catch)", 3015, "https://kbelludoo.github.io/pokepixel-bot/", nil},
-		"pocketweb":     {"PocketWeb Mesh Server", "PocketWeb", "Go Native Engine (Mesh Server)", 8888, "https://kbelludoo.github.io/agent-go/", nil},
+		"pocketweb":     {"AI-Go-Browser (Navegador)", "AI-Go-Browser", "Go Native Browser Engine (<75 MB RAM)", 8888, "https://kbelludoo.github.io/ai-go-browser/", nil},
 		"kaggle":        {"Kaggle Training Watcher", "Kaggle", "Go Native Agent (24/7 Watcher)", 0, "https://kbelludoo.github.io/agent-go/", nil},
 		"telegram":      {"Telegram Relay Agent", "Telegram", "Go Native Agent (Bot Command)", 0, "https://kbelludoo.github.io/agent-go/", nil},
 	}

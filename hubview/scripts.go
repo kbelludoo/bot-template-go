@@ -282,7 +282,7 @@ const hubScripts = `
           var badge = document.getElementById('badge-' + k);
           var accounts = getUnifiedAccounts(b);
           var isStream = (k === 'kickminer' || k === 'twitchminer');
-          var isService = (k === 'pocketweb' || k === 'kaggle' || k === 'telegram');
+          var isService = (k === 'pocketweb' || k === 'aigobrowser' || k === 'kaggle' || k === 'telegram');
 
           // Verificação de Level Up com chave única por conta e sem repetição
           for (var ai = 0; ai < accounts.length; ai++) {

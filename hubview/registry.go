@@ -116,10 +116,17 @@ var knownMetas = map[string]BotMeta{
 		IsStream: true,
 	},
 	"pocketweb": {
-		Key: "pocketweb", Icon: "🌐", Name: "PocketWeb Mesh Server", Game: "PocketWeb • Navegador Sem Internet",
+		Key: "pocketweb", Icon: "🌐", Name: "AI-Go-Browser (Navegador)", Game: "AI-Go-Browser • Navegador de IA em Go",
 		Port: 8888, Theme: "#3b82f6", ThemeBg: "rgba(59, 130, 246, 0.12)",
 		ThemeBorder: "rgba(59, 130, 246, 0.45)", ThemeGlow: "rgba(59, 130, 246, 0.25)",
-		DashboardURL: "https://kbelludoo.github.io/agent-go/", Order: 16,
+		DashboardURL: "https://kbelludoo.github.io/ai-go-browser/", Order: 16,
+		IsService: true,
+	},
+	"aigobrowser": {
+		Key: "aigobrowser", Icon: "🌐", Name: "AI-Go-Browser (Navegador)", Game: "AI-Go-Browser • Navegador de IA em Go",
+		Port: 8888, Theme: "#3b82f6", ThemeBg: "rgba(59, 130, 246, 0.12)",
+		ThemeBorder: "rgba(59, 130, 246, 0.45)", ThemeGlow: "rgba(59, 130, 246, 0.25)",
+		DashboardURL: "https://kbelludoo.github.io/ai-go-browser/", Order: 16,
 		IsService: true,
 	},
 	"kaggle": {
@@ -144,7 +151,7 @@ func GetMeta(key string, b BotData) BotMeta {
 		if b.Port > 0 {
 			m.Port = b.Port
 		}
-		if b.DashboardURL != "" {
+		if b.DashboardURL != "" && key != "pocketweb" && key != "aigobrowser" {
 			m.DashboardURL = b.DashboardURL
 		}
 		return m
