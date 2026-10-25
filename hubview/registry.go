@@ -83,12 +83,6 @@ var knownMetas = map[string]BotMeta{
 		ThemeBorder: "rgba(192, 132, 252, 0.45)", ThemeGlow: "rgba(192, 132, 252, 0.25)",
 		DashboardURL: "https://kbelludoo.github.io/baiak-idle-bot/", Order: 10,
 	},
-	"lolidle": {
-		Key: "lolidle", Icon: "⚔️", Name: "LoL Idle Multi-Bot", Game: "LoL Idle • Summoner's Rift Idle RPG",
-		Port: 3011, Theme: "#c8aa6e", ThemeBg: "rgba(200, 170, 110, 0.12)",
-		ThemeBorder: "rgba(200, 170, 110, 0.45)", ThemeGlow: "rgba(10, 200, 185, 0.25)",
-		DashboardURL: "https://kbelludoo.github.io/lolidle-bot/", Order: 11,
-	},
 	"luxidle": {
 		Key: "luxidle", Icon: "✨", Name: "Lux Idle Multi-Bot", Game: "Lux Idle • Demacia Idle RPG",
 		Port: 3012, Theme: "#f59e0b", ThemeBg: "rgba(245, 158, 11, 0.12)",

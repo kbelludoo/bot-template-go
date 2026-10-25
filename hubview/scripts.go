@@ -48,7 +48,7 @@ const hubScripts = `
       'pokeidleworld': 'assets/gifs/pokeidleworld.gif', 'pokepixel': 'assets/gifs/pokepixel.gif',
       'poketrue': 'assets/gifs/poketrue.gif', 'huntera': 'assets/gifs/huntera.gif',
       'tibidle': 'assets/gifs/tibidle.gif', 'baiak': 'assets/gifs/baiak.gif',
-      'luxidle': 'assets/gifs/luxidle.gif', 'lolidle': 'assets/gifs/lolidle.gif',
+      'luxidle': 'assets/gifs/luxidle.gif',
       'leveling': 'assets/gifs/leveling.gif', 'sigma': 'assets/gifs/sigma.gif',
       'farmricochet': 'assets/gifs/farmricochet.gif', 'default': 'assets/gifs/pokelegacy.gif'
     };
@@ -106,7 +106,7 @@ const hubScripts = `
       setTimeout(function() { showNextLevelUp(); }, 400);
     }
 
-    var testGames = ['pokelegacy', 'huntera', 'tibidle', 'luxidle', 'pokepixel', 'baiak', 'farmricochet', 'leveling', 'poketrue', 'pokeidle', 'pokeidleworld', 'lolidle', 'sigma'];
+    var testGames = ['pokelegacy', 'huntera', 'tibidle', 'luxidle', 'pokepixel', 'baiak', 'farmricochet', 'leveling', 'poketrue', 'pokeidle', 'pokeidleworld', 'sigma'];
     var testMeta = {
       'pokelegacy': { c: 'Charizard Flamethrower', v: 'Fire Dragon', a: 'Cinnabar Volcano' },
       'huntera': { c: 'Sir Lancelot', v: 'Paladin Knight', a: 'Dungeon of Valor' },
@@ -119,7 +119,6 @@ const hubScripts = `
       'poketrue': { c: 'Mewtwo Psystrike', v: 'Psychic Legend', a: 'Cerulean Unknown Cave' },
       'pokeidle': { c: 'Pikachu Volt Tackle', v: 'Electric Mouse', a: 'Power Plant' },
       'pokeidleworld': { c: 'Blastoise Hydro Pump', v: 'Water Fortress', a: 'Seafoam Islands' },
-      'lolidle': { c: 'Lucario Aura Sphere', v: 'Aura Champion', a: 'Summoner Rift' },
       'sigma': { c: 'Deoxys Cyber Speed', v: 'Cosmic Alien', a: 'Space Observatory' }
     };
     var testIdx = 0;

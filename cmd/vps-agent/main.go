@@ -79,7 +79,6 @@ var allBots = []BotProbe{
 	{ID: "kickminer", Name: "🟢 Kick Miner Go", Port: 3009, URL: "http://127.0.0.1:3009/api/status", RestartCmd: "sudo systemctl restart kick-miner.service", Type: "systemd"},
 	{ID: "twitchminer", Name: "🟣 Twitch Miner Go", Port: 3010, URL: "http://127.0.0.1:3010/api/status", RestartCmd: "sudo systemctl restart twitch-miner.service", Type: "systemd"},
 	{ID: "baiak", Name: "🏰 Baiak Idle Go", Port: 8090, URL: "http://127.0.0.1:8090/api/fleet", RestartCmd: "sudo systemctl restart baiak-fleet.service", Type: "systemd"},
-	{ID: "lolidle", Name: "⚔️ LoL Idle Multi-Bot", Port: 3011, URL: "http://127.0.0.1:3011/api/status", RestartCmd: "sudo systemctl restart lolidle.service", Type: "systemd"},
 	{ID: "luxidle", Name: "⚔️ Lux Idle Multi-Bot", Port: 3012, URL: "http://127.0.0.1:3012/api/status", RestartCmd: "sudo systemctl restart luxidle.service", Type: "systemd"},
 	{ID: "farmricochet", Name: "🌾 Farm Ricochet", Port: 3013, URL: "http://127.0.0.1:3013/api/status", RestartCmd: "sudo systemctl restart farmbot.service", Type: "systemd"},
 	{ID: "poketrue", Name: "🔥 PokeTrue Multi-Bot", Port: 3014, URL: "http://127.0.0.1:3014/api/status", RestartCmd: "sudo systemctl restart poketrue.service", Type: "systemd"},
@@ -360,7 +359,6 @@ func syncIndividual() {
 		{repo: "pokeidle-go", port: 3006, label: "Treinador"},
 		{repo: "pokeidleworld-bot", port: 3007, label: "Treinador"},
 		{repo: "twitch-miner-go", port: 3010, label: "Minerador"},
-		{repo: "lolidle-bot", port: 3011, label: "Campeão"},
 		{repo: "luxidle-bot", port: 3012, label: "Personagem"},
 		{repo: "farmricochet-bot", port: 3013, label: "Fazendeiro"},
 		{repo: "pokepixel-bot", port: 3015, label: "Treinador"},
@@ -567,7 +565,6 @@ func syncHub() {
 		"kickminer":     {"Kick Channel Points Miner", "Kick.com", "Go Native (Zero-Video WS)", 3009, "https://kbelludoo.github.io/kick-miner-go/", nil},
 		"twitchminer":   {"Twitch Channel Points Miner", "Twitch.tv", "Go Native (Zero-Video WS)", 3010, "https://kbelludoo.github.io/twitch-miner-go/", nil},
 		"baiak":         {"Baiak Idle Multi-Account", "Baiak Idle", "Go Native Engine", 8090, "https://kbelludoo.github.io/baiak-idle-bot/", nil},
-		"lolidle":       {"LoL Idle Multi-Bot", "LoL Idle", "Go Native Engine (Runeterra 4x Party)", 3011, "https://kbelludoo.github.io/lolidle-bot/", nil},
 		"luxidle":       {"Lux Idle Multi-Bot", "Lux Idle", "Go Native Engine (5x Party)", 3012, "https://kbelludoo.github.io/luxidle-bot/", nil},
 		"farmricochet":  {"Farm Ricochet Bot", "Farm Ricochet", "Go Native Engine (Circuit Breaker)", 3013, "https://kbelludoo.github.io/farmricochet-bot/", nil},
 		"poketrue":      {"PokeTrue Multi-Bot", "PokeTrue", "Go Native Engine (Weakness Solver)", 3014, "https://kbelludoo.github.io/bot-template-go/?v=force1", nil},
@@ -745,29 +742,6 @@ func syncHub() {
 							if bm, ok := botsMap[k].(map[string]interface{}); ok {
 								bm["name"] = ""
 								bm["label"] = fmt.Sprintf("Conta %d", idx+1)
-							}
-						}
-					}
-				case "lolidle":
-					if accs, ok := stMap["accounts"].([]interface{}); ok {
-						for i, a := range accs {
-							if am, ok := a.(map[string]interface{}); ok {
-								label := fmt.Sprintf("Campeão #%d", i+1)
-								am["name"] = label
-								am["id"] = fmt.Sprintf("acc-%d", i+1)
-								delete(am, "bindIp")
-								delete(am, "outboundIp")
-								if logs, ok := am["logs"].([]interface{}); ok {
-									safeLogs := make([]interface{}, len(logs))
-									for li, l := range logs {
-										if s, ok := l.(string); ok {
-											safeLogs[li] = emailParenRegex.ReplaceAllString(nickRegex.ReplaceAllString(s, label), "(Sessão Autenticada)")
-										} else {
-											safeLogs[li] = l
-										}
-									}
-									am["logs"] = safeLogs
-								}
 							}
 						}
 					}

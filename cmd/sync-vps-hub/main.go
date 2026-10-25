@@ -70,7 +70,6 @@ func fetchAll() map[string]map[string]any {
 		"kickminer":     "http://127.0.0.1:3009/api/status",
 		"baiak":         "http://127.0.0.1:8090/api/fleet",
 		"twitchminer":   "http://127.0.0.1:3010/api/status",
-		"lolidle":       "http://127.0.0.1:3011/api/status",
 		"poketrue":      "http://127.0.0.1:3014/api/status",
 	}
 	results := make(map[string]map[string]any, len(urls))
@@ -212,16 +211,6 @@ func sanitizeBotPayload(bots map[string]any) any {
 				extra["trainerName"] = label
 			}
 		}
-		replaceLogNick(acc, "logs", label)
-	})
-	eachAccount(bots, "lolidle", func(i int, acc map[string]any) {
-		label := fmt.Sprintf("Campeão #%d", i+1)
-		acc["name"] = label
-		if _, ok := acc["id"].(string); ok {
-			acc["id"] = fmt.Sprintf("acc-%d", i+1)
-		}
-		delete(acc, "bindIp")
-		delete(acc, "outboundIp")
 		replaceLogNick(acc, "logs", label)
 	})
 	eachAccount(bots, "poketrue", func(i int, acc map[string]any) {
@@ -376,14 +365,6 @@ func buildBots(results map[string]map[string]any) map[string]any {
 			"dashboardUrl": "https://kbelludoo.github.io/baiak-idle-bot/",
 			"status":       results["baiak"],
 		},
-		"lolidle": map[string]any{
-			"name":         "LoL Idle Multi-Bot",
-			"game":         "LoL Idle",
-			"engine":       "Go Native Engine (Runeterra 4x Party)",
-			"port":         3011,
-			"dashboardUrl": "https://kbelludoo.github.io/lolidle-bot/",
-			"status":       results["lolidle"],
-		},
 		"poketrue": map[string]any{
 			"name":         "PokeTrue Multi-Bot",
 			"game":         "PokeTrue",
@@ -397,7 +378,7 @@ func buildBots(results map[string]map[string]any) map[string]any {
 
 func countActive(results map[string]map[string]any) int {
 	active := 0
-	for _, key := range []string{"huntera", "tibidle", "sigma", "leveling", "pokeidle", "pokeidleworld", "kickminer", "lolidle"} {
+	for _, key := range []string{"huntera", "tibidle", "sigma", "leveling", "pokeidle", "pokeidleworld", "kickminer"} {
 		if isOnline(results[key]) {
 			active++
 		}

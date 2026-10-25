@@ -379,7 +379,7 @@ func (s BotStatusData) GetUnifiedAccounts() []AccountData {
 		return res
 	}
 
-	// 4. Standby process fallback (e.g. lolidle or daemon awaiting match/session)
+	// 4. Standby process fallback (daemon awaiting match/session)
 	if s.Uptime != "" || s.RAMSysMB > 0 || s.Goroutines > 0 {
 		return []AccountData{
 			{
