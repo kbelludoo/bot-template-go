@@ -342,3 +342,37 @@ type BossLutaResponse struct {
 	Erro   string         `json:"erro,omitempty"`
 }
 
+// VipBuyResponse retornado por /api/vip/buy
+type VipBuyResponse struct {
+	Saldo  int    `json:"saldo"`
+	VipAte int64  `json:"vipAte"`
+	Erro   string `json:"erro,omitempty"`
+}
+
+// MarketListingsResponse retornado por /api/market
+type MarketListingsResponse struct {
+	Anuncios []MarketListingItem `json:"anuncios"`
+	Total    int                 `json:"total"`
+	Erro     string              `json:"erro,omitempty"`
+}
+
+type MarketListingItem struct {
+	ID       int    `json:"id"`
+	Tipo     string `json:"tipo"`
+	Moeda    string `json:"moeda"`
+	Preco    int64  `json:"preco"`
+	ItemQtd  int    `json:"itemQtd"`
+	Avulso   bool   `json:"avulso"`
+	Vendedor string `json:"vendedor"`
+	Modo     string `json:"modo"`
+}
+
+// MarketBuyResponse retornado por /api/market/buy
+type MarketBuyResponse struct {
+	Tipo    string         `json:"tipo"`
+	ItemQtd int            `json:"itemQtd"`
+	Preco   int64          `json:"preco"`
+	State   *PokeTrueState `json:"state,omitempty"`
+	Erro    string         `json:"erro,omitempty"`
+}
+

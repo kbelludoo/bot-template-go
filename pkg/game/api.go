@@ -568,3 +568,29 @@ func (c *PokeTrueClient) LutarBoss(ctx context.Context, chefe string, pokemonID 
 	return &resp, err
 }
 
+// BuyVIP compra dias de assinatura VIP (30, 60 ou 180 dias)
+func (c *PokeTrueClient) BuyVIP(ctx context.Context, dias int) (*VipBuyResponse, error) {
+	payload := map[string]any{"dias": dias}
+	var resp VipBuyResponse
+	err := c.DoRequest(ctx, http.MethodPost, "vip/buy", payload, &resp)
+	return &resp, err
+}
+
+// GetMarketListings consulta ofertas do mercado por tipo (ex: diamante)
+func (c *PokeTrueClient) GetMarketListings(ctx context.Context, tipo string) (*MarketListingsResponse, error) {
+	var resp MarketListingsResponse
+	err := c.DoRequest(ctx, http.MethodGet, "market?tipo="+tipo, nil, &resp)
+	return &resp, err
+}
+
+// BuyMarket compra um item ou diamantes no mercado
+func (c *PokeTrueClient) BuyMarket(ctx context.Context, listingID, qtd int) (*MarketBuyResponse, error) {
+	payload := map[string]any{"listingId": listingID}
+	if qtd > 0 {
+		payload["qtd"] = qtd
+	}
+	var resp MarketBuyResponse
+	err := c.DoRequest(ctx, http.MethodPost, "market/buy", payload, &resp)
+	return &resp, err
+}
+

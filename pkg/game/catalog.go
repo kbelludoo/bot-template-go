@@ -284,12 +284,14 @@ func FindBestHunt(team []PokemonState, trainerLevel int, dex map[string]DexEntry
 			continue
 		}
 
-		// Penalidade para áreas muito abaixo do nível quando for farm comum
+		// Penalidade para áreas abaixo da faixa do jogador (Rush de Nível e Ouro para VIP)
 		levelDiff := trainerLevel - maxNivel
 		levelFactor := 1.0
-		if levelDiff > 25 {
-			levelFactor = 0.6
-		} else if levelDiff > 15 {
+		if levelDiff > 35 {
+			levelFactor = 0.15
+		} else if levelDiff > 20 {
+			levelFactor = 0.5
+		} else if levelDiff > 10 {
 			levelFactor = 0.8
 		}
 
@@ -315,8 +317,7 @@ func FindBestHunt(team []PokemonState, trainerLevel int, dex map[string]DexEntry
 			totalEffectiveness += maxEff
 			monsterCount++
 
-			// Checagem de Bestiário (PokéLog):
-			// Se o jogador ainda não coletou os 3 estágios dessa espécie, o monstro é prioritário
+			// Checagem de Bestiário (PokéLog)
 			if dex != nil {
 				dEntry, inDex := dex[monsterName]
 				if !inDex || dEntry.Coletado < 3 {
@@ -337,20 +338,15 @@ func FindBestHunt(team []PokemonState, trainerLevel int, dex map[string]DexEntry
 			avgEffectiveness = totalEffectiveness / monsterCount
 		}
 
-		// Bônus de Bestiário (PokéLog): rotas com espécies incompletas ganham até 3.5x de bônus!
+		// Bônus moderado de Bestiário para desempate dentro da faixa correta
 		bestiaryFactor := 1.0
 		if monsterCount > 0 && incompletePokelog > 0 {
-			bestiaryFactor = 1.0 + (incompletePokelog / monsterCount) * 1.5
-		}
-
-		// Se a rota tem PokéLog incompleto, reduz a penalidade de nível baixo pois o abate rápido compensa
-		if incompletePokelog > 0 && levelFactor < 1.0 {
-			levelFactor = (levelFactor + 1.0) / 2.0
+			bestiaryFactor = 1.0 + (incompletePokelog / monsterCount) * 0.3
 		}
 
 		avgLevel := float64(minNivel+maxNivel) / 2.0
-		// Score = Kills/h * Vantagem Elemental * Bestiário * Nível
-		score := float64(h.KillsPorHora) * avgEffectiveness * bestiaryFactor * levelFactor * (1.0 + (avgLevel * 0.03))
+		// Score = Kills/h * Vantagem Elemental * Multiplicador de Nível Forte * Fator de Nível * Bestiário
+		score := float64(h.KillsPorHora) * avgEffectiveness * levelFactor * bestiaryFactor * (1.0 + (avgLevel * 0.08))
 
 		if score > bestScore {
 			bestScore = score
