@@ -94,6 +94,12 @@ var botsMap = map[string]BotInfo{
 		Path:       "/api/status",
 		RestartCmd: []string{"sudo", "systemctl", "restart", "leveling-bot.service"},
 	},
+	"pokelegacy": {
+		Name:       "🔥 PokeLegacy",
+		Port:       3005,
+		Path:       "/api/status",
+		RestartCmd: []string{"sudo", "systemctl", "restart", "pokelegacy.service"},
+	},
 	"pokeidle": {
 		Name:       "⚡ PokeIdle.io",
 		Port:       3006,
@@ -117,6 +123,30 @@ var botsMap = map[string]BotInfo{
 		Port:       3010,
 		Path:       "/api/status",
 		RestartCmd: []string{"sudo", "systemctl", "restart", "twitch-miner.service"},
+	},
+	"luxidle": {
+		Name:       "✨ Lux Idle",
+		Port:       3012,
+		Path:       "/api/status",
+		RestartCmd: []string{"sudo", "systemctl", "restart", "luxidle.service"},
+	},
+	"farmbot": {
+		Name:       "🌾 FarmBot Ricochet",
+		Port:       3013,
+		Path:       "/api/status",
+		RestartCmd: []string{"sudo", "systemctl", "restart", "farmbot.service"},
+	},
+	"poketrue": {
+		Name:       "🎯 PokeTrue",
+		Port:       3014,
+		Path:       "/api/status",
+		RestartCmd: []string{"sudo", "systemctl", "restart", "poketrue.service"},
+	},
+	"pokepixel": {
+		Name:       "🟦 PokePixel",
+		Port:       3015,
+		Path:       "/api/status",
+		RestartCmd: []string{"sudo", "systemctl", "restart", "pokepixel.service"},
 	},
 	"baiak": {
 		Name:       "🏰 Baiak Idle Go",
@@ -328,9 +358,13 @@ func getMemInfo() string {
 
 func handleFastStatus() string {
 	var sb strings.Builder
-	sb.WriteString("📊 *STATUS DOS 9 BOTS NA VPS (GO NATIVE)*\n\n")
+	sb.WriteString("📊 *STATUS DOS 14 BOTS ATIVOS NA VPS (GO NATIVE)*\n\n")
 
-	keys := []string{"huntera", "tibidle", "sigma", "leveling", "pokeidle", "pokeidleworld", "kickminer", "twitchminer", "baiak"}
+	keys := []string{
+		"huntera", "tibidle", "sigma", "leveling", "pokelegacy",
+		"pokeidle", "pokeidleworld", "kickminer", "twitchminer",
+		"luxidle", "farmbot", "poketrue", "pokepixel", "baiak",
+	}
 	for _, k := range keys {
 		bot := botsMap[k]
 		online := probePort(bot.Port, bot.Path)
@@ -385,10 +419,10 @@ func handleMessage(msg *Message) {
 
 	case text == "/help":
 		help := "📖 *COMANDOS DISPONÍVEIS:*\n\n" +
-			"• `/status` - Exibe a saúde dos 9 bots e RAM da VPS\n" +
+			"• `/status` - Exibe a saúde dos 14 bots ativos e RAM da VPS\n" +
 			"• `/restart <bot>` - Reinicia um bot específico\n" +
 			"• `/logs <bot>` - Analisa os últimos logs de um bot\n" +
-			"  _Bots:_ `huntera`, `tibidle`, `sigma`, `leveling`, `pokeidle`, `pokeidleworld`, `kickminer`, `twitchminer`, `baiak`\n" +
+			"  _Bots:_ `huntera`, `tibidle`, `sigma`, `leveling`, `pokelegacy`, `pokeidle`, `pokeidleworld`, `kickminer`, `twitchminer`, `luxidle`, `farmbot`, `poketrue`, `pokepixel`, `baiak`\n" +
 			"• Ou envie *qualquer texto* para conversar com a IA com ferramentas completas de diagnóstico e auto-recuperação!"
 		_ = sendTelegramMessage(msg.Chat.ID, help, "Markdown")
 
@@ -412,7 +446,11 @@ func handleMessage(msg *Message) {
 		target := strings.ToLower(strings.TrimSpace(strings.TrimPrefix(text, "/restart")))
 		bot, ok := botsMap[target]
 		if !ok {
-			keys := []string{"huntera", "tibidle", "sigma", "leveling", "pokeidle", "pokeidleworld", "kickminer", "twitchminer", "baiak"}
+			keys := []string{
+				"huntera", "tibidle", "sigma", "leveling", "pokelegacy",
+				"pokeidle", "pokeidleworld", "kickminer", "twitchminer",
+				"luxidle", "farmbot", "poketrue", "pokepixel", "baiak",
+			}
 			_ = sendTelegramMessage(msg.Chat.ID, fmt.Sprintf("⚠️ Bot `%s` não reconhecido.\nUse um destes: `%s`", target, strings.Join(keys, "`, `")), "Markdown")
 			return
 		}
