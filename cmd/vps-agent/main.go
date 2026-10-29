@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 	"os/exec"
@@ -17,6 +16,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"bot-template-go/pkg/ghsync"
 )
 
 type SecretsConfig struct {
@@ -69,21 +70,21 @@ type BotProbe struct {
 }
 
 var allBots = []BotProbe{
-	{ID: "huntera", Name: "⚔️ Huntera Idle", Port: 3000, URL: "http://127.0.0.1:3000/api/status", RestartCmd: "bash /home/ubuntu/huntera-go/start.sh", Type: "tmux"},
-	{ID: "tibidle", Name: "🛡️ Tibidle Multi-Bot", Port: 3001, URL: "http://127.0.0.1:3001/api/status", RestartCmd: "sudo systemctl restart tibidle.service", Type: "systemd"},
-	{ID: "sigma", Name: "⚡ Pokemon Sigma", Port: 3002, URL: "http://127.0.0.1:3002/api/status", RestartCmd: "sudo systemctl restart sigma-bot.service", Type: "systemd"},
-	{ID: "leveling", Name: "🏹 Leveling Idle 2D", Port: 3003, URL: "http://127.0.0.1:3003/api/status", RestartCmd: "sudo systemctl restart leveling-bot.service", Type: "systemd"},
-	{ID: "pokelegacy", Name: "⚡ PokeLegacy Online", Port: 3005, URL: "http://127.0.0.1:3005/api/status", RestartCmd: "sudo systemctl restart pokelegacy.service", Type: "systemd"},
-	{ID: "pokeidle", Name: "⚡ PokeIdle.io", Port: 3006, URL: "http://127.0.0.1:3006/api/status", RestartCmd: "sudo systemctl restart pokeidle.service", Type: "systemd"},
-	{ID: "pokeidleworld", Name: "🌍 Poke Idle World", Port: 3007, URL: "http://127.0.0.1:3007/api/status", RestartCmd: "sudo systemctl restart pokeidleworld.service", Type: "systemd"},
-	{ID: "kickminer", Name: "🟢 Kick Miner Go", Port: 3009, URL: "http://127.0.0.1:3009/api/status", RestartCmd: "sudo systemctl restart kick-miner.service", Type: "systemd"},
-	{ID: "twitchminer", Name: "🟣 Twitch Miner Go", Port: 3010, URL: "http://127.0.0.1:3010/api/status", RestartCmd: "sudo systemctl restart twitch-miner.service", Type: "systemd"},
-	{ID: "baiak", Name: "🏰 Baiak Idle Go", Port: 8090, URL: "http://127.0.0.1:8090/api/fleet", RestartCmd: "sudo systemctl restart baiak-fleet.service", Type: "systemd"},
-	{ID: "luxidle", Name: "⚔️ Lux Idle Multi-Bot", Port: 3012, URL: "http://127.0.0.1:3012/api/status", RestartCmd: "sudo systemctl restart luxidle.service", Type: "systemd"},
-	{ID: "farmricochet", Name: "🌾 Farm Ricochet", Port: 3013, URL: "http://127.0.0.1:3013/api/status", RestartCmd: "sudo systemctl restart farmbot.service", Type: "systemd"},
-	{ID: "poketrue", Name: "🔥 PokeTrue Multi-Bot", Port: 3014, URL: "http://127.0.0.1:3014/api/status", RestartCmd: "sudo systemctl restart poketrue.service", Type: "systemd"},
-	{ID: "pokepixel", Name: "👾 PokePixel Multi-Bot", Port: 3015, URL: "http://127.0.0.1:3015/api/status", RestartCmd: "sudo systemctl restart pokepixel.service", Type: "systemd"},
-	{ID: "pocketweb", Name: "🌐 AI-Go-Browser", Port: 8888, URL: "http://127.0.0.1:8888/", RestartCmd: "sudo systemctl restart floppy-server.service", Type: "systemd"},
+	{ID: "huntera", Name: "âš”ï¸ Huntera Idle", Port: 3000, URL: "http://127.0.0.1:3000/api/status", RestartCmd: "bash /home/ubuntu/huntera-go/start.sh", Type: "tmux"},
+	{ID: "tibidle", Name: "ðŸ›¡ï¸ Tibidle Multi-Bot", Port: 3001, URL: "http://127.0.0.1:3001/api/status", RestartCmd: "sudo systemctl restart tibidle.service", Type: "systemd"},
+	{ID: "sigma", Name: "âš¡ Pokemon Sigma", Port: 3002, URL: "http://127.0.0.1:3002/api/status", RestartCmd: "sudo systemctl restart sigma-bot.service", Type: "systemd"},
+	{ID: "leveling", Name: "ðŸ¹ Leveling Idle 2D", Port: 3003, URL: "http://127.0.0.1:3003/api/status", RestartCmd: "sudo systemctl restart leveling-bot.service", Type: "systemd"},
+	{ID: "pokelegacy", Name: "âš¡ PokeLegacy Online", Port: 3005, URL: "http://127.0.0.1:3005/api/status", RestartCmd: "sudo systemctl restart pokelegacy.service", Type: "systemd"},
+	{ID: "pokeidle", Name: "âš¡ PokeIdle.io", Port: 3006, URL: "http://127.0.0.1:3006/api/status", RestartCmd: "sudo systemctl restart pokeidle.service", Type: "systemd"},
+	{ID: "pokeidleworld", Name: "ðŸŒ Poke Idle World", Port: 3007, URL: "http://127.0.0.1:3007/api/status", RestartCmd: "sudo systemctl restart pokeidleworld.service", Type: "systemd"},
+	{ID: "kickminer", Name: "ðŸŸ¢ Kick Miner Go", Port: 3009, URL: "http://127.0.0.1:3009/api/status", RestartCmd: "sudo systemctl restart kick-miner.service", Type: "systemd"},
+	{ID: "twitchminer", Name: "ðŸŸ£ Twitch Miner Go", Port: 3010, URL: "http://127.0.0.1:3010/api/status", RestartCmd: "sudo systemctl restart twitch-miner.service", Type: "systemd"},
+	{ID: "baiak", Name: "ðŸ° Baiak Idle Go", Port: 8090, URL: "http://127.0.0.1:8090/api/fleet", RestartCmd: "sudo systemctl restart baiak-fleet.service", Type: "systemd"},
+	{ID: "luxidle", Name: "âš”ï¸ Lux Idle Multi-Bot", Port: 3012, URL: "http://127.0.0.1:3012/api/status", RestartCmd: "sudo systemctl restart luxidle.service", Type: "systemd"},
+	{ID: "farmricochet", Name: "ðŸŒ¾ Farm Ricochet", Port: 3013, URL: "http://127.0.0.1:3013/api/status", RestartCmd: "sudo systemctl restart farmbot.service", Type: "systemd"},
+	{ID: "poketrue", Name: "ðŸ”¥ PokeTrue Multi-Bot", Port: 3014, URL: "http://127.0.0.1:3014/api/status", RestartCmd: "sudo systemctl restart poketrue.service", Type: "systemd"},
+	{ID: "pokepixel", Name: "ðŸ‘¾ PokePixel Multi-Bot", Port: 3015, URL: "http://127.0.0.1:3015/api/status", RestartCmd: "sudo systemctl restart pokepixel.service", Type: "systemd"},
+	{ID: "pocketweb", Name: "ðŸŒ AI-Go-Browser", Port: 8888, URL: "http://127.0.0.1:8888/", RestartCmd: "sudo systemctl restart floppy-server.service", Type: "systemd"},
 }
 
 // -------------------------------------------------------------
@@ -146,7 +147,7 @@ func deepScrub(v interface{}) interface{} {
 		if strings.HasPrefix(val, "http://") || strings.HasPrefix(val, "https://") {
 			return val
 		}
-		s := emailParenRegex.ReplaceAllString(val, "(Sessão Autenticada)")
+		s := emailParenRegex.ReplaceAllString(val, "(SessÃ£o Autenticada)")
 		s = emailRegex.ReplaceAllString(s, "protegido")
 		s = publicIPRegex.ReplaceAllString(s, "127.0.0.1")
 		s = nickRegex.ReplaceAllString(s, "anonimo")
@@ -183,36 +184,12 @@ func pushToGitHub(repo string, payload interface{}) error {
 		return err
 	}
 
-	b64 := base64.StdEncoding.EncodeToString(b)
-
-	// Get SHA if exists
-	shaCmd := exec.Command("gh", "api", fmt.Sprintf("repos/kbelludoo/%s/contents/docs/status.json", repo), "--jq", ".sha")
-	shaOut, _ := shaCmd.Output()
-	sha := strings.TrimSpace(string(shaOut))
-
-	tmpPath := filepath.Join(os.TempDir(), fmt.Sprintf("status_%s.json", repo))
-	reqBody := map[string]interface{}{
-		"message": "telemetry: live bot status update (Go Stealth Engine)",
-		"content": b64,
-	}
-	if sha != "" {
-		reqBody["sha"] = sha
+	sha, _ := ghsync.FileSHA(repo, "docs/status.json")
+	if err := ghsync.Put(repo, "docs/status.json", "telemetry: live bot status update (Go Native Stream)", b, sha); err != nil {
+		return fmt.Errorf("ghsync put %s: %w", repo, err)
 	}
 
-	reqJSON, _ := json.Marshal(reqBody)
-	if err := os.WriteFile(tmpPath, reqJSON, 0644); err != nil {
-		return err
-	}
-	defer os.Remove(tmpPath)
-
-	putCmd := exec.Command("gh", "api", "-X", "PUT", fmt.Sprintf("repos/kbelludoo/%s/contents/docs/status.json", repo), "--input", tmpPath)
-	putCmd.Stdout = io.Discard
-	putCmd.Stderr = io.Discard
-	if err := putCmd.Run(); err != nil {
-		return err
-	}
-
-	fmt.Printf("✓ [%s] Telemetria sincronizada com sucesso (Go Native)!\n", repo)
+	fmt.Printf("✓ [%s] Telemetria sincronizada com sucesso (Go Native Stream)!\n", repo)
 	return nil
 }
 
@@ -334,7 +311,7 @@ func sanitizeHunteraIndex() {
 		defer os.Remove(tmpPath)
 
 		_ = exec.Command("gh", "api", "-X", "PUT", "repos/kbelludoo/huntera-bot/contents/docs/index.html", "--input", tmpPath).Run()
-		fmt.Println("✓ [huntera-bot] docs/index.html sanitizado via Go!")
+		fmt.Println("âœ“ [huntera-bot] docs/index.html sanitizado via Go!")
 	}
 }
 
@@ -398,7 +375,7 @@ func syncIndividual() {
 				safeLogs := make([]interface{}, len(logs))
 				for i, l := range logs {
 					if s, ok := l.(string); ok {
-						safeLogs[i] = emailParenRegex.ReplaceAllString(nickRegex.ReplaceAllString(s, "Minerador #1"), "(Sessão Autenticada)")
+						safeLogs[i] = emailParenRegex.ReplaceAllString(nickRegex.ReplaceAllString(s, "Minerador #1"), "(SessÃ£o Autenticada)")
 					} else {
 						safeLogs[i] = l
 					}
@@ -438,7 +415,7 @@ func syncIndividual() {
 						safeLogs := make([]interface{}, len(logs))
 						for li, l := range logs {
 							if s, ok := l.(string); ok {
-								safeLogs[li] = emailParenRegex.ReplaceAllString(nickRegex.ReplaceAllString(s, label), "(Sessão Autenticada)")
+								safeLogs[li] = emailParenRegex.ReplaceAllString(nickRegex.ReplaceAllString(s, label), "(SessÃ£o Autenticada)")
 							} else {
 								safeLogs[li] = l
 							}
@@ -482,7 +459,7 @@ func probeService(key string, d botItem) interface{} {
 					map[string]interface{}{
 						"name":        "AI-Go-Browser Core",
 						"vocation":    "Navegador de IA (Go Puro)",
-						"currentArea": "Navegação Semântica & CDP (<75 MB RAM)",
+						"currentArea": "NavegaÃ§Ã£o SemÃ¢ntica & CDP (<75 MB RAM)",
 						"status":      "Online",
 						"gold":        int64(0),
 						"kills":       0,
@@ -534,7 +511,7 @@ func probeService(key string, d botItem) interface{} {
 					map[string]interface{}{
 						"name":        "Relay Bot",
 						"vocation":    "Telegram Bridge",
-						"currentArea": "Alertas & Notificações 24/7",
+						"currentArea": "Alertas & NotificaÃ§Ãµes 24/7",
 						"status":      "Online",
 						"gold":        int64(0),
 						"kills":       0,
@@ -629,7 +606,7 @@ func syncHub() {
 
 		if def.status != nil {
 			if stMap, ok := def.status.(map[string]interface{}); ok {
-				// Sanitização específica por bot
+				// SanitizaÃ§Ã£o especÃ­fica por bot
 				switch k {
 				case "huntera":
 					if accs, ok := stMap["accounts"].([]interface{}); ok {
@@ -650,7 +627,7 @@ func syncHub() {
 									safeLogs := make([]interface{}, len(logs))
 									for li, l := range logs {
 										if s, ok := l.(string); ok {
-											safeLogs[li] = emailParenRegex.ReplaceAllString(s, "(Sessão Autenticada)")
+											safeLogs[li] = emailParenRegex.ReplaceAllString(s, "(SessÃ£o Autenticada)")
 										} else {
 											safeLogs[li] = l
 										}
@@ -726,7 +703,7 @@ func syncHub() {
 						safeLogs := make([]interface{}, len(logs))
 						for li, l := range logs {
 							if s, ok := l.(string); ok {
-								safeLogs[li] = emailParenRegex.ReplaceAllString(nickRegex.ReplaceAllString(s, "Minerador #1"), "(Sessão Autenticada)")
+								safeLogs[li] = emailParenRegex.ReplaceAllString(nickRegex.ReplaceAllString(s, "Minerador #1"), "(SessÃ£o Autenticada)")
 							} else {
 								safeLogs[li] = l
 							}
@@ -761,7 +738,7 @@ func syncHub() {
 									safeLogs := make([]interface{}, len(logs))
 									for li, l := range logs {
 										if s, ok := l.(string); ok {
-											safeLogs[li] = emailParenRegex.ReplaceAllString(nickRegex.ReplaceAllString(s, label), "(Sessão Autenticada)")
+											safeLogs[li] = emailParenRegex.ReplaceAllString(nickRegex.ReplaceAllString(s, label), "(SessÃ£o Autenticada)")
 										} else {
 											safeLogs[li] = l
 										}
@@ -784,7 +761,7 @@ func syncHub() {
 									safeLogs := make([]interface{}, len(logs))
 									for li, l := range logs {
 										if s, ok := l.(string); ok {
-											safeLogs[li] = emailParenRegex.ReplaceAllString(nickRegex.ReplaceAllString(s, label), "(Sessão Autenticada)")
+											safeLogs[li] = emailParenRegex.ReplaceAllString(nickRegex.ReplaceAllString(s, label), "(SessÃ£o Autenticada)")
 										} else {
 											safeLogs[li] = l
 										}
@@ -835,9 +812,9 @@ func runWatchdog() {
 			continue
 		}
 
-		fmt.Printf("[watchdog-go] ⚠️ ALERTA: %s (Porta %d) FORA DO AR! Tentando auto-cura...\n", bot.Name, bot.Port)
+		fmt.Printf("[watchdog-go] âš ï¸ ALERTA: %s (Porta %d) FORA DO AR! Tentando auto-cura...\n", bot.Name, bot.Port)
 
-		// Executa comando de recuperação
+		// Executa comando de recuperaÃ§Ã£o
 		parts := strings.Fields(bot.RestartCmd)
 		if len(parts) > 0 {
 			cmd := exec.Command(parts[0], parts[1:]...)
@@ -854,25 +831,25 @@ func runWatchdog() {
 		}
 
 		if reHealthy {
-			fmt.Printf("[watchdog-go] ✅ Auto-cura concluída para %s (Porta %d)!\n", bot.Name, bot.Port)
-			msg := fmt.Sprintf("🛠️ *AUTO-CURA CONCLUÍDA NA VPS (Go Native)*\n\n"+
-				"• *Bot:* %s\n"+
-				"• *Porta:* `%d`\n"+
-				"• *Ação:* Serviço reiniciado automaticamente pelo Watchdog em Go.\n"+
-				"• *Status Atual:* ✅ ONLINE e operando normalmente!", bot.Name, bot.Port)
+			fmt.Printf("[watchdog-go] âœ… Auto-cura concluÃ­da para %s (Porta %d)!\n", bot.Name, bot.Port)
+			msg := fmt.Sprintf("ðŸ› ï¸ *AUTO-CURA CONCLUÃDA NA VPS (Go Native)*\n\n"+
+				"â€¢ *Bot:* %s\n"+
+				"â€¢ *Porta:* `%d`\n"+
+				"â€¢ *AÃ§Ã£o:* ServiÃ§o reiniciado automaticamente pelo Watchdog em Go.\n"+
+				"â€¢ *Status Atual:* âœ… ONLINE e operando normalmente!", bot.Name, bot.Port)
 			sendTelegram(msg)
 			delete(incidentHistory, bot.ID)
 		} else {
-			fmt.Printf("[watchdog-go] ❌ Falha na auto-cura de %s. Enviando alerta crítico...\n", bot.Name)
+			fmt.Printf("[watchdog-go] âŒ Falha na auto-cura de %s. Enviando alerta crÃ­tico...\n", bot.Name)
 			now := time.Now().UnixMilli()
 			lastAlert := incidentHistory[bot.ID]
 			if lastAlert == 0 || (now-lastAlert > 600000) {
 				incidentHistory[bot.ID] = now
-				msg := fmt.Sprintf("🚨 *ALERTA CRÍTICO: BOT FORA DO AR!*\n\n"+
-					"• *Bot:* %s\n"+
-					"• *Porta:* `%d`\n"+
-					"• *Tentativa de Auto-Cura:* ❌ Falhou ao reiniciar\n"+
-					"• *Verificação manual:* `sudo systemctl status %s`", bot.Name, bot.Port, bot.ID)
+				msg := fmt.Sprintf("ðŸš¨ *ALERTA CRÃTICO: BOT FORA DO AR!*\n\n"+
+					"â€¢ *Bot:* %s\n"+
+					"â€¢ *Porta:* `%d`\n"+
+					"â€¢ *Tentativa de Auto-Cura:* âŒ Falhou ao reiniciar\n"+
+					"â€¢ *VerificaÃ§Ã£o manual:* `sudo systemctl status %s`", bot.Name, bot.Port, bot.ID)
 				sendTelegram(msg)
 			}
 		}
@@ -884,9 +861,9 @@ func runWatchdog() {
 // -------------------------------------------------------------
 
 func main() {
-	allFlag := flag.Bool("all", false, "Executa sync do hub e repositórios individuais")
-	hubFlag := flag.Bool("hub", false, "Executa sincronização do Bot Command Center Hub")
-	indFlag := flag.Bool("individual", false, "Executa sincronização dos repositórios individuais")
+	allFlag := flag.Bool("all", false, "Executa sync do hub e repositÃ³rios individuais")
+	hubFlag := flag.Bool("hub", false, "Executa sincronizaÃ§Ã£o do Bot Command Center Hub")
+	indFlag := flag.Bool("individual", false, "Executa sincronizaÃ§Ã£o dos repositÃ³rios individuais")
 	watchdogFlag := flag.Bool("watchdog", false, "Executa ciclo do Watchdog de auto-cura")
 
 	flag.Parse()
@@ -897,10 +874,10 @@ func main() {
 	}
 
 	if *allFlag {
-		fmt.Printf("[%s] Iniciando ciclo completo de sincronização em Go Native...\n", time.Now().Format("15:04:05"))
+		fmt.Printf("[%s] Iniciando ciclo completo de sincronizaÃ§Ã£o em Go Native...\n", time.Now().Format("15:04:05"))
 		syncHub()
 		syncIndividual()
-		fmt.Println("✓ Ciclo completo de telemetria Go Native concluído com sucesso!")
+		fmt.Println("âœ“ Ciclo completo de telemetria Go Native concluÃ­do com sucesso!")
 		return
 	}
 
@@ -914,7 +891,7 @@ func main() {
 		return
 	}
 
-	// Padrão se chamado sem flags: executa sync completo
+	// PadrÃ£o se chamado sem flags: executa sync completo
 	syncHub()
 	syncIndividual()
 }
