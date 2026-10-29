@@ -1,4 +1,13 @@
-# ⚡ Game Bot Starter Kit & VPS Command Center (Go Native Engine)
+> [!IMPORTANT]
+> ### ⚡ SUBSTITUÍDO OFICIALMENTE PELO TEMPLATE RUST
+> Este repositório em Go foi substituído oficialmente pelo **[`bot-template-rust`](https://github.com/kbelludoo/bot-template-rust)**.  
+> A versão em Rust atinge **100% de paridade funcional**, opera com **Zero-GC**, reduz o consumo de memória de ~50MB para **< 10MB de RAM** e possui latência sub-milissegundo.  
+> 🔗 **Novo Repositório Principal**: [https://github.com/kbelludoo/bot-template-rust](https://github.com/kbelludoo/bot-template-rust)  
+> 🌐 **Novo Dashboard Central (GitHub Pages)**: [https://kbelludoo.github.io/bot-template-rust/](https://kbelludoo.github.io/bot-template-rust/)
+
+---
+
+# ⚡ Game Bot Starter Kit & VPS Command Center (Go Native Engine - Legado)
 
 Template padronizado de altíssima performance desenvolvido em **Go (Golang)** para criação rápida de bots autônomos para qualquer jogo de navegador / idle (PokeIdle, PokeIdleWorld, LoL Idle, Baiak, Tibia Idle, Sigma, Leveling Idle, Lux Idle, PokeLegacy, Farm Ricochet, etc.), acompanhado de um ecossistema completo de anti-ban, disjuntor heurístico, gestão de fadiga e automação dos 13 subsistemas de jogos idle.
 
